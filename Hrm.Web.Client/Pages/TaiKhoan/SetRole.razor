@@ -1,0 +1,33 @@
+﻿@if (Role != null)
+{
+<EditForm Model="Role" OnValidSubmit="HandleAddRoleValidSubmitAsync">
+    <Row Gutter="16">
+        @if (ChooseUserRoles != null)
+        {
+            @foreach (var roleItem in ChooseUserRoles.OrderBy(c => c.Name))
+            {
+                <AntDesign.Col Class="gutter-row" Span="6">
+                    <Checkbox @bind-Value="roleItem.Checked">
+                        @roleItem.Description
+                    </Checkbox>
+                </AntDesign.Col>
+            }
+        }
+    </Row>
+    <Divider></Divider>
+    <Row Gutter="16">
+        <div style="display:flex">
+            <Space Size=@("small")>
+                <SpaceItem>
+                    <Button Type="@ButtonType.Primary" Icon="save" HtmlType="submit">Lưu</Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button Icon="cancel" HtmlType="button" @onclick="() => CancelChanged.InvokeAsync()">Hủy</Button>
+                </SpaceItem>
+            </Space>
+        </div>
+    </Row>
+</EditForm>
+}
+
+

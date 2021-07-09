@@ -1,0 +1,87 @@
+﻿
+<div>
+    <Button OnClick="AddRow" Type="primary" Style="margin-bottom:16px">
+        Thêm khóa học
+    </Button>
+    <Table DataSource="ListCourseView" RowClassName="@(_=>"editable-row")" Bordered Size="@TableSize.Small">
+        <Column Width="35%" DataIndex="@nameof(context.TenKhoaHoc)" TData="string">
+            @if (editId == context.Id)
+            {
+                <AutoComplete TOption="KeyValuePair<string, ISelectItem>"
+                              Value="@context.Selected"
+                              Options="DataSource"
+                              OptionFormat="e => e.Value.Value.GetDisplay()"
+                              OnSelectionChange="OnSelectionChange"
+                              Placeholder="Nhập để chọn"
+                              AllowFilter="true"/>
+            }
+            else
+            {
+                <div class="editable-cell-value-wrap" @onclick="()=>StartEdit(context.Id)">
+                    @context.TenKhoaHoc
+                </div>
+            }
+        </Column>
+        <Column Width="25%" DataIndex="@nameof(context.TuNgay)" TData="DateTime?">
+            @if (editId == context.Id)
+            {
+                <DatePicker TValue="DateTime?" DefaultValue="new DateTime(1970, 1, 1)" 
+                            @bind-Value="@context.TuNgay" Format="dd/MM/yyyy" Style="display:block"/>
+            }
+            else
+            {
+                <div class="editable-cell-value-wrap" @onclick="()=>StartEdit(context.Id)">
+                    @context.TuNgay.ToShortDate()
+                </div>
+            }
+
+        </Column>        
+        <Column Width="25%" DataIndex="@nameof(context.DenNgay)" TData="DateTime?">
+            @if (editId == context.Id)
+            {
+                <DatePicker TValue="DateTime?" DefaultValue="new DateTime(1970, 1, 1)"
+                            @bind-Value="@context.DenNgay" Format="dd/MM/yyyy" Style="display:block"/>
+            }
+            else
+            {
+                <div class="editable-cell-value-wrap" @onclick="()=>StartEdit(context.Id)">
+                    @context.DenNgay.ToShortDate()
+                </div>
+            }
+
+        </Column>
+        <ActionColumn Title="Thao tác">
+            <Popconfirm Title="Sure to delete?"
+                        OnConfirm="()=> DeleteRow(context.Id)"
+                        OkText="Yes"
+                        CancelText="No">
+                <a>Xóa</a>
+            </Popconfirm>
+        </ActionColumn>
+    </Table>
+</div>
+
+<style>
+    .editable-cell {
+        position: relative;
+    }
+
+    .editable-cell-value-wrap {
+        padding: 5px 12px;
+        cursor: pointer;
+    }
+
+    .editable-row:hover .editable-cell-value-wrap {
+        padding: 4px 11px;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+    }
+
+    [data-theme='dark'] .editable-row:hover .editable-cell-value-wrap {
+        border: 1px solid #434343;
+    }
+</style>
+
+@code{
+    
+}

@@ -1,0 +1,42 @@
+﻿@inject TokenProvider TokenProvider
+<Error>
+    <CascadingAuthenticationState>
+        <AuthorizeView>
+            <Authorized>
+                <Router AppAssembly="typeof(Startup).Assembly">
+                    <Found Context="routeData">
+                        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                    </Found>
+                    <NotFound>
+                        <LayoutView Layout="@typeof(MainLayout)">
+                            <p class="thongBao">Không tìm thấy dữ liệu yêu cầu.</p>
+                        </LayoutView>
+                    </NotFound>
+                </Router>
+            </Authorized>
+            <NotAuthorized>
+                <Router AppAssembly="typeof(Startup).Assembly">
+                    <Found Context="routeData">
+                        <RedirectToLogin />
+                    </Found>
+                    <NotFound>
+                        <p class="thongBao">Không tìm thấy dữ liệu yêu cầu.</p>
+                    </NotFound>
+                </Router>
+            </NotAuthorized>
+        </AuthorizeView>
+    </CascadingAuthenticationState>
+</Error>
+<AntContainer />
+@code
+{
+
+    [Parameter]
+    public string AccessToken { get; set; }
+
+    protected override void OnInitialized()
+    {
+        TokenProvider.AccessToken = AccessToken;
+        base.OnInitialized();
+    }
+}

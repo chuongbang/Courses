@@ -1,0 +1,197 @@
+﻿@using Course.Web.Client.Models
+@using System.Security.Claims
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@inject AppUserAdapterService UserService
+@inject NotificationService Notice
+@inject IMapper Mapper
+@inject PermissionClaim Permission
+
+<CascadingValue Value="sessionData">
+    <Layout>
+        <Header Style="position: fixed; z-index: 1; width: 100%;">
+            <div class="logo" />
+            <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Horizontal" DefaultSelectedKeys=@(new[]{"quan-tri"})>
+                <MenuItem Key="quan-tri" RouterLink="/" RouterMatch="NavLinkMatch.All"><Icon Type="home" Theme="outline"></Icon> Trang chủ</MenuItem>
+                <MenuItem Key="khoa-hoc" RouterLink="/khoa-hoc" RouterMatch="NavLinkMatch.All"><Icon Type="book" Theme="outline" /> Khóa học</MenuItem>
+                <MenuItem Key="bai-hoc" RouterLink="/bai-hoc" RouterMatch="NavLinkMatch.All"><Icon Type="book" Theme="outline" /> Bài học</MenuItem>
+                <SubMenu>
+                    <ChildContent>
+                        @if (Permission?.ACCOUNT_VIEW == true)
+                        {
+                            <MenuItem Key="tai-khoan" RouterLink="/tai-khoan" RouterMatch="NavLinkMatch.All"><Icon Type="team" Theme="outline"></Icon> Tài khoản</MenuItem>
+                        }
+                        @if (Permission?.ROLE_VIEW == true)
+                        {
+                            <MenuItem Key="vai-tro" RouterLink="/nhom-tai-khoan" RouterMatch="NavLinkMatch.All"><Icon Type="fund-view" Theme="outline"></Icon> Nhóm tài khoản</MenuItem>
+                        }
+                        @if (Permission?.AUDITLOG_VIEW == true)
+                        {
+                            <MenuItem Key="nhat-ky-he-thong" RouterLink="/nhat-ky-he-thong" RouterMatch="NavLinkMatch.All"><Icon Type="history" Theme="outline"></Icon> Nhật ký hệ thống</MenuItem>
+                        }
+                    </ChildContent>
+                    <TitleTemplate>
+                        <Icon Type="appstore" Theme="outline"></Icon> Hệ thống
+                    </TitleTemplate>
+                </SubMenu>
+                <SubMenu Style="min-width: 180px">
+                    <ChildContent>
+                        <MenuItem Key="thong-tin-tai-khoan" OnClick="OpenDetail"><Icon Type="solution" Theme="outline"></Icon> Thông tin</MenuItem>
+                        <MenuItem Key="doi-mat-khau" OnClick="OpenChangePasswordForm"><Icon Type="key" Theme="outline"></Icon> Đổi mật khẩu</MenuItem>
+                        <MenuItem Key="dang-xuat" RouterLink="/dang-xuat" RouterMatch="NavLinkMatch.All"><Icon Type="logout" Theme="outline"></Icon> Đăng xuất</MenuItem>
+                    </ChildContent>
+                    <TitleTemplate>
+                        <Icon Type="user" Theme="outline"></Icon> @(sessionData?.User?.FullName)
+                    </TitleTemplate>
+                </SubMenu>
+            </Menu>
+        </Header>
+        <Content Class="site-layout" Style="padding:0 20px; margin-top: 64px; ">
+            @Body
+        </Content>
+        <Drawer Closable="true" MaskClosable="false" Width="720" Visible="changePasswordVisible" Title='($"Thay đổi mật khẩu")' OnClose="CloseChangePassword">
+            <Template>
+                <InputForm ItemType="ChangePasswordModel" Value="changePasswordModel" ValueChanged="OnPasswordChangedAsync" CancelChanged="CloseChangePassword"></InputForm>
+            </Template>
+        </Drawer>
+        <Drawer Closable="true" MaskClosable="false" Width="720" Visible="DetailVisible" Title='("Thông tin tài khoản")' OnClose="CloseDetail">
+            <Template>
+                <Course.Web.Client.Pages.TaiKhoan.AppUserDetail @ref="appUserDetail" Cancel="CloseDetail" ValueChanged="@SaveDetailAsync"></Course.Web.Client.Pages.TaiKhoan.AppUserDetail>
+            </Template>
+        </Drawer>
+        @*<Footer Style="text-align: center;">Ant Design ©2018 Created by Ant UED</Footer>*@
+    </Layout>
+</CascadingValue>
+@code
+{
+    [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; }
+    [CascadingParameter] Error Error { get; set; }
+    SessionData sessionData = new SessionData();
+    ChangePasswordModel changePasswordModel;
+    bool changePasswordVisible = false;
+    bool DetailVisible { get; set; }
+    Pages.TaiKhoan.AppUserDetail appUserDetail;
+    string uri;
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            uri = NavigationManager.BaseUri + "dang-nhap";
+            changePasswordModel = new ChangePasswordModel();
+            var user = (await authenticationStateTask).User;
+            if (user == null || !user.Identity.IsAuthenticated)
+            {
+                NavigationManager.NavigateTo(uri);
+            }
+            await LoadUserInfoAsync(user.Identity.Name);
+            var claims = user?.Claims?.ToList();
+
+            await base.OnInitializedAsync();
+        }
+        catch (Exception ex)
+        {
+            Error.ProcessError(ex);
+        }
+    }
+
+    async Task LoadUserInfoAsync(string userName)
+    {
+        sessionData.User = await UserService.GetByUserNameAsync(userName: userName);
+        if (sessionData.User == null || !sessionData.User.IsActive)
+        {
+            NavigationManager.NavigateTo(uri);
+        }
+    }
+
+    void OpenChangePasswordForm()
+    {
+        changePasswordModel = new() { UserName = sessionData.User.UserName, Id = sessionData.User.Id };
+        changePasswordVisible = true;
+    }
+
+    async Task OnPasswordChangedAsync(ChangePasswordModel model)
+    {
+        changePasswordVisible = false;
+        try
+        {
+            var result = await UserService.ChangePasswordAsync(model.Id, model.OldPassword, model.Password);
+            if (result.State)
+            {
+                CloseChangePassword();
+                Notice.NotiSuccess(AlertResource.ChangePasswordSuccessful);
+            }
+            else
+            {
+                Notice.NotiError(AlertResource.ChangePasswordFailed);
+            }
+        }
+        catch (Exception ex)
+        {
+            Error.ProcessError(ex);
+        }
+
+
+    }
+
+    void CloseChangePassword()
+    {
+        changePasswordVisible = false;
+    }
+
+    void OpenDetail()
+    {
+        try
+        {
+            appUserDetail.LoadEditModel(sessionData.User);
+            appUserDetail.DisableField();
+            DetailVisible = true;
+        }
+        catch (Exception ex)
+        {
+            Error.ProcessError(ex);
+        }
+    }
+
+    async Task SaveDetailAsync(AppUserEditModel model)
+    {
+        try
+        {
+            if (model.Id.IsNullOrEmpty())
+            {
+                Notice.NotiWarning("Dữ liệu không hợp lệ");
+                return;
+            }
+            var updateModel = Mapper.Map<AppUserData>(model);
+            var result = await UserService.UpdateAsync(updateModel);
+            if (result.State)
+            {
+                CloseDetail();
+                Notice.NotiSuccess(AlertResource.UpdateSuccessful);
+                await LoadUserInfoAsync(model.UserName);
+            }
+            else
+            {
+                Notice.NotiError(AlertResource.InvalidData);
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Error.ProcessError(ex);
+        }
+    }
+
+    void CloseDetail()
+    {
+        try
+        {
+            DetailVisible = false;
+        }
+        catch (Exception ex)
+        {
+            Error.ProcessError(ex);
+        }
+    }
+
+}

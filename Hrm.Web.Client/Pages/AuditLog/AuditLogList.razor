@@ -1,0 +1,100 @@
+﻿@page "/nhat-ky-he-thong"
+
+@if (PermissionClaim.AUDITLOG_VIEW)
+{
+<PageHeader Class="site-page-header" Title="Lịch sử thay đổi hệ thống">
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Hệ thống</BreadcrumbItem>
+            <BreadcrumbItem>Nhật ký hệ thống</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
+
+    <div class="site-content">
+        <EditForm Model="AuditLogFilterEditModel" OnValidSubmit="SearchAsync" Context="context">
+            <Row Gutter="8">
+                <AntDesign.Col Span="6">
+                    <LabelFor For="() => AuditLogFilterEditModel.Username"></LabelFor>
+                    <Input @bind-Value="AuditLogFilterEditModel.Username" />
+                </AntDesign.Col>
+                <AntDesign.Col Span="6">
+                    <LabelFor For="() => AuditLogFilterEditModel.TableName"></LabelFor>
+                    <Input @bind-Value="AuditLogFilterEditModel.TableName" />
+                </AntDesign.Col>
+                <AntDesign.Col Span="6">
+                    <LabelFor For="() => AuditLogFilterEditModel.Title"></LabelFor>
+                    <Input @bind-Value="AuditLogFilterEditModel.Title" />
+                </AntDesign.Col>
+                <AntDesign.Col Span="6">
+                    <LabelFor For="() => AuditLogFilterEditModel.Action"></LabelFor>
+                    <Select DataSource="AuditLogFilterEditModel.DataSource[AuditLogFilterEditModel.Property.Name(c => c.Action)].Select(c => (SelectItem)c.Value)"
+                            @bind-Value="AuditLogFilterEditModel.Action"
+                            ValueName="@nameof(SelectItem.Value)"
+                            LabelName="@nameof(SelectItem.Text)"
+                            Placeholder="Chọn"
+                            AllowClear>
+                    </Select>
+                </AntDesign.Col>
+                <AntDesign.Col Span="6">
+                    <LabelFor FieldIdentifier="context.Field(AuditLogFilterEditModel.Property.Name(c => c.StartDate))"></LabelFor>
+                    <RangePicker TValue="DateTime?[]" Value="@(new DateTime?[] { AuditLogFilterEditModel.StartDate, AuditLogFilterEditModel.EndDate })" 
+                                 DisabledDate="date => date > DateTime.Now" 
+                                 OnChange="e => AuditLogFilterEditModel.SetDate(e.Dates)" 
+                                 OnClearClick="e => AuditLogFilterEditModel.SetDate(new DateTime?[] { null, null })"
+                                 ShowToday="true" Placeholder="@(new string[] { "Từ ngày", "Đến ngày" })"/>
+                </AntDesign.Col>
+            </Row>
+            <Row Gutter="8">
+                <AntDesign.Col Span="24">
+                    <Space Size=@("small")>
+                        <SpaceItem>
+                            <Button Type="@ButtonType.Primary" Icon="search" HtmlType="submit">Tìm kiếm</Button>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Button Icon="reset" HtmlType="button" @onclick="CLearFilterAsync">Xóa hết</Button>
+                        </SpaceItem>
+                    </Space>
+                </AntDesign.Col>
+            </Row>
+        </EditForm>
+
+        <Table TItem="AuditLogViewModel" DataSource="@AuditLogViewModels" Class="table-striped" ScrollY="550"
+               Total="AuditLogFilterEditModel.Page.Total"
+               Loading="loading"
+               PageIndex="AuditLogFilterEditModel.Page.PageIndex"
+               PageSize="AuditLogFilterEditModel.Page.PageSize"
+               OnPageIndexChange="PageIndexChangeAsync"
+               OnPageSizeChange="PageSizeChangeAsync">
+            <Column @bind-Field="@context.Stt" Width="100"></Column>
+            <Column @bind-Field="@context.Action"></Column>
+            <Column @bind-Field="@context.Username"></Column>
+            <Column @bind-Field="@context.TableName"></Column>
+            <Column @bind-Field="@context.Timestamp">
+                <Template>
+                    @context.Timestamp.ToString("dd/MM/yyyy HH:mm:ss")
+                </Template>
+            </Column>
+            <Column @bind-Field="@context.Title" Ellipsis="true"></Column>
+            <ActionColumn Title="Thao tác" Class="action-column">
+                <Space Size=@("small")>
+                    <SpaceItem>
+                        <Button OnClick="() => OpenDetail(context)">Chi tiết</Button>
+                    </SpaceItem>
+                </Space>
+            </ActionColumn>
+        </Table>
+    </div>
+
+    <Drawer Closable="true" MaskClosable="true" Width="1000" Visible="DetailVisible" Title='("Thông tin chi tiết thay đổi")' OnClose="CloseDetail">
+        <Template>
+            <Table TItem="AuditLogDetailViewModel" DataSource="auditLogDetailViewModels" Class="table-striped" HidePagination="true">
+                <Column @bind-Field="@context.Stt" Width="100"></Column>
+                <Column @bind-Field="@context.FieldName" Ellipsis="true"></Column>
+                <Column @bind-Field="@context.OldValue" Ellipsis="true"></Column>
+                <Column @bind-Field="@context.NewValue" Ellipsis="true"></Column>
+            </Table>
+        </Template>
+    </Drawer>
+}

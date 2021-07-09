@@ -1,0 +1,198 @@
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+a, .btn-link {
+    color: #0366d6;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.content {
+    padding-top: 1.1rem;
+}
+
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+#components-layout-demo-fixed .logo {
+    width: 120px;
+    height: 31px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px 24px 16px 0;
+    float: left;
+}
+
+.site-layout .site-layout-background, .site-content {
+    background: #fff;
+    padding: 0px 10px;
+    margin-top: 10px;
+}
+
+.ant-layout-header {
+    height: 50px;
+    line-height: 50px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 10px;
+    font-weight: 600;
+}
+
+.ant-menu-item {
+    padding: 0px 10px !important;
+}
+
+    .ant-menu-item > span, .ant-menu-submenu-title {
+        display: flex;
+        align-items: center;
+    }
+
+        .ant-menu-item .anticon, .ant-menu-submenu-title .anticon {
+            font-size: 20px;
+        }
+
+.action-column {
+    text-align: end !important;
+}
+
+.ant-table tfoot > tr > td, .ant-table tfoot > tr > th, .ant-table-tbody > tr > td, .ant-table-thead > tr > th {
+    padding: 5px;
+}
+
+/*.ant-btn, .ant-pagination-item-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}*/
+
+.avatar-uploader > .ant-upload {
+    width: 128px;
+    height: 128px;
+}
+
+.ant-drawer-title {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.ant-collapse-header {
+    font-weight: 600;
+    font-size: 16px;
+    font-size: 16px;
+    padding: 10px 15px 0 15px;
+}
+
+.ant-collapse-icon-position-right .ant-collapse-header {
+    display: flex;
+    cursor: pointer;
+    border-bottom: 1px solid #dcdcdc;
+    padding-bottom: 8px;
+    justify-content: space-between;
+}
+
+    .ant-collapse-icon-position-right .ant-collapse-header .anticon {
+        order: 2;
+        margin-left: 5px;
+        transform: translateY(4px);
+    }
+
+.ant-collapse {
+    margin-bottom: 20px;
+    border: 1px solid #d9d9d9 !important;
+}
+
+.ant-list-item:hover {
+    background: #f8f8f8;
+}
+
+.ant-btn.ant-btn-primary {
+}
+
+.ant-btn .anticon {
+    transform: translateY(-2px);
+    margin-right: 5px;
+}
+
+.ant-collapse-content {
+    border: 0;
+}
+
+    .ant-collapse-content > .ant-collapse-content-box {
+        padding-top: 0;
+    }
+
+.ant-list-bordered .ant-list-item {
+    padding-left: 0;
+}
+
+.ant-list {
+    border: 0;
+}
+
+.ant-col:first-child .ant-collapse-item {
+    border-right: 1px solid #dcdcdc;
+}
+
+.ant-drawer-header {
+    border: 0;
+    padding-bottom: 0;
+    padding-top: 20px;
+}
+
+.ant-row {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.ant-table-thead > tr > th {
+    font-weight: 600;
+}
+
+.ant-page-header-heading-title{
+    line-height: 26px;
+}
+
+.ant-page-header{
+    padding: 5px 24px;
+
+}
+
+.ant-page-header-footer{
+    margin-top: 5px;
+    padding-bottom: 5px;
+}

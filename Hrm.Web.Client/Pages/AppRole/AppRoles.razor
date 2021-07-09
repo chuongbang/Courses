@@ -1,0 +1,78 @@
+﻿@page "/nhom-tai-khoan"
+
+@if (PermissionClaim?.ROLE_VIEW == true)
+{
+<PageHeader Class="site-page-header" Title="Danh sách nhóm tài khoản">
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Hệ thống</BreadcrumbItem>
+            <BreadcrumbItem>Nhóm tài khoản</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
+
+    <div class="site-content">
+        <Row Wrap="false" Style="padding: 10px 0px">
+            <AntDesign.Col Span="6">
+                <Search Placeholder="Tên nhóm" OnChange="e => SearchAsync(e)" EnterButton="true" @bind-Value="@Search" />
+            </AntDesign.Col>
+            <AntDesign.Col Flex=@("auto")>
+                <Row Justify="end">
+                    @if (PermissionClaim?.ROLE_ADD == true)
+                    {
+                        <Button Icon="plus" OnClick="Add">Thêm mới</Button>
+                    }
+                </Row>
+            </AntDesign.Col>
+        </Row>
+        <Table TItem="AppRoleViewModel" DataSource="@AppRoleViewModels" Class="table-striped"
+               Total="Page.Total"
+               Loading="loading"
+               PageIndex="Page.PageIndex"
+               PageSize="Page.PageSize"
+               OnPageIndexChange="PageIndexChangeAsync">
+            <Column @bind-Field="@context.Stt"></Column>
+            <Column @bind-Field="@context.Name"></Column>
+            <Column @bind-Field="@context.Description"></Column>
+            <ActionColumn Title="Thao tác" Class="action-column">
+                <Space Size=@("small")>
+                    <SpaceItem>
+                        <Button OnClick="() => OpenDetail(context)">Thông tin</Button>
+                    </SpaceItem>
+                    <SpaceItem>
+                        @if (PermissionClaim?.ROLE_SETCLAIM == true)
+                        {
+                            <Button OnClick="() => OpenSetClaimAsync(context)">Cài đặt quyền</Button>
+                        }
+                    </SpaceItem>
+                    <SpaceItem>
+                        @if (PermissionClaim?.ROLE_DELETE == true)
+                        {
+                            <Popconfirm Placement="@PlacementType.LeftBottom" Title="Bạn có chắc chắn muốn xóa dữ liệu này?"
+                                        OnConfirm="() => DeleteAsync(context)"
+                                        OkText="Đồng ý"
+                                        CancelText="Hủy">
+                                <Button>Xóa</Button>
+                            </Popconfirm>
+                        }
+                    </SpaceItem>
+                </Space>
+            </ActionColumn>
+        </Table>
+    </div>
+
+    <Drawer Closable="true" MaskClosable="false" Width="720" Visible="DetailVisible" Title='("Thông tin nhóm tài khoản")' OnClose="CloseDetail">
+        <Template style="height:90%">
+            <AppRoleDetail @ref="appRoleDetail" Cancel="CloseDetail" ValueChanged="@SaveDetailAsync"></AppRoleDetail>
+        </Template>
+    </Drawer>
+    @if (PermissionClaim?.ROLE_SETCLAIM == true)
+    {
+        <Drawer Closable="true" MaskClosable="false" Width="1000" Visible="setClaimVisible" Title='($"Cài đặt quyền cho nhóm tài khoản {setClaimComponent?.Name}")' OnClose="CloseSetClaim">
+            <Template>
+                <SetClaim @ref="setClaimComponent" OnCancel="CloseSetClaim" OnCreateSuccess="ClaimChanged"></SetClaim>
+            </Template>
+        </Drawer>
+    }
+}

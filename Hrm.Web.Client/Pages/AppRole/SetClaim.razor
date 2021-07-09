@@ -1,0 +1,45 @@
+﻿@if (ClaimTemplates != null && claimViewModels != null)
+{
+    <div>
+        <Collapse ExpandIconPosition="@CollapseExpandIconPosition.Right" DefaultActiveKey="defaultActiveKeyGroup" Bordered="true">
+            <Row>
+                @foreach (var group in claimViewModels)
+                {
+                    <AntDesign.Col Span="12">
+                        <Panel Header="@group.Key" Key="@group.Key">
+                            <AntList DataSource="@group">
+                                <ChildContent Context="item">
+                                    <ListItem>
+                                        <Checkbox @bind-Value="item.Checked" Disabled="IsAdmin()">
+                                            @item.Name
+                                        </Checkbox>
+                                    </ListItem>
+                                </ChildContent>
+                            </AntList>
+                        </Panel>
+                    </AntDesign.Col>
+                }
+            </Row>
+        </Collapse>
+    </div>
+
+    <div style="display:flex;">
+        <Space Size=@("small")>
+            @if (!IsAdmin())
+            {
+                <SpaceItem>
+                    <Button Type="@ButtonType.Primary" Icon="save" HtmlType="button" @onclick="HandleAddRoleValidSubmitAsync">Lưu</Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button Icon="cancel" HtmlType="button" @onclick="() => OnCancel.InvokeAsync()">Hủy</Button>
+                </SpaceItem>
+            }
+            else
+            {
+                <SpaceItem>
+                    <Button Icon="cancel" HtmlType="button" @onclick="() => OnCancel.InvokeAsync()">Hủy</Button>
+                </SpaceItem>
+            }
+        </Space>
+    </div>
+}

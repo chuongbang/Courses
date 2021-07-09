@@ -1,0 +1,88 @@
+﻿@page "/khoa-hoc"
+
+@if (_displayGrid == LoaiHienThiEnum.Grid)
+{
+    <div class="box">
+        <div class="box-body">
+
+            @*<h5>
+            selections:
+            @if (selectedRows != null)
+            {
+                @foreach (var selected in selectedRows)
+                {
+                    <Tag @key="selected" Closable OnClose="e=>RemoveSelection(selected.Id)">@selected.TenKhoaHoc</Tag>
+                }
+                <Button Danger Size="small" OnClick="@(e => { table.SetSelection(null); })">Bỏ chọn</Button>
+            }
+        </h5>*@
+
+            <Table @ref="table" TItem="CoursesViewModel" DataSource="@ListViewCourses" @bind-SelectedRows="selectedRows"
+                   Total="Page.Total"
+                   Loading="loading"
+                   PageIndex="Page.PageIndex"
+                   PageSize="Page.PageSize"
+                   OnPageIndexChange="PageIndexChangeAsync">
+
+                <Selection Key="@context.Id" Type="@selectionType" Disabled="@(context.Id=="Disabled User")" />
+                <Column @bind-Field="@context.Stt" />
+                <Column @bind-Field="@context.TenKhoaHoc">
+                    <a>@context.TenKhoaHoc</a>
+                </Column>
+                <Column @bind-Field="@context.ThoiLuong" />
+                <Column @bind-Field="@context.TuNgay" />
+                <Column @bind-Field="@context.DenNgay" />
+            </Table>
+
+
+            <Tabs DefaultActiveKey="2">
+                <TabPane Key="1">
+                    <Tab>
+                        <span><Icon Type="android" />Tab 1</span>
+                    </Tab>
+                    <ChildContent>Tab 1</ChildContent>
+                </TabPane>
+                <TabPane Key="2">
+                    <Tab>
+                        <span><Icon Type="apple" />Tab 2</span>
+                    </Tab>
+                    <ChildContent>Tab 2</ChildContent>
+                </TabPane>
+            </Tabs>
+
+        </div>
+    </div>
+
+
+    <div class="box">
+        <div class="box-body">
+            @*<div class="row">
+                    <div class="col-sm-4 col-xs-4 text-left">
+                        <button class="btn btn-danger" @onclick="DeleteSelectedCheck">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                            Xóa chọn
+                        </button>
+                        <button class="btn btn-danger" @onclick="@(() => deleteAllConfirm.Show(new DeleteEventArgs()))">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                            Xóa tất cả
+                        </button>
+                    </div>
+                    <div class="col-sm-8 col-xs-8 text-right">
+                        <button class="btn btn-primary" @onclick="SaveAllAsync">
+                            <i class="fa fa-save" aria-hidden="true"></i>
+                            Lưu thủ tục
+                        </button>
+
+                        <button class="btn btn-primary" @onclick="ShowSaoChepFormAsync">
+                            <i class="fa fa-files-o" aria-hidden="true"></i>
+                            Sao chép
+                        </button>
+                        <button class="btn btn-primary" @onclick="Preview">
+                            <i class="fa fa-snowflake-o" aria-hidden="true"></i>
+                            Xem trước
+                        </button>
+                    </div>
+                </div>*@
+        </div>
+    </div>
+}

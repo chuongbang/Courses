@@ -1,0 +1,204 @@
+﻿@typeparam ItemType
+@using Course.Core.Data
+
+@if (Value != null)
+{
+    <div class="box wow fadeIn" data-wow-duration="0.5s">
+        <div class="box-body">
+            <EditForm Model="Value" OnValidSubmit="OnvalidSubmit" OnInvalidSubmit="OnInValidSubmit">
+                <DataAnnotationsValidator />
+                <InputWatcher @ref="_inputWatcher"></InputWatcher>
+                <div class="group-input-box">
+                    <div class="group-input-box-content">
+                        @{
+                            var properties = InputFields;
+                            @foreach (var property in properties)
+                            {
+                                var att = property.GetCustomAttributes(false);
+
+                                var nameAttribute = (DisplayAttribute)att.FirstOrDefault(c => c is DisplayAttribute);
+                                var value = property.GetValue(Value);
+
+                                Dictionary<string, object> additionalAttributes = new Dictionary<string, object>();
+                                if (ReadOnly || DisableInputFields.Contains(property.Name))
+                                {
+                                    additionalAttributes.Add("disabled", true);
+                                }
+
+                                if (att.Any(c => c is FieldAttribute && ((FieldAttribute)c).Type == FieldType.File))
+                                {
+                                    if (loadings.ContainsKey(property.Name))
+                                    {
+                                        loadings.Add(property.Name, false);
+                                    }
+                                    var allowType = (FileAttribute)att.FirstOrDefault(c => c is FileAttribute);
+                                    <Upload Action="@UploadApiPath"
+                                            Name="@property.Name"
+                                            Class="avatar-uploader"
+                                            ListType="picture-card"
+                                            ShowUploadList="false"
+                                            BeforeUpload="e => BeforeUpload(e, allowType)"
+                                            OnChange="e => UploadSingleFileChange(e, property)">
+                                        @if (!string.IsNullOrWhiteSpace(imageUrl))
+                                        {
+                                            <img src="@value" alt="avatar" style="width: 100%" />
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                <Icon Spin="loadings[property.Name]" Type="@(loadings[property.Name] ? "Loading":"plus")"></Icon>
+                                                <div className="ant-upload-text">Upload</div>
+                                            </div>
+                                        }
+                                    </Upload>
+                                }
+                                else if (att.Any(c => c is FieldAttribute && ((FieldAttribute)c).Type == FieldType.Combobox))
+                                {
+                                    DataSource[property.Name].TryGetValue((value ?? "").ToString(), out var selectItem);
+                                    <div class="form-group">
+                                        @if (nameAttribute != null)
+                                        {
+                                            <LabelFor FieldIdentifier="context.Field(property.Name)"></LabelFor>
+                                        }
+                                        <AutoComplete TOption="KeyValuePair<string, ISelectItem>"
+                                                      Value="@selectItem?.GetDisplay()"
+                                                      Options="DataSource[property.Name]"
+                                                      OptionFormat="e => e.Value.Value.GetDisplay()"
+                                                      OnSelectionChange="(e => FieldChanged(property, ((KeyValuePair<string, ISelectItem>
+                                            )e.Value).Key))"
+                                                      Placeholder="Nhập để chọn"
+                                                      AllowFilter="true"
+                                                      @attributes="@additionalAttributes" />
+                                    </div>
+                                }
+                                else if (att.Any(c => c is FieldAttribute && ((FieldAttribute)c).Type == FieldType.ComboboxMulti))
+                                {
+                                    <div class="form-group">
+                                        @if (nameAttribute != null)
+                                        {
+                                            <LabelFor FieldIdentifier="context.Field(property.Name)"></LabelFor>
+                                        }
+                                        <Select Mode="multiple"
+                                                Placeholder="Select options"
+                                                Values="(IEnumerable<string>)value"
+                                                TItemValue="string"
+                                                TItem="string"
+                                                OnSelectedItemsChanged="(e => FieldChanged(property, e))"
+                                                Style="width: 100%; margin-bottom: 8px;"
+                                                EnableSearch
+                                                AllowClear
+                                                @attributes="@additionalAttributes">
+                                            <SelectOptions>
+                                                @foreach (var item in DataSource[property.Name].Values)
+                                                {
+                                                    <SelectOption TItemValue="string" TItem="string" Value=@item.GetKey() Label=@item.GetDisplay() />
+                                                }
+                                            </SelectOptions>
+                                        </Select>
+                                    </div>
+                                }
+                                else if (att.Any(c => c is FieldAttribute && ((FieldAttribute)c).Type == FieldType.Password))
+                                {
+                                    <div class="form-group">
+
+                                        @if (nameAttribute != null)
+                                        {
+                                            <LabelFor FieldIdentifier="context.Field(property.Name)"></LabelFor>
+                                        }
+                                        <InputPassword autocomplete="new-password"
+                                                       Value="@value?.ToString()"
+                                                       ValueChanged="(e => FieldChanged(property, e))"
+                                                       @attributes="@additionalAttributes" />
+                                        <CustomValidationMessage Field="context.Field(property.Name)" TValue="object"></CustomValidationMessage>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-group">
+                                        @if (nameAttribute != null)
+                                        {
+                                            <LabelFor FieldIdentifier="context.Field(property.Name)"></LabelFor>
+                                        }
+                                        @if (property.PropertyType == typeof(string))
+                                        {
+                                            <Input TValue="string"
+                                                   Value="@value?.ToString()"
+                                                   ValueChanged="(e => FieldChanged(property, e))"
+                                                   @attributes="@additionalAttributes" />
+                                        }
+                                        else if (property.PropertyType == typeof(bool))
+                                        {
+                                            <Checkbox Checked="(bool)value" CheckedChanged="e => FieldChanged(property, e)" Style="margin-left:10px"
+                                                      @attributes="@additionalAttributes"></Checkbox>
+                                        }
+                                        else if (property.PropertyType == typeof(DateTime?))
+                                        {
+                                            <DatePicker TValue="DateTime?" DefaultValue="new DateTime(1970, 1, 1)"
+                                                        Value="(DateTime?)value ?? new DateTime(1970, 1, 1)" Format="dd/MM/yyyy" Style="display:block"
+                                                        ValueChanged="e => FieldChanged(property, e)" @attributes="@additionalAttributes" />
+                                        }
+                                        else if (property.PropertyType == typeof(decimal?))
+                                        {
+                                            <InputText id="@(property.Name + Value.GetHashCode())"
+                                                       Value="@value?.ToString()"
+                                                       ValueExpression="@(() => property.Name)"
+                                                       ValueChanged="(e => FieldChanged(property, e))" @attributes="@additionalAttributes" />
+                                        }
+                                        else if (property.PropertyType == typeof(DateTime))
+                                        {
+                                            <DatePicker TValue="DateTime" DefaultValue="new DateTime(1970, 1, 1)"
+                                                        Value="(DateTime)value" Format="dd/MM/yyyy" Style="display:block"
+                                                        ValueChanged="e => FieldChanged(property, e)" @attributes="@additionalAttributes" />
+                                        }
+                                        else if (property.PropertyType == typeof(int))
+                                        {
+                                            <AntDesign.InputNumber TValue="int" Value="(int)value" Style="display:block"
+                                                                   ValueChanged="e => FieldChanged(property, e)" @attributes="@additionalAttributes" />
+                                        }
+                                        else if (property.PropertyType == typeof(int?))
+                                        {
+                                            <AntDesign.InputNumber TValue="int?" Value="(int?)value" Style="display:block"
+                                                                   ValueChanged="e => FieldChanged(property, e)" @attributes="@additionalAttributes" />
+                                        }
+
+                                        <CustomValidationMessage Field="context.Field(property.Name)" TValue="object"></CustomValidationMessage>
+                                    </div>
+                                }
+                            }
+                        }
+
+                    </div>
+                </div>
+                <br />
+                @if (ShowActionBar)
+                {
+                    <div style="display:flex">
+                        <Space Size=@("small")>
+                            <SpaceItem>
+                                @if (!ReadOnly)
+                                {
+                                    <Button Type="@ButtonType.Primary" Icon="save" HtmlType="submit">@NameLabelSubmit</Button>
+                                }
+                            </SpaceItem>
+                            <SpaceItem>
+                                <Button Icon="cancel" HtmlType="button" @onclick="() => CancelChanged.InvokeAsync()">
+                                    @if (ReadOnly)
+                                    {
+                                        @("Đóng")
+                                    }
+                                    else
+                                    {
+                                        @("Hủy")
+                                    }
+                                </Button>
+                            </SpaceItem>
+                        </Space>
+                    </div>
+                }
+                <br />
+            </EditForm>
+        </div>
+    </div>
+}
+
+

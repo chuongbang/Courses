@@ -1,0 +1,112 @@
+﻿@page "/"
+@namespace Course.Web.Client.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, NWebsec.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Authentication
+@using Course.Web.Share.Ultils
+@{
+    Layout = null;
+}
+@{
+    HttpContext.Request.Cookies.TryGetValue(GlobalVariants.ACCESSTOKEN, out var accessToken);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hệ thống quản trị y tế mới</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+    @*<link href="Course.Web.Client.styles.css" rel="stylesheet" />*@
+
+
+    <style>
+        .my-reconnect-modal > div {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            overflow: hidden;
+            background-color: #fff;
+            opacity: 0.8;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .components-reconnect-hide > div {
+            display: none;
+        }
+
+        .components-reconnect-show > div {
+            display: none;
+        }
+
+        .components-reconnect-show > .show {
+            display: block;
+        }
+
+        .components-reconnect-failed > div {
+            display: none;
+        }
+
+        .components-reconnect-failed > .failed {
+            display: block;
+        }
+
+        .components-reconnect-rejected > div {
+            display: none;
+        }
+
+        .components-reconnect-rejected > .rejected {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <component type="typeof(App)" param-AccessToken="accessToken" render-mode="ServerPrerendered" />
+
+    <div id="components-reconnect-modal" class="my-reconnect-modal components-reconnect-hide">
+        <div class="show">
+            <p>
+                Mất kết nối. Đang thử kết nối lại
+            </p>
+        </div>
+        <div class="failed">
+            <p>
+                Không thể kết nối đến hệ thống.<a href="" class="reload">Tải lại</a>
+            </p>
+        </div>
+        <div class="rejected">
+            <p>
+                Kết nối thất bại.
+            </p>
+        </div>
+    </div>
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            Đã xảy ra lỗi. Ứng dụng sẽ không hoạt động cho đến khi được tải lại.
+        </environment>
+        <environment include="Development">
+            Đã xảy ra lỗi. Xem chi tiết ở debug của trình duyệt.
+        </environment>
+        <a href="" class="reload">Tải lại</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+    <script src="_framework/blazor.server.js" autostart="false"></script>
+    <script nws-csp-add-nonce="true">
+        Blazor.start({
+            reconnectionOptions: {
+                maxRetries: 5,
+                retryIntervalMilliseconds: 5000
+            }
+        });
+    </script>
+</body>
+</html>

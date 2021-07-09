@@ -1,0 +1,147 @@
+﻿@page "/tai-khoan"
+@using Course.Web.Client.Models;
+
+@if (PermissionClaim?.ACCOUNT_VIEW == true)
+{
+    <PageHeader Class="site-page-header" Title="Danh sách tài khoản">
+        <PageHeaderExtra>
+            <Breadcrumb>
+                <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+                <BreadcrumbItem>Hệ thống</BreadcrumbItem>
+                <BreadcrumbItem>Danh sách tài khoản</BreadcrumbItem>
+            </Breadcrumb>
+        </PageHeaderExtra>
+    </PageHeader>
+
+
+    <div class="site-content">
+        <Row Wrap="false" Style="padding: 10px 0px">
+            <AntDesign.Col Span="6">
+                <Search Placeholder="Tên tài khoản" OnChange="e => SearchAsync(e)" EnterButton="true" @bind-Value="@Search" />
+            </AntDesign.Col>
+            <AntDesign.Col Flex=@("auto")>
+                <Row Justify="end">
+                    @if (PermissionClaim?.ACCOUNT_ADD == true)
+                    {
+                        <Button Icon="plus" OnClick="Add">Thêm mới</Button>
+                    }
+                </Row>
+            </AntDesign.Col>
+        </Row>
+        <Table TItem="AppUserViewModel" DataSource="@AppUserViewModels" Class="table-striped"
+               Total="Page.Total"
+               Loading="loading"
+               PageIndex="Page.PageIndex"
+               PageSize="Page.PageSize"
+               OnPageIndexChange="PageIndexChangeAsync">
+            <Column @bind-Field="@context.Stt"></Column>
+            <Column @bind-Field="@context.UserName"></Column>
+            <Column @bind-Field="@context.FullName"></Column>
+            <Column @bind-Field="@context.JobTitle"></Column>
+            <Column @bind-Field="@context.IsActive">
+                <Template>
+                    @if (context.IsActive)
+                        {
+                        <span class="label label-success">Hoạt động</span>
+                        }
+                        else
+                        {
+                        <span class="label label-danger">Ngừng</span>
+                        }
+                </Template>
+            </Column>
+            <ActionColumn Title="Thao tác" Class="action-column">
+                <Space Size=@("small")>
+                    <SpaceItem>
+                        <Button OnClick="() => OpenDetail(context)">Thông tin</Button>
+                    </SpaceItem>
+                    <SpaceItem>
+                        @if (PermissionClaim?.ACCOUNT_SETROLE == true)
+                        {
+                            <Button OnClick="() => OpenSetRoleAsync(context)">Gán nhóm tài khoản</Button>
+                        }
+                    </SpaceItem>
+                    <SpaceItem>
+                        @if (PermissionClaim?.ACCOUNT_SETCLAIM == true)
+                        {
+                            <Button OnClick="() => OpenSetClaimAsync(context)">Phân quyền</Button>
+                        }
+                    </SpaceItem>
+                    <SpaceItem>
+                        @if (PermissionClaim?.ACCOUNT_CHANGEPASSWORD == true)
+                        {
+                            <Button OnClick="() => OpenChangePasswordForm(context)">Đổi mật khẩu</Button>
+                        }
+                    </SpaceItem>
+                    <SpaceItem>
+                        @if (PermissionClaim?.ACCOUNT_DELETE == true)
+                        {
+                            <Popconfirm Placement="@PlacementType.LeftBottom" Title="Bạn có chắc chắn muốn xóa tài khoản này?"
+                                        OnConfirm="() => DeleteAsync(context)"
+                                        OkText="Đồng ý"
+                                        CancelText="Hủy">
+                                <Button>Xóa</Button>
+                            </Popconfirm>
+                        }
+                    </SpaceItem>
+                </Space>
+            </ActionColumn>
+        </Table>
+    </div>
+
+    <Drawer Closable="true" MaskClosable="@(!PermissionClaim.ACCOUNT_EDIT)" Width="720" Visible="DetailVisible"
+            Title='("Thông tin tài khoản")' OnClose="CloseDetail">
+        <Tabs DefaultActiveKey="1">
+            <TabPane Key="1">
+                <Tab>
+                    <span><Icon Type="info"/>Thông tin chung</span>
+                </Tab>
+                <ChildContent>
+                    <Template>
+                        <AppUserDetail @ref="appUserDetail" Cancel="CloseDetail" ValueChanged="@SaveDetailAsync"></AppUserDetail>
+                    </Template>
+                </ChildContent>
+            </TabPane>
+            <TabPane Key="2">
+                <Tab>
+                    <span><Icon Type="book"/>Thông tin khóa học</span>
+                </Tab>
+                <ChildContent>
+                    <CourseTab />
+                </ChildContent>
+            </TabPane>
+        </Tabs>
+    </Drawer>
+    @if (PermissionClaim?.ACCOUNT_CHANGEPASSWORD == true)
+    {
+        <Drawer Closable="true" MaskClosable="false" Width="720" Visible="changePasswordVisible"
+                Title='($"Thay đổi mật khẩu tài khoản - [{resetPasswordModel?.UserName}]")' OnClose="CloseChangePassword">
+            <Template>
+                <InputForm ItemType="ResetPasswordModel" Value="resetPasswordModel" ValueChanged="OnPasswordChangedAsync" CancelChanged="CloseChangePassword"></InputForm>
+            </Template>
+        </Drawer>
+    }
+    @if (PermissionClaim?.ACCOUNT_SETROLE == true)
+    {
+        <Drawer Closable="true" MaskClosable="false" Width="1000" Visible="setRoleVisible"
+                Title='($"Gán nhóm cho tài khoản - [{setRoleComponent?.UserName}]")' OnClose="CloseSetRole">
+            <Template>
+                <SetRole @ref="setRoleComponent" CancelChanged="CloseSetRole" OnCreateSuccess="AppRoleChanged"></SetRole>
+            </Template>
+        </Drawer>
+    }
+    @if (PermissionClaim?.ACCOUNT_SETCLAIM == true)
+    {
+        <Drawer Closable="true" MaskClosable="false" Width="1000" Visible="setClaimVisible"
+                Title='($"Cài đặt quyền cho tài khoản {setClaimComponent?.Name}")' OnClose="CloseSetClaim">
+            <Template>
+                <Course.Web.Client.Pages.AppRole.SetClaim @ref="setClaimComponent"
+                                                          OnCancel="CloseSetClaim"
+                                                          OnCreateSuccess="ClaimChanged"
+                                                          Target="@SetClaimTypeInterface.AppUser">
+
+                </Course.Web.Client.Pages.AppRole.SetClaim>
+            </Template>
+        </Drawer>
+    }
+}

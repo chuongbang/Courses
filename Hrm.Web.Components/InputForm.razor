@@ -64,8 +64,7 @@
                                                       Value="@selectItem?.GetDisplay()"
                                                       Options="DataSource[property.Name]"
                                                       OptionFormat="e => e.Value.Value.GetDisplay()"
-                                                      OnSelectionChange="(e => FieldChanged(property, ((KeyValuePair<string, ISelectItem>
-                                            )e.Value).Key))"
+                                                      OnSelectionChange="(e => FieldChanged(property, ((KeyValuePair<string, ISelectItem>)e.Value).Key))"
                                                       Placeholder="Nhập để chọn"
                                                       AllowFilter="true"
                                                       @attributes="@additionalAttributes" />

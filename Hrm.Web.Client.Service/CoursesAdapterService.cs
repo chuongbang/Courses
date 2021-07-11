@@ -79,10 +79,11 @@ namespace Course.Web.Client.Data
             }
         }
 
-        public async Task<CoursesResult> GetByIdsAsync(List<string> ids, Page page, string keyword)
+        public async Task<CoursesResult> GetByIdsAsync(List<string> ids, Page page = null, string keyword = null)
         {
             try
             {
+                page = page ?? new Page();
                 return await Service.GetByIdsAsync(new CoursesSearch() { Ids = ids, Page = page , Keyword = keyword});
             }
             catch (Exception ex)

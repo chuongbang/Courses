@@ -34,8 +34,14 @@ namespace Course.Web.Data.Repository
                     _query = _query.Where(c => c.TenKhoaHoc.ToLower().Contains(keyword.ToLower()));
                 }
                 total = _query.Count();
-                dt = await _query.Skip(pageIndex * pageSize).Take(pageSize).ToListAsync();
-
+                if (pageIndex != 0)
+                {
+                    dt = await _query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                }
+                else
+                {
+                    dt = await _query.ToListAsync();
+                }
                 tx.Commit();
             }
             catch (Exception ex)

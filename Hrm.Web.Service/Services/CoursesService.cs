@@ -29,7 +29,7 @@ namespace Course.Web.Service.Services
             try
             {
                
-                var data = await _coursesRepository.GetByIdsAsync(cs.Ids, cs.Keyword, cs.Page.PageIndex - 1, cs.Page.PageSize);
+                var data = await _coursesRepository.GetByIdsAsync(cs.Ids, cs.Keyword, cs.Page.PageIndex, cs.Page.PageSize);
 
                 dts = data.Item1?.Select(c => c.As<CoursesData>()).ToList();
                 total = data.Item2;

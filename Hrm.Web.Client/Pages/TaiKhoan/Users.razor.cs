@@ -47,6 +47,9 @@ namespace Course.Web.Client.Pages.TaiKhoan
         ClaimsPrincipal User;
         SetClaim setClaimComponent;
         bool setClaimVisible;
+        CourseTab courseTab;
+        string defaultTab = "1";
+        string activeTab = "1";
 
         protected override async Task OnInitializedAsync()
         {
@@ -128,6 +131,7 @@ namespace Course.Web.Client.Pages.TaiKhoan
                     appUserDetail.DisableField();
                 }
                 DetailVisible = true;
+                activeTab = "1";
             }
             catch (Exception ex)
             {
@@ -154,6 +158,7 @@ namespace Course.Web.Client.Pages.TaiKhoan
             try
             {
                 DetailVisible = false;
+                courseTab = null;
             }
             catch (Exception ex)
             {
@@ -340,6 +345,12 @@ namespace Course.Web.Client.Pages.TaiKhoan
         void ClaimChanged()
         {
             setClaimVisible = false;
+        }
+
+        void TabChanged(string key)
+        {
+            activeTab = key;
+            StateHasChanged();
         }
     }
 }

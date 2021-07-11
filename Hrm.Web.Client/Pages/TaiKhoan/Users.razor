@@ -91,7 +91,7 @@
 
     <Drawer Closable="true" MaskClosable="@(!PermissionClaim.ACCOUNT_EDIT)" Width="720" Visible="DetailVisible"
             Title='("Thông tin tài khoản")' OnClose="CloseDetail">
-        <Tabs DefaultActiveKey="1">
+        <Tabs DefaultActiveKey="@defaultTab" ActiveKey="@activeTab" OnChange="TabChanged">
             <TabPane Key="1">
                 <Tab>
                     <span><Icon Type="info"/>Thông tin chung</span>
@@ -107,7 +107,7 @@
                     <span><Icon Type="book"/>Thông tin khóa học</span>
                 </Tab>
                 <ChildContent>
-                    <CourseTab />
+                    <CourseTab @ref="courseTab" UserId="@appUserDetail.Value.Id" CancelChanged="CloseDetail"/>
                 </ChildContent>
             </TabPane>
         </Tabs>

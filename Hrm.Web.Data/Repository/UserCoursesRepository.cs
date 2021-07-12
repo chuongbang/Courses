@@ -14,9 +14,11 @@ namespace Course.Web.Data.Repository
 {
     public class UserCoursesRepository : Repository<UserCourses>, IUserCoursesRepository
     {
+        IQueryable<Courses> _courseQr;
         public UserCoursesRepository(ISession session)
             : base(session)
         {
+            _courseQr = session.Query<Courses>();
         }
 
 
@@ -26,7 +28,11 @@ namespace Course.Web.Data.Repository
             List<UserCourses> dt = null;
             try
             {
-                dt = await Query.Where(c => c.UserId == id).ToListAsync();
+                var cs = Query.Where(c => c.UserId == id).ToList();
+                var ids = cs.Select(a => a.KhoaHocId);
+                var listActiveById = _courseQr.Where(c => ids.Contains(c.Id) && c.Active).ToList();
+                dt = cs.Where(c => listActiveById.Select(a => a.Id).Contains(c.KhoaHocId)).ToList();
+
                 tx.Commit();
             }
             catch (Exception ex)

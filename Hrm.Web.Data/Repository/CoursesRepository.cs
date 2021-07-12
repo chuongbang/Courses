@@ -51,20 +51,23 @@ namespace Course.Web.Data.Repository
             return (dt, total);
         }
 
+        public async Task<List<Courses>> GetAllActiveAsync()
+        {
+            using var tx = session.BeginTransaction();
+            List<Courses> dt = null;
+            try
+            {
+                dt = await Query.Where(c => c.Active).ToListAsync();
+                tx.Commit();
+            }
+            catch (Exception ex)
+            {
+                tx.Rollback();
+            }
+            return dt;
+        }
 
-        //public async Task<bool> DeleteListAsync(IEnumerable<Courses> dts)
-        //{
-        //    BeginTransaction();
-        //    try
-        //    {
-        //        await DeleteWithListKeyAsync(dts?.Select(c => c.Id), false);
-        //        return await CommitTransactionAsync();
-        //    }
-        //    catch (Exception)
-        //    {
-        //        await RolbackTransactionAsync();
-        //        return false;
-        //    }
-        //}
+
+
     }
 }

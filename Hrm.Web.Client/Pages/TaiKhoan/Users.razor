@@ -94,20 +94,18 @@
         <Tabs DefaultActiveKey="@defaultTab" ActiveKey="@activeTab" OnChange="TabChanged">
             <TabPane Key="1">
                 <Tab>
-                    <span><Icon Type="info"/>Thông tin chung</span>
+                    <span><Icon Type="info" />Thông tin chung</span>
                 </Tab>
                 <ChildContent>
-                    <Template>
-                        <AppUserDetail @ref="appUserDetail" Cancel="CloseDetail" ValueChanged="@SaveDetailAsync"></AppUserDetail>
-                    </Template>
+                    <AppUserDetail @ref="appUserDetail" Cancel="CloseDetail" ValueChanged="@SaveDetailAsync"></AppUserDetail>
                 </ChildContent>
             </TabPane>
             <TabPane Key="2">
                 <Tab>
-                    <span><Icon Type="book"/>Thông tin khóa học</span>
+                    <span><Icon Type="book" />Thông tin khóa học</span>
                 </Tab>
                 <ChildContent>
-                    <CourseTab @ref="courseTab" UserId="@appUserDetail.Value.Id" CancelChanged="CloseDetail"/>
+                    <CourseTab @ref="courseTab" UserId="@appUserDetail.Value.Id" CancelChanged="CloseDetail" />
                 </ChildContent>
             </TabPane>
         </Tabs>

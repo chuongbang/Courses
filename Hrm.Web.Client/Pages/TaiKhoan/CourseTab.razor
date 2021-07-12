@@ -11,7 +11,7 @@
 
                 <AutoComplete TOption="KeyValuePair<string, ISelectItem>"
                               Value="@selectedItem?.GetDisplay()"
-                              Options="DataSource"
+                              Options="DataSourceFull"
                               OptionFormat="e => e.Value.Value.GetDisplay()"
                               OnSelectionChange="((e) => OnSelectionChange(e, sttId))"
                               Placeholder="Nhập để chọn"
@@ -69,7 +69,7 @@
             </SpaceItem>
             <SpaceItem>
                 <Button Icon="cancel" HtmlType="button" @onclick="() => CancelChanged.InvokeAsync()">
-                    @("Đóng")
+                    @("Hủy")
                 </Button>
             </SpaceItem>
         </Space>

@@ -44,18 +44,23 @@ namespace Course.Web.Client.Pages.TaiKhoan
         protected async override Task OnInitializedAsync()
         {
             ListUserCourseView = new List<UserCoursesViewModel>();
+            await LoadUserCoursesDetail();
+        }
+
+
+        public async Task LoadUserCoursesDetail()
+        {
             allKhoaHoc = (await CoursesService.GetAllActiveAsync()).Dts;
 
             var allMap = await UserCoursesService.GetByIdAsync(UserId);
             ListUserCourseView = Mapper.Map<List<UserCoursesViewModel>>(allMap.Dts);
 
-            var dataSoureList = allMap.Dts != null ? allKhoaHoc.Where(c => !allMap.Dts.Select(a => a.KhoaHocId).Contains(c.Id)) : allKhoaHoc;
-            DataSource = allKhoaHoc != null ? dataSoureList.ToDictionary(c => c.Id, v => (ISelectItem)v) : new Dictionary<string, ISelectItem>();
+            //var dataSoureList = allMap.Dts != null ? allKhoaHoc.Where(c => !allMap.Dts.Select(a => a.KhoaHocId).Contains(c.Id)) : allKhoaHoc;
+            //DataSource = allKhoaHoc != null ? dataSoureList.ToDictionary(c => c.Id, v => (ISelectItem)v) : new Dictionary<string, ISelectItem>();
             DataSourceFull = allKhoaHoc != null ? allKhoaHoc.ToDictionary(c => c.Id, v => (ISelectItem)v) : new Dictionary<string, ISelectItem>();
 
             UpdateListView();
         }
-
 
         void AddRow()
         {

@@ -38,6 +38,7 @@ namespace Course.Web.Client.Pages.TaiKhoan
         public string Search { get; set; }
         Page Page { get; set; } = new() { PageIndex = 1, PageSize = 10, Total = 0 };
         bool loading;
+        CourseTab courseTab;
         AppUserData selectAppUserViewModel;
         AppUserDetail appUserDetail;
         ResetPasswordModel resetPasswordModel;
@@ -47,7 +48,6 @@ namespace Course.Web.Client.Pages.TaiKhoan
         ClaimsPrincipal User;
         SetClaim setClaimComponent;
         bool setClaimVisible;
-        CourseTab courseTab;
         string defaultTab = "1";
         string activeTab = "1";
 
@@ -347,10 +347,14 @@ namespace Course.Web.Client.Pages.TaiKhoan
             setClaimVisible = false;
         }
 
-        void TabChanged(string key)
+        async Task TabChanged(string key)
         {
+            var a = appUserDetail.Value;
+            if (key == "2")
+            {
+                courseTab?.LoadUserCoursesDetail();
+            }
             activeTab = key;
-            StateHasChanged();
         }
     }
 }

@@ -15,7 +15,6 @@ namespace Course.Web.Service.Services
     public class CoursesService : ICoursesService
     {
         private readonly ICoursesRepository _coursesRepository;
-        IQueryable<Courses> _query;
         public CoursesService(ICoursesRepository coursesRepository)
         {
             _coursesRepository = coursesRepository;
@@ -45,8 +44,7 @@ namespace Course.Web.Service.Services
             List<CoursesData> dts = null;
             try
             {
-               
-                var data = await _coursesRepository.GetAllAsync();
+                var data = await _coursesRepository.GetAllActiveAsync();
 
                 dts = data?.Select(c => c.As<CoursesData>()).ToList();
             }

@@ -13,5 +13,6 @@ namespace Course.Web.Share.Domain {
         public virtual string ThoiLuong { get; set; }
         public virtual DateTime? TuNgay { get; set; }
         public virtual DateTime? DenNgay { get; set; }
+        public virtual bool Active { get; set; }
     }
 }

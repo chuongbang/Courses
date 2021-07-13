@@ -12,18 +12,18 @@ using Course.Web.Share.Domain;
 
 namespace Course.Web.Data.Repository
 {
-    public class CoursesRepository : Repository<Courses>, ICoursesRepository
+    public class LessonsRepository : Repository<Lessons>, ILessonsRepository
     {
-        public CoursesRepository(ISession session)
+        public LessonsRepository(ISession session)
             : base(session)
         {
         }
 
 
-        public async Task<(List<Courses>, int)> GetByIdsAsync(IEnumerable<string> ids, string keyword, int pageIndex, int pageSize)
+        public async Task<(List<Lessons>, int)> GetByIdsAsync(IEnumerable<string> ids, string keyword, int pageIndex, int pageSize)
         {
             using var tx = session.BeginTransaction();
-            List<Courses> dt = null;
+            List<Lessons> dt = null;
             int total = 0;
             try
             {
@@ -31,7 +31,7 @@ namespace Course.Web.Data.Repository
                 _query = _query.Where(c => ids.Contains(c.Id));
                 if (keyword != null && keyword != string.Empty)
                 {
-                    _query = _query.Where(c => c.TenKhoaHoc.ToLower().Contains(keyword.ToLower()));
+                    _query = _query.Where(c => c.TenBaiHoc.ToLower().Contains(keyword.ToLower()));
                 }
                 total = _query.Count();
                 if (pageIndex != 0)
@@ -51,13 +51,13 @@ namespace Course.Web.Data.Repository
             return (dt, total);
         }
 
-        public async Task<List<Courses>> GetAllActiveAsync()
+        public async Task<List<Lessons>> GetAllActiveAsync()
         {
             using var tx = session.BeginTransaction();
-            List<Courses> dt = null;
+            List<Lessons> dt = null;
             try
             {
-                dt = await Query.Where(c => c.IsActive).ToListAsync();
+                dt = await Query.ToListAsync();
                 tx.Commit();
             }
             catch (Exception ex)

@@ -17,6 +17,7 @@ namespace Course.Web.Share.Map
 			Map(x => x.KhoaHocId).Column("KhoaHocId");
 			Map(x => x.TuNgay).Column("TuNgay");
 			Map(x => x.DenNgay).Column("DenNgay");
+			Map(x => x.IsTrial).Column("IsTrial");
         }
     }
 }

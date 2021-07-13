@@ -19,9 +19,9 @@ using Course.Core.Extentions;
 using Course.Web.Client.Ultils;
 using Course.Web.Share;
 
-namespace Course.Web.Client.Pages.Courses
+namespace Course.Web.Client.Pages.Lessons
 {
-    public partial class Courses : ComponentBase
+    public partial class Lessons : ComponentBase
     {
         [CascadingParameter] Error Error { get; set; }
         [CascadingParameter] Task<AuthenticationState> AuthenticationStateTask { get; set; }
@@ -29,18 +29,17 @@ namespace Course.Web.Client.Pages.Courses
         [Inject] PermissionClaim PermissionClaim { get; set; }
         [Inject] NotificationService Notice { get; set; }
 
-        [Inject] public CoursesAdapterService Service { get; set; }
-        [Inject] public UserCoursesAdapterService UserCourseService { get; set; }
+        [Inject] public LessonsAdapterService Service { get; set; }
 
         protected LoaiHienThiEnum _displayGrid = LoaiHienThiEnum.None;
-        protected List<CoursesViewModel> ListViewCourses;
-        protected List<CoursesData> ListCourses;
-        protected CoursesEditModel EditModel;
+        protected List<LessonsViewModel> ListViewLessons;
+        protected List<LessonsData> ListLessons;
+        protected LessonsEditModel EditModel;
 
         bool DetailVisible { get; set; }
         Page Page { get; set; } = new() { PageIndex = 1, PageSize = 20, Total = 0 };
         ITable table;
-        IEnumerable<CoursesViewModel> selectedRows;
+        IEnumerable<LessonsViewModel> selectedRows;
         string selectionType = "checkbox";
         bool loading;
         ClaimsPrincipal User;
@@ -52,8 +51,8 @@ namespace Course.Web.Client.Pages.Courses
             _displayGrid = LoaiHienThiEnum.Grid;
             User = (await AuthenticationStateTask).User;
             var claims = User?.Claims?.ToList();
-            EditModel = new CoursesEditModel();
-            ListViewCourses = new List<CoursesViewModel>();
+            EditModel = new LessonsEditModel();
+            ListViewLessons = new List<LessonsViewModel>();
             await LoadDataAsync();
 
 
@@ -70,14 +69,14 @@ namespace Course.Web.Client.Pages.Courses
                 {
                     return;
                 }
-                ListCourses = data.Dts;
+                ListLessons = data.Dts;
                 Page.Total = data.Total;
-                ListViewCourses = Mapper.Map<List<CoursesViewModel>>(ListCourses);
+                ListViewLessons = Mapper.Map<List<LessonsViewModel>>(ListLessons);
                 int stt = Page.PageSize * (Page.PageIndex - 1) + 1;
-                ListViewCourses.ForEach(c =>
-                {
-                    c.Stt = stt++;
-                });
+                //ListViewLessons.ForEach(c =>
+                //{
+                //    c.Stt = stt++;
+                //});
             }
             catch (Exception ex)
             {
@@ -89,10 +88,11 @@ namespace Course.Web.Client.Pages.Courses
 
         void AddNew()
         {
-            EditModel = new CoursesEditModel() { IsActive = true, TuNgay = DateTime.Now, DenNgay = DateTime.Now };
+            EditModel = new LessonsEditModel() {  };
             DetailVisible = true;
 
         }
+
 
         async Task PageIndexChangeAsync(PaginationEventArgs e)
         {
@@ -113,13 +113,13 @@ namespace Course.Web.Client.Pages.Courses
             DetailVisible = false;
         }
 
-        async Task SaveCourseAsync(CoursesEditModel model)
+        async Task SaveCourseAsync(LessonsEditModel model)
         {
             try
             {
                 if (model.Id.IsNotNullOrEmpty())
                 {
-                    var updateModel = Mapper.Map<CoursesData>(model);
+                    var updateModel = Mapper.Map<LessonsData>(model);
                     var result = await Service.UpdateAsync(updateModel);
                     if (result.State)
                     {
@@ -134,7 +134,7 @@ namespace Course.Web.Client.Pages.Courses
                 }
                 else
                 {
-                    var createModel = Mapper.Map<CoursesData>(model);
+                    var createModel = Mapper.Map<LessonsData>(model);
                     createModel.Id = ObjectExtentions.GenerateGuid();
                     var result = await Service.AddAsync(createModel);
                     if (result.State)
@@ -176,7 +176,7 @@ namespace Course.Web.Client.Pages.Courses
             {
                 if (selectedRows.IsNotNullOrEmpty() && selectedRows.Any())
                 {
-                    var result = await Service.DeleteListAsync(Mapper.Map<List<CoursesData>>(selectedRows));
+                    var result = await Service.DeleteListAsync(Mapper.Map<List<LessonsData>>(selectedRows));
                     if (result.State)
                     {
                         Notice.NotiSuccess(AlertResource.DeleteSuccessful);
@@ -203,11 +203,11 @@ namespace Course.Web.Client.Pages.Courses
         {
             try
             {
-                var current = ListViewCourses.FirstOrDefault(c => c.Id == id);
+                var current = ListViewLessons.FirstOrDefault(c => c.Id == id);
                 if (current.IsNotNullOrEmpty())
                 {
-                    current.IsActive = check;
-                    var result = await Service.UpdateAsync(Mapper.Map<CoursesData>(current));
+                    current.IsTrial = check;
+                    var result = await Service.UpdateAsync(Mapper.Map<LessonsData>(current));
                     if (result.State)
                     {
                         Notice.NotiSuccess(AlertResource.UpdateSuccessful);

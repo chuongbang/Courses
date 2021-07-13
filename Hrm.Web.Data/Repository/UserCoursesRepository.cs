@@ -30,7 +30,7 @@ namespace Course.Web.Data.Repository
             {
                 var cs = Query.Where(c => c.UserId == id).ToList();
                 var ids = cs.Select(a => a.KhoaHocId);
-                var listActiveById = _courseQr.Where(c => ids.Contains(c.Id) && c.Active).ToList();
+                var listActiveById = _courseQr.Where(c => ids.Contains(c.Id) && c.IsActive).ToList();
                 dt = cs.Where(c => listActiveById.Select(a => a.Id).Contains(c.KhoaHocId)).ToList();
 
                 tx.Commit();

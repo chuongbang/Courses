@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 namespace Course.Web.Client.Models
 {
 
-    public class CoursesModel
+    public class LessonsModel
     {
-        public List<CoursesData> Dts { get; set; }
+        public List<LessonsData> Dts { get; set; }
 
-        public CoursesModel()
+        public LessonsModel()
         {
-            Dts = new List<CoursesData>();
+            Dts = new List<LessonsData>();
         }
     }
 }

@@ -102,5 +102,15 @@ namespace Course.Web.Share.Ultils
         public bool AUDITLOG_EDIT;
         public bool AUDITLOG_DELETE;
 
+        public bool COURSE_VIEW;
+        public bool COURSE_ADD;
+        public bool COURSE_EDIT;
+        public bool COURSE_DELETE;
+
+        public bool LESSON_VIEW;
+        public bool LESSON_ADD;
+        public bool LESSON_EDIT;
+        public bool LESSON_DELETE;
+
     }
 }

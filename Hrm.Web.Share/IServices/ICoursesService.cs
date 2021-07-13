@@ -12,12 +12,12 @@ namespace Course.Web.Share.IServices
     [ServiceContract(Name = "Hyper.CoursesService")]
     public interface ICoursesService
     {
-        ValueTask<CoursesResult> GetByIdsAsync(CoursesSearch cs, CallContext context = default);
+        ValueTask<CoursesResult> GetByPageAsync(CoursesSearch cs, CallContext context = default);
         ValueTask<CoursesResult> GetAllActiveAsync(CallContext context = default);
         ValueTask<ExcuteResponse> AddAsync(CoursesData hs, CallContext context = default);
         ValueTask<ExcuteResponse> UpdateAsync(CoursesData hs, CallContext context = default);
         ValueTask<ExcuteResponse> DeleteAsync(CoursesData hs, CallContext context = default);
-        //ValueTask<ExcuteResponse> DeleteListAsync(List<CoursesData> ls, CallContext context = default);
+        ValueTask<ExcuteResponse> DeleteListAsync(List<CoursesData> ls, CallContext context = default);
     }
 
     [DataContract]

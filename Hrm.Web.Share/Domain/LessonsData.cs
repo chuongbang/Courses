@@ -17,7 +17,8 @@ namespace Course.Web.Share.Domain {
         }
         
         [DataMember(Order=2)]
-        public virtual String IdKhoaHoc {
+        public virtual String KhoaHocId
+        {
             get;
             set;
         }
@@ -36,6 +37,18 @@ namespace Course.Web.Share.Domain {
         
         [DataMember(Order=5)]
         public virtual String MaBaiHoc {
+            get;
+            set;
+        }        
+        [DataMember(Order=6)]
+        public virtual Boolean IsTrial
+        {
+            get;
+            set;
+        }
+        [DataMember(Order=7)]
+        public virtual String TenBaiHoc
+        {
             get;
             set;
         }

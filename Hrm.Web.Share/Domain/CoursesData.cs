@@ -48,7 +48,8 @@ namespace Course.Web.Share.Domain {
             set;
         }        
         [DataMember(Order=7)]
-        public virtual Boolean Active {
+        public virtual Boolean IsActive
+        {
             get;
             set;
         }

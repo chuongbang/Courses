@@ -48,9 +48,8 @@ namespace Course.Web.Client.Pages.TaiKhoan
         ClaimsPrincipal User;
         SetClaim setClaimComponent;
         bool setClaimVisible;
-        string defaultTab = "1";
-        string activeTab = "1";
-
+        string VisibaleUserId { get; set; }
+        bool DetailCourse { get; set; }
         protected override async Task OnInitializedAsync()
         {
             try
@@ -131,7 +130,6 @@ namespace Course.Web.Client.Pages.TaiKhoan
                     appUserDetail.DisableField();
                 }
                 DetailVisible = true;
-                activeTab = "1";
             }
             catch (Exception ex)
             {
@@ -158,7 +156,6 @@ namespace Course.Web.Client.Pages.TaiKhoan
             try
             {
                 DetailVisible = false;
-                courseTab = null;
             }
             catch (Exception ex)
             {
@@ -347,14 +344,30 @@ namespace Course.Web.Client.Pages.TaiKhoan
             setClaimVisible = false;
         }
 
-        async Task TabChanged(string key)
+
+        async Task OpenCourseDetail(AppUserViewModel model)
         {
-            var a = appUserDetail.Value;
-            if (key == "2")
+            try
             {
-                courseTab?.LoadUserCoursesDetail();
+                VisibaleUserId = model.Id;
+                await courseTab.LoadUserCoursesDetail();
+                DetailCourse = true;
             }
-            activeTab = key;
+            catch (Exception ex)
+            {
+                Error.ProcessError(ex);
+            }
+        }
+        void CloseCourseDetail()
+        {
+            try
+            {
+                DetailCourse = false;
+            }
+            catch (Exception ex)
+            {
+                Error.ProcessError(ex);
+            }
         }
     }
 }

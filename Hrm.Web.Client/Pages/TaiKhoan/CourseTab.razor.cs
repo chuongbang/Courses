@@ -41,10 +41,9 @@ namespace Course.Web.Client.Pages.TaiKhoan
         int sttId = 0;
         int stt = 1;
 
-        protected async override Task OnInitializedAsync()
+        protected override Task OnInitializedAsync()
         {
-            ListUserCourseView = new List<UserCoursesViewModel>();
-            await LoadUserCoursesDetail();
+            return base.OnInitializedAsync();
         }
 
 
@@ -53,17 +52,14 @@ namespace Course.Web.Client.Pages.TaiKhoan
             allKhoaHoc = (await CoursesService.GetAllActiveAsync()).Dts;
 
             var allMap = await UserCoursesService.GetByIdAsync(UserId);
-            ListUserCourseView = Mapper.Map<List<UserCoursesViewModel>>(allMap.Dts);
-
-            //var dataSoureList = allMap.Dts != null ? allKhoaHoc.Where(c => !allMap.Dts.Select(a => a.KhoaHocId).Contains(c.Id)) : allKhoaHoc;
-            //DataSource = allKhoaHoc != null ? dataSoureList.ToDictionary(c => c.Id, v => (ISelectItem)v) : new Dictionary<string, ISelectItem>();
+            ListUserCourseView = allMap.Dts != null ?  Mapper.Map<List<UserCoursesViewModel>>(allMap.Dts) : null;
             DataSourceFull = allKhoaHoc != null ? allKhoaHoc.ToDictionary(c => c.Id, v => (ISelectItem)v) : new Dictionary<string, ISelectItem>();
-
             UpdateListView();
         }
 
         void AddRow()
         {
+            ListUserCourseView ??= new List<UserCoursesViewModel>();
             ListUserCourseView.Add(new UserCoursesViewModel() { Stt = stt++, TuNgay = DateTime.Now, DenNgay = DateTime.Now });
         }
 
@@ -130,7 +126,7 @@ namespace Course.Web.Client.Pages.TaiKhoan
 
         void UpdateListView(bool updateStt = true, bool updateIsSave = true)
         {
-            ListUserCourseView.Where(c => c.KhoaHocId != null).ForEach(c =>
+            ListUserCourseView?.Where(c => c.KhoaHocId != null).ForEach(c =>
             {
                 DataSourceFull.TryGetValue(c.KhoaHocId, out var tenKhoaHoc);
                 if (updateStt)
@@ -146,10 +142,6 @@ namespace Course.Web.Client.Pages.TaiKhoan
 
         }
 
-        public async Task InitialTab()
-        {
-            await OnInitializedAsync();
-        }
 
 
     }

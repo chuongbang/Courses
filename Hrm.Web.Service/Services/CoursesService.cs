@@ -21,14 +21,16 @@ namespace Course.Web.Service.Services
         }
 
 
-        public async ValueTask<CoursesResult> GetByIdsAsync(CoursesSearch cs, CallContext context = default)
+        public async ValueTask<CoursesResult> GetByPageAsync(CoursesSearch cs, CallContext context = default)
         {
             List<CoursesData> dts = null;
             int total = 0;
             try
             {
                
-                var data = await _coursesRepository.GetByIdsAsync(cs.Ids, cs.Keyword, cs.Page.PageIndex, cs.Page.PageSize);
+                var data = await _coursesRepository
+                    .GetPageWithTransactionWithTotalAsync(c => c.TenKhoaHoc.Contains(cs.Keyword ?? ""),
+                    cs.Page.PageIndex -1, cs.Page.PageSize, c => c.TenKhoaHoc, Core.Patterns.Repository.OrderType.Asc);
 
                 dts = data.Item1?.Select(c => c.As<CoursesData>()).ToList();
                 total = data.Item2;
@@ -94,18 +96,18 @@ namespace Course.Web.Service.Services
             }
         }
 
-        //public async ValueTask<ExcuteResponse> DeleteListAsync(List<CoursesData> ls, CallContext context = default)
-        //{
-        //    try
-        //    {
-        //        var result = await _coursesRepository.DeleteListAsync(ls.Select(c => c.As<Courses>()));
-        //        return new ExcuteResponse() { State = result };
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return new ExcuteResponse() { State = false };
-        //    }
-        //}
+        public async ValueTask<ExcuteResponse> DeleteListAsync(List<CoursesData> ls, CallContext context = default)
+        {
+            try
+            {
+                var result = await _coursesRepository.DeleteWithListKeyAsync(ls.Select(c => c.Id));
+                return new ExcuteResponse() { State = result };
+            }
+            catch (Exception)
+            {
+                return new ExcuteResponse() { State = false };
+            }
+        }
 
     }
 }

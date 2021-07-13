@@ -11,39 +11,39 @@ using Course.Web.Client.Models;
 
 namespace Course.Web.Client.Data
 {
-    public class CoursesAdapterService : BaseAdapterService<ICoursesService>
+    public class LessonsAdapterService : BaseAdapterService<ILessonsService>
     {
-        public CoursesAdapterService(HostService host, Course.Core.AuditLog.FileLoggerProvider fileLoggerProvider, TokenProvider tokenProvider)
+        public LessonsAdapterService(HostService host, Course.Core.AuditLog.FileLoggerProvider fileLoggerProvider, TokenProvider tokenProvider)
             : base(host, fileLoggerProvider, tokenProvider)
         {
         }
 
-        public async Task<ExcuteResponse> AddAsync(CoursesData hs)
+        public async Task<ExcuteResponse> AddAsync(LessonsData hs)
         {
             return await Service.AddAsync(hs);
         }
 
-        public async Task<ExcuteResponse> UpdateAsync(CoursesData hs)
+        public async Task<ExcuteResponse> UpdateAsync(LessonsData hs)
         {
             return await Service.UpdateAsync(hs);
         }
 
-        public async Task<ExcuteResponse> DeleteAsync(CoursesData hs)
+        public async Task<ExcuteResponse> DeleteAsync(LessonsData hs)
         {
             return await Service.DeleteAsync(hs);
         }        
         
-        public async Task<ExcuteResponse> DeleteListAsync(List<CoursesData> hs)
+        public async Task<ExcuteResponse> DeleteListAsync(List<LessonsData> hs)
         {
             return await Service.DeleteListAsync(hs);
         }
 
-        public async Task<CoursesResult> GetByPageAsync(Page page = null, string keyword = null)
+        public async Task<LessonsResult> GetByPageAsync(Page page = null, string keyword = null)
         {
             try
             {
                 page = page ?? new Page();
-                return await Service.GetByPageAsync(new CoursesSearch() { Page = page, Keyword = keyword });
+                return await Service.GetByPageAsync(new LessonsSearch() { Page = page, Keyword = keyword });
             }
             catch (Exception ex)
             {
@@ -51,7 +51,7 @@ namespace Course.Web.Client.Data
             }
         }
 
-        public async Task<CoursesResult> GetAllActiveAsync()
+        public async Task<LessonsResult> GetAllActiveAsync()
         {
             try
             {

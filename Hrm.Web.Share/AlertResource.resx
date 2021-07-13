@@ -192,6 +192,9 @@
   <data name="Required" xml:space="preserve">
     <value>Dữ liệu bắt buộc nhập</value>
   </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>Cập nhật dữ liệu thất bại</value>
+  </data>
   <data name="UpdateSuccessful" xml:space="preserve">
     <value>Cập nhật dữ liệu thành công</value>
   </data>

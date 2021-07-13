@@ -111,6 +111,18 @@
                                         <CustomValidationMessage Field="context.Field(property.Name)" TValue="object"></CustomValidationMessage>
                                     </div>
                                 }
+                                else if (att.Any(c => c is FieldAttribute && ((FieldAttribute)c).Type == FieldType.Switch))
+                                {
+                                    <div class="form-group">
+
+                                        @if (nameAttribute != null)
+                                        {
+                                            <LabelFor FieldIdentifier="context.Field(property.Name)"></LabelFor>
+                                        }
+                                        <Switch Checked="(bool)value" CheckedChanged="e => FieldChanged(property, e)" Style="margin-left: 20px"/>
+                                        <CustomValidationMessage Field="context.Field(property.Name)" TValue="object"></CustomValidationMessage>
+                                    </div>
+                                }
                                 else
                                 {
                                     <div class="form-group">

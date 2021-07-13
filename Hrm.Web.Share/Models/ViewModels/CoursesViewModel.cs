@@ -12,7 +12,9 @@ namespace Course.Web.Share.Models.ViewModels
         public virtual string Id { get; set; }
 
         [Display(Name = "Tên khóa học")]
-        public virtual string TenKhoaHoc { get; set; }
+        public virtual string TenKhoaHoc { get; set; }       
+        [Display(Name = "Mã khóa học")]
+        public virtual string MaKhoaHoc { get; set; }
 
         [Display(Name = "Thời lượng khóa học")]
         public virtual string ThoiLuong { get; set; }
@@ -24,7 +26,10 @@ namespace Course.Web.Share.Models.ViewModels
         public virtual DateTime? DenNgay { get; set; }
 
         [Display(Name = "STT")]
-        public int Stt { get; set; }
+        public int Stt { get; set; }        
+        
+        [Display(Name = "Công khai")]
+        public bool IsActive { get; set; }
 
         public string Selected { get; set; }
     }

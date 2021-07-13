@@ -28,7 +28,8 @@ namespace Course.Core.Enums
         DotMMYYYYInputMask,
         File,
         FileList,
-        ComboboxMulti
+        ComboboxMulti,
+        Switch
     }
     public enum LoaiHienThiEnum
     {

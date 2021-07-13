@@ -26,5 +26,8 @@ namespace Course.Web.Share.Models.ViewModels
         public int Stt { get; set; }
 
         public bool IsSave { get; set; }
+
+        [Display(Name = "Khóa học thử")]
+        public bool IsTrial { get; set; }
     }
 }

@@ -27,7 +27,13 @@ namespace Course.Web.Share.Models.EditModels
         public virtual DateTime? TuNgay { get; set; }
 
         [Display(Name = "Kết thúc từ")]
-        public virtual DateTime? DenNgay { get; set; }        
+        public virtual DateTime? DenNgay { get; set; }    
+        
+        [Display(Name = "Học phí")]
+        public virtual decimal? HocPhi { get; set; }      
+        
+        [Display(Name = "Giáo viên")]
+        public virtual string GiaoVien { get; set; }        
         
         [Display(Name = "Công khai")]
         [Field(Type = Core.Enums.FieldType.Switch)]
@@ -42,6 +48,8 @@ namespace Course.Web.Share.Models.EditModels
             InputFields.Add<CoursesEditModel>(c => c.ThoiLuong);
             InputFields.Add<CoursesEditModel>(c => c.TuNgay);
             InputFields.Add<CoursesEditModel>(c => c.DenNgay);
+            InputFields.Add<CoursesEditModel>(c => c.HocPhi);
+            InputFields.Add<CoursesEditModel>(c => c.GiaoVien);
             InputFields.Add<CoursesEditModel>(c => c.IsActive);
 
         }

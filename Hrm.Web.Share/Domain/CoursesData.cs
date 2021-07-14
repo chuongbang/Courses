@@ -52,6 +52,18 @@ namespace Course.Web.Share.Domain {
         {
             get;
             set;
+        }        
+        [DataMember(Order=8)]
+        public virtual Decimal? HocPhi
+        {
+            get;
+            set;
+        }        
+        [DataMember(Order=9)]
+        public virtual String GiaoVien
+        {
+            get;
+            set;
         }
 
         public string GetCustomDisplay()

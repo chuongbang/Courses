@@ -1,9 +1,9 @@
-﻿@page "/khoa-hoc"
+﻿@page "/quan-ly-khoa-hoc"
 
 
 <Space>
-    <SpaceItem>
-        <h3>Danh sách khóa học</h3>
+    <SpaceItem Style="text-transform: uppercase">
+        <h3>Quản lý khóa học</h3>
     </SpaceItem>
 </Space>
 <Row Wrap="false" Style="padding: 10px 0px">
@@ -16,7 +16,7 @@
                 @if (PermissionClaim?.COURSE_ADD == true)
                 {
                     <SpaceItem>
-                        <Button Icon="plus" OnClick="AddNew">Thêm mới</Button>
+                        <Button Icon="plus" OnClick="(() =>OpenDetail(null))">Thêm mới</Button>
                     </SpaceItem>
                 }
                 @if (PermissionClaim?.COURSE_DELETE == true)
@@ -32,28 +32,30 @@
 </Row>
 
 
-    <Table @ref="table" TItem="CoursesViewModel" DataSource="@ListViewCourses" @bind-SelectedRows="selectedRows"
-           Total="Page.Total"  Loading="loading" ScrollY="600px"
-           PageIndex="Page.PageIndex"
-           PageSize="Page.PageSize"
-           OnPageIndexChange="PageIndexChangeAsync">
+<Table @ref="table" TItem="CoursesViewModel" DataSource="@ListViewCourses" @bind-SelectedRows="selectedRows"
+       Total="Page.Total" Loading="loading" ScrollY="600px"
+       PageIndex="Page.PageIndex"
+       PageSize="Page.PageSize"
+       OnPageIndexChange="PageIndexChangeAsync">
 
-        <Selection Key="@context.Id" Type="@selectionType" Disabled="@(context.Id=="Disabled User")" />
-        <Column @bind-Field="@context.Stt" Sortable />
-        <Column @bind-Field="@context.TenKhoaHoc" Sortable>
-            <a>@context.TenKhoaHoc</a>
-        </Column>
-        <Column @bind-Field="@context.MaKhoaHoc" />
-        <Column @bind-Field="@context.ThoiLuong" />
-        <Column @bind-Field="@context.TuNgay" Format="dd-MM-yyyy" />
-        <Column @bind-Field="@context.DenNgay" Format="dd-MM-yyyy" />
-        <Column @bind-Field="@context.IsActive">
-            <Switch @bind-Value="@context.IsActive" OnChange="((e) => UpadateStatus(context.Id, e))" />
-        </Column>
-        <ActionColumn>
+    <Selection Key="@context.Id" Type="@selectionType" Disabled="@(context.Id=="Disabled User")" />
+    <Column @bind-Field="@context.Stt" Sortable />
+    <Column @bind-Field="@context.TenKhoaHoc" Sortable>
+        <a class="btn-link" @onclick="(() => OpenDetail(context))">@context.TenKhoaHoc</a>
+    </Column>
+    <Column @bind-Field="@context.MaKhoaHoc" />
+    <Column @bind-Field="@context.ThoiLuong" />
+    <Column @bind-Field="@context.TuNgay" Format="dd-MM-yyyy" />
+    <Column @bind-Field="@context.DenNgay" Format="dd-MM-yyyy" />
+    <Column @bind-Field="@context.HocPhi"/>
+    <Column @bind-Field="@context.GiaoVien" />
+    <Column Width="5%" @bind-Field="@context.IsActive">
+        <Switch @bind-Value="@context.IsActive" OnChange="((e) => UpadateStatus(context.Id, e))" />
+    </Column>
+    <ActionColumn>
 
-        </ActionColumn>
-    </Table>
+    </ActionColumn>
+</Table>
 
 
 

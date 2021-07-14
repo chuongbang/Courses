@@ -14,5 +14,7 @@ namespace Course.Web.Share.Domain {
         public virtual DateTime? TuNgay { get; set; }
         public virtual DateTime? DenNgay { get; set; }
         public virtual bool IsActive { get; set; }
+        public virtual decimal? HocPhi { get; set; }
+        public virtual string GiaoVien { get; set; }
     }
 }

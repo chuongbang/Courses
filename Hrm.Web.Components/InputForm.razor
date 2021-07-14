@@ -29,28 +29,40 @@
                                 {
                                     if (loadings.ContainsKey(property.Name))
                                     {
-                                        loadings.Add(property.Name, false);
+                                        loadings.TryAdd(property.Name, false);
                                     }
+
                                     var allowType = (FileAttribute)att.FirstOrDefault(c => c is FileAttribute);
-                                    <Upload Action="@UploadApiPath"
-                                            Name="@property.Name"
-                                            Class="avatar-uploader"
-                                            ListType="picture-card"
-                                            ShowUploadList="false"
-                                            BeforeUpload="e => BeforeUpload(e, allowType)"
-                                            OnChange="e => UploadSingleFileChange(e, property)">
-                                        @if (!string.IsNullOrWhiteSpace(imageUrl))
+                                    <div class="form-group">
+                                        @if (nameAttribute != null)
                                         {
-                                            <img src="@value" alt="avatar" style="width: 100%" />
+                                            <LabelFor FieldIdentifier="context.Field(property.Name)"></LabelFor>
                                         }
-                                        else
-                                        {
-                                            <div>
-                                                <Icon Spin="loadings[property.Name]" Type="@(loadings[property.Name] ? "Loading":"plus")"></Icon>
-                                                <div className="ant-upload-text">Upload</div>
-                                            </div>
-                                        }
-                                    </Upload>
+                                        <Upload Action="@UploadApiPath"
+                                                Name="@property.Name"
+                                                Class="avatar-uploader"
+                                                ListType="picture-card"
+                                                ShowUploadList="false"
+                                                BeforeUpload="e => BeforeUpload(e, allowType)"
+                                                OnChange="e => UploadSingleFileChange(e, property)">
+                                            @if (!string.IsNullOrWhiteSpace(imageUrl))
+                                            {
+                                                <img src="@value" alt="avatar" style="width: 100%" />
+                                            }
+                                            else
+                                            {
+                                                if (loadings.ContainsKey(property.Name))
+                                                {
+                                                    <div>
+                                                        <Icon Spin="loadings[property.Name]" Type="@(loadings[property.Name] ? "Loading":"plus")"></Icon>
+                                                        <div className="ant-upload-text">Upload</div>
+                                                    </div>
+                                                }
+
+                                            }
+                                        </Upload>
+                                    </div>
+
                                 }
                                 else if (att.Any(c => c is FieldAttribute && ((FieldAttribute)c).Type == FieldType.Combobox))
                                 {
@@ -114,12 +126,11 @@
                                 else if (att.Any(c => c is FieldAttribute && ((FieldAttribute)c).Type == FieldType.Switch))
                                 {
                                     <div class="form-group">
-
                                         @if (nameAttribute != null)
                                         {
-                                            <LabelFor FieldIdentifier="context.Field(property.Name)"></LabelFor>
+                                            <LabelFor FieldIdentifier="context.Field(property.Name)" Class="no-block"></LabelFor>
                                         }
-                                        <Switch Checked="(bool)value" CheckedChanged="e => FieldChanged(property, e)" Style="margin-left: 20px"/>
+                                        <Switch Checked="(bool)value" CheckedChanged="e => FieldChanged(property, e)" Style="margin-left: 20px" />
                                         <CustomValidationMessage Field="context.Field(property.Name)" TValue="object"></CustomValidationMessage>
                                     </div>
                                 }
@@ -150,7 +161,7 @@
                                         }
                                         else if (property.PropertyType == typeof(decimal?))
                                         {
-                                            <InputText id="@(property.Name + Value.GetHashCode())"
+                                            <InputText class="decimal-input" id="@(property.Name + Value.GetHashCode())"
                                                        Value="@value?.ToString()"
                                                        ValueExpression="@(() => property.Name)"
                                                        ValueChanged="(e => FieldChanged(property, e))" @attributes="@additionalAttributes" />

@@ -37,6 +37,8 @@ namespace Course.Web.Client.Pages.Courses
         protected List<CoursesData> ListCourses;
         protected CoursesEditModel EditModel;
 
+
+        CoursesData selectCourseViewModel;
         bool DetailVisible { get; set; }
         Page Page { get; set; } = new() { PageIndex = 1, PageSize = 20, Total = 0 };
         ITable table;
@@ -77,6 +79,7 @@ namespace Course.Web.Client.Pages.Courses
                 ListViewCourses.ForEach(c =>
                 {
                     c.Stt = stt++;
+                    c.HocPhi = c.HocPhi.IsNotNullOrEmpty() ? (c.HocPhi.ToDecimal().ToDecimalFormated() + "đ") : string.Empty;
                 });
             }
             catch (Exception ex)
@@ -92,6 +95,21 @@ namespace Course.Web.Client.Pages.Courses
             EditModel = new CoursesEditModel() { IsActive = true, TuNgay = DateTime.Now, DenNgay = DateTime.Now };
             DetailVisible = true;
 
+        }
+
+        void OpenDetail(CoursesViewModel model)
+        {
+            if (model.IsNullOrEmpty())
+            {
+                EditModel = new CoursesEditModel() { IsActive = true, TuNgay = DateTime.Now, DenNgay = DateTime.Now };
+            }
+            else
+            {
+                selectCourseViewModel = ListCourses.FirstOrDefault(c => c.Id == model.Id);
+                EditModel = Mapper.Map<CoursesEditModel>(selectCourseViewModel);
+            }
+
+            DetailVisible = true;
         }
 
         async Task PageIndexChangeAsync(PaginationEventArgs e)

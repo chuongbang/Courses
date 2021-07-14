@@ -175,6 +175,7 @@ namespace Course.Web.Service
                 endpoints.MapGrpcService<AuditLogService>();
                 endpoints.MapGrpcService<CoursesService>();
                 endpoints.MapGrpcService<UserCoursesService>();
+                endpoints.MapGrpcService<LessonsService>();
 
                 endpoints.MapGet("/", async context =>
                 {

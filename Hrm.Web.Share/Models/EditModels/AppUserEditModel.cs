@@ -45,7 +45,6 @@ namespace Course.Web.Share.Models.EditModels
         public virtual string ConfirmPassword { get; set; }
 
 
-        Property<AppUserEditModel> _property;
         public AppUserEditModel(bool isEdit = true)
         {
             if (isEdit)

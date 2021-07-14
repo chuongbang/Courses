@@ -1,9 +1,9 @@
-﻿@page "/bai-hoc"
+﻿@page "/quan-ly-bai-học"
 
 
 <Space>
     <SpaceItem>
-        <h3>Danh sách các bài học</h3>
+        <h3 style="text-transform: uppercase"> Quản lý bài học</h3>
     </SpaceItem>
 </Space>
 <Row Wrap="false" Style="padding: 10px 0px">
@@ -13,13 +13,13 @@
     <AntDesign.Col Flex=@("auto")>
         <Row Justify="end">
             <Space>
-                @if (PermissionClaim?.COURSE_ADD == true)
+                @if (PermissionClaim?.LESSON_ADD == true)
                 {
                     <SpaceItem>
                         <Button Icon="plus" OnClick="AddNew">Thêm mới</Button>
                     </SpaceItem>
                 }
-                @if (PermissionClaim?.COURSE_DELETE == true)
+                @if (PermissionClaim?.LESSON_DELETE == true)
                 {
                     <SpaceItem>
                         <Button Icon="delete" OnClick="DeleteSelected">Xóa chọn</Button>
@@ -32,26 +32,17 @@
 </Row>
 
 
-    <Table @ref="table" TItem="LessonsViewModel" DataSource="@ListViewLessons" @bind-SelectedRows="selectedRows"
-           Total="Page.Total"  Loading="loading" ScrollY="600px"
-           PageIndex="Page.PageIndex"
-           PageSize="Page.PageSize"
-           OnPageIndexChange="PageIndexChangeAsync">
+    <AntList Bordered DataSource="ListViewLessons">
+        <Header>Header</Header>
+        <ChildContent Context="item">
+            <ListItem>
+                <span><Text Mark>[ITEM]</Text></span>@item
+            </ListItem>
+        </ChildContent>
 
-        <Selection Key="@context.Id" Type="@selectionType" Disabled="@(context.Id=="Disabled User")" />
-        @*<Column @bind-Field="@context.Stt" Sortable />*@
-        <Column @bind-Field="@context.TenBaiHoc" Sortable>
-            <a>@context.TenBaiHoc</a>
-        </Column>
-        <Column @bind-Field="@context.MaBaiHoc" />
-        <Column @bind-Field="@context.IsTrial">
-            <Switch @bind-Value="@context.IsTrial" OnChange="((e) => UpadateStatus(context.Id, e))" />
-        </Column>
+        <Footer>Footer</Footer>
+    </AntList>
 
-        <ActionColumn>
-
-        </ActionColumn>
-    </Table>
 
 
 

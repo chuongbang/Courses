@@ -9,6 +9,7 @@ namespace Course.Web.Data.IRepository
     {
         Task<(List<Courses>, int)> GetByIdsAsync(IEnumerable<string> ids, string keyword, int pageIndex, int pageSize);
         Task<List<Courses>> GetAllActiveAsync();
+        Task<(List<Courses>, List<Lessons>)> GetCoursesActiveWithLessonsAsync();
 
         //Task<bool> DeleteListAsync(IEnumerable<Courses> list);
 

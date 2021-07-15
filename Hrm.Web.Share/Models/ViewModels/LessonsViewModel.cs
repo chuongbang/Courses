@@ -14,20 +14,10 @@ namespace Course.Web.Share.Models.ViewModels
 
         [Display(Name = "Nội dung bài học")]
 
-        public string NoiDung { get; set; }
+        public string TenKhoaHoc { get; set; }
 
-        [Display(Name = "File nội dung")]
 
-        public string FileNoiDung { get; set; }
-
-        [Display(Name = "Mã bài học")]
-        public string MaBaiHoc { get; set; }
-
-        public bool IsTrial { get; set; }
-
-        [Required(ErrorMessageResourceType = typeof(AlertResource), ErrorMessageResourceName = "Required")]
-        [StringLength(255, ErrorMessage = "Nhập không quá 255 ký tự")]
-        public string TenBaiHoc { get; set; }
+        public List<Lesson> Lessons { get; set; }
 
     }
 
@@ -49,8 +39,6 @@ namespace Course.Web.Share.Models.ViewModels
 
         public bool IsTrial { get; set; }
 
-        [Required(ErrorMessageResourceType = typeof(AlertResource), ErrorMessageResourceName = "Required")]
-        [StringLength(255, ErrorMessage = "Nhập không quá 255 ký tự")]
         public string TenBaiHoc { get; set; }
     }
 }

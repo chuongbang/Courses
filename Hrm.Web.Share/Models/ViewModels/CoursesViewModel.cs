@@ -32,9 +32,12 @@ namespace Course.Web.Share.Models.ViewModels
         public bool IsActive { get; set; }
 
         [Display(Name = "Học phí")]
-        public string HocPhi { get; set; }
+        public string HocPhiFormat { get; set; }
+        public decimal? HocPhi { get; set; }
 
         [Display(Name = "Giáo viên")]
         public string GiaoVien { get; set; }
+
+        public string SoBaiHoc { get; set; }
     }
 }

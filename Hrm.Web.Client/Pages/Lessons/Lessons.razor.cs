@@ -18,6 +18,8 @@ using Course.Web.Share.Ultils;
 using Course.Core.Extentions;
 using Course.Web.Client.Ultils;
 using Course.Web.Share;
+using Course.Core.Ultis;
+using Course.Core.Data;
 
 namespace Course.Web.Client.Pages.Lessons
 {
@@ -30,49 +32,86 @@ namespace Course.Web.Client.Pages.Lessons
         [Inject] NotificationService Notice { get; set; }
 
         [Inject] public LessonsAdapterService Service { get; set; }
+        [Inject] public CoursesAdapterService CoursesService { get; set; }
 
         protected LoaiHienThiEnum _displayGrid = LoaiHienThiEnum.None;
         protected List<LessonsViewModel> ListViewLessons;
         protected List<LessonsData> ListLessons;
+        protected List<CoursesData> ListCourses;
         protected LessonsEditModel EditModel;
+        Dictionary<CoursesViewModel, List<LessonsViewModel>> Datas;
 
         bool DetailVisible { get; set; }
         Page Page { get; set; } = new() { PageIndex = 1, PageSize = 20, Total = 0 };
-        ITable table;
-        IEnumerable<LessonsViewModel> selectedRows;
         string selectionType = "checkbox";
         bool loading;
         ClaimsPrincipal User;
         string KeyWord { get; set; }
-
+        Property<LessonsEditModel> property;
+        List<LessonsData> ListAllLesson;
 
         protected async override Task OnInitializedAsync()
         {
-            _displayGrid = LoaiHienThiEnum.Grid;
             User = (await AuthenticationStateTask).User;
             var claims = User?.Claims?.ToList();
             EditModel = new LessonsEditModel();
+            property = new Property<LessonsEditModel>();
             ListViewLessons = new List<LessonsViewModel>();
-            await LoadDataAsync();
+            Datas = new Dictionary<CoursesViewModel, List<LessonsViewModel>>();
+            ListCourses = (await CoursesService.GetAllActiveAsync()).Dts;
 
+            await LoadDataAsync();
 
         }
         async Task LoadDataAsync()
         {
             try
             {
-                loading = true;
-                StateHasChanged();
-
-                var data = await Service.GetByPageAsync(Page, KeyWord);
-                if (data == null)
+                int sttCourse = 1;
+                Datas.Clear();
+                var ListAll = await CoursesService.GetCoursesActiveWithLessonsAsync();
+                ListAllLesson = ListAll.LDatas;
+                foreach (var cs in ListAll?.CDatas)
                 {
-                    return;
+                    var course = Mapper.Map<CoursesViewModel>(cs);
+                    course.Stt = sttCourse++;
+                    var ls = ListAll.LDatas.Where(c => c.KhoaHocId == cs.Id);
+                    if (true)
+                    {
+                        Datas.TryAdd(course, Mapper.Map<List<LessonsViewModel>>(ls));
+                    }
+                }                
+                
+                foreach (var cs in ListAll?.CDatas)
+                {
+                    var listLs = ListAll.LDatas.Where(c => c.KhoaHocId == cs.Id);
+                    LessonsViewModel ls = new LessonsViewModel();
+                    ls.Id = cs.Id;
+                    ls.TenKhoaHoc = cs.TenKhoaHoc;
+                    ls.Lessons = new List<Lesson>();
+
+                    listLs.ForEach((dt) => 
+                    {
+                        Lesson lss = new Lesson();
+                        lss.Update(dt);
+                        ls.Lessons.Add(lss);
+                    });
+
+
                 }
-                ListLessons = data.Dts;
-                Page.Total = data.Total;
-                ListViewLessons = Mapper.Map<List<LessonsViewModel>>(ListLessons);
-                int stt = Page.PageSize * (Page.PageIndex - 1) + 1;
+
+
+
+
+                //var data = await Service.GetByPageAsync(Page, KeyWord);
+                //if (data == null)
+                //{
+                //    return;
+                //}
+                //ListLessons = data.Dts;
+                //Page.Total = data.Total;
+                //ListViewLessons = Mapper.Map<List<LessonsViewModel>>(ListLessons);
+                //int stt = Page.PageSize * (Page.PageIndex - 1) + 1;
                 //ListViewLessons.ForEach(c =>
                 //{
                 //    c.Stt = stt++;
@@ -88,11 +127,20 @@ namespace Course.Web.Client.Pages.Lessons
 
         void AddNew()
         {
-            EditModel = new LessonsEditModel() {  };
+            EditModel = new LessonsEditModel() { };
+            EditModel.DataSource[property.Name(c => c.KhoaHocId)] = ListCourses.ToDictionary(c => c.Id, v => (ISelectItem)v);
+
             DetailVisible = true;
 
         }
+        void Edit(string id)
+        {
+            var current = ListAllLesson.FirstOrDefault(c => c.Id == id);
+            EditModel = Mapper.Map<LessonsEditModel>(current);
 
+            DetailVisible = true;
+
+        }
 
         async Task PageIndexChangeAsync(PaginationEventArgs e)
         {
@@ -113,7 +161,7 @@ namespace Course.Web.Client.Pages.Lessons
             DetailVisible = false;
         }
 
-        async Task SaveCourseAsync(LessonsEditModel model)
+        async Task SaveLessonAsync(LessonsEditModel model)
         {
             try
             {
@@ -170,28 +218,21 @@ namespace Course.Web.Client.Pages.Lessons
             }
         }
 
-        async Task DeleteSelected()
+        async Task Delete(string id)
         {
             try
             {
-                if (selectedRows.IsNotNullOrEmpty() && selectedRows.Any())
-                {
-                    var result = await Service.DeleteListAsync(Mapper.Map<List<LessonsData>>(selectedRows));
-                    if (result.State)
-                    {
-                        Notice.NotiSuccess(AlertResource.DeleteSuccessful);
-                        await LoadDataAsync();
-                    }
-                    else
-                    {
-                        Notice.NotiError(AlertResource.DeleteFailed);
-                    }
 
-                }
-                else
-                {
-                    Notice.NotiWarning("Chưa có dòng nào được chọn");
-                }
+                var result = await Service.DeleteAsync(new LessonsData());
+                //if (result.State)
+                //{
+                //    Notice.NotiSuccess(AlertResource.DeleteSuccessful);
+                //    await LoadDataAsync();
+                //}
+                //else
+                //{
+                //    Notice.NotiError(AlertResource.DeleteFailed);
+                //}
 
             }
             catch (Exception ex)

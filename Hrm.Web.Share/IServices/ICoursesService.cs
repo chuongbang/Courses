@@ -18,6 +18,8 @@ namespace Course.Web.Share.IServices
         ValueTask<ExcuteResponse> UpdateAsync(CoursesData hs, CallContext context = default);
         ValueTask<ExcuteResponse> DeleteAsync(CoursesData hs, CallContext context = default);
         ValueTask<ExcuteResponse> DeleteListAsync(List<CoursesData> ls, CallContext context = default);
+        ValueTask<CourseLessons> GetCoursesActiveWithLessonsAsync(CallContext context = default);
+
     }
 
     [DataContract]
@@ -38,6 +40,18 @@ namespace Course.Web.Share.IServices
         public Page Page { get; set; }
         [DataMember(Order = 3)]
         public IEnumerable<string> Ids { get; set; }
+
+    }
+    [DataContract]
+    public class CourseLessons
+    {
+        [DataMember(Order = 1)]
+        public List<CoursesData> CDatas { get; set; }        
+        
+        [DataMember(Order = 2)]
+        public List<LessonsData> LDatas { get; set; }
+
+
 
     }
 

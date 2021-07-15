@@ -61,6 +61,18 @@ namespace Course.Web.Client.Data
             {
                 throw;
             }
+        }        
+        
+        public async Task<CourseLessons> GetCoursesActiveWithLessonsAsync()
+        {
+            try
+            {
+                return await Service.GetCoursesActiveWithLessonsAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
 

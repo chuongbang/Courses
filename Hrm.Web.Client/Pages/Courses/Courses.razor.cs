@@ -79,7 +79,7 @@ namespace Course.Web.Client.Pages.Courses
                 ListViewCourses.ForEach(c =>
                 {
                     c.Stt = stt++;
-                    c.HocPhi = c.HocPhi.IsNotNullOrEmpty() ? (c.HocPhi.ToDecimal().ToDecimalFormated() + "đ") : string.Empty;
+                    c.HocPhiFormat = c.HocPhi.IsNotNullOrEmpty() ? (c.HocPhi.ToDecimalFormated() + "đ") : string.Empty;
                 });
             }
             catch (Exception ex)

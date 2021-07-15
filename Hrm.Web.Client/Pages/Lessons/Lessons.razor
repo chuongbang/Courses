@@ -1,49 +1,76 @@
 ﻿@page "/quan-ly-bai-học"
 
+<div class="site-content">
+    @*<Space>
+            <SpaceItem>
+                <h3 style="text-transform: uppercase; margin-top: 10px"> </h3>
+            </SpaceItem>
+        </Space>*@
+    <PageHeader Class="site-page-header" Title="Quản lý bài học" />
+    <Row Wrap="false" Style="padding: 10px 0px">
+        <AntDesign.Col Span="6">
+            <Search Placeholder="Tên khóa học" OnChange="SearchAsync" EnterButton="true" @bind-Value="@KeyWord" />
+        </AntDesign.Col>
+        <AntDesign.Col Flex=@("auto")>
+            <Row Justify="end">
+                <Space>
+                    @if (PermissionClaim?.LESSON_ADD == true)
+                    {
+                        <SpaceItem>
+                            <Button Icon="plus" OnClick="AddNew">Thêm mới</Button>
+                        </SpaceItem>
+                    }
+                    @if (PermissionClaim?.LESSON_DELETE == true)
+                    {
+                        <SpaceItem>
+                            <Button Icon="delete">Xóa chọn</Button>
+                        </SpaceItem>
+                    }
+                </Space>
 
-<Space>
-    <SpaceItem>
-        <h3 style="text-transform: uppercase"> Quản lý bài học</h3>
-    </SpaceItem>
-</Space>
-<Row Wrap="false" Style="padding: 10px 0px">
-    <AntDesign.Col Span="6">
-        <Search Placeholder="Tên khóa học" OnChange="SearchAsync" EnterButton="true" @bind-Value="@KeyWord" />
-    </AntDesign.Col>
-    <AntDesign.Col Flex=@("auto")>
-        <Row Justify="end">
-            <Space>
-                @if (PermissionClaim?.LESSON_ADD == true)
-                {
-                    <SpaceItem>
-                        <Button Icon="plus" OnClick="AddNew">Thêm mới</Button>
-                    </SpaceItem>
-                }
-                @if (PermissionClaim?.LESSON_DELETE == true)
-                {
-                    <SpaceItem>
-                        <Button Icon="delete" OnClick="DeleteSelected">Xóa chọn</Button>
-                    </SpaceItem>
-                }
-            </Space>
+            </Row>
+        </AntDesign.Col>
+    </Row>
 
-        </Row>
-    </AntDesign.Col>
-</Row>
+    @*<Table DataSource="data" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")">
+        <RowTemplate>
+            <Column @bind-Field="@context.Name" />
+            <Column @bind-Field="@context.Age" />
+            <Column @bind-Field="@context.Address" />
+            <ActionColumn Title="Action">
+                <a>Delete</a>
+            </ActionColumn>
+        </RowTemplate>
+        <ExpandTemplate>
+            @context.Data.Description
+        </ExpandTemplate>
+    </Table>*@
 
+    <Collapse Bordered="false">
+        @foreach (var item in Datas)
+        {
+            <Panel Header="@item.Key.TenKhoaHoc" Key="@item.Key.Stt.ToString()">
 
-    <AntList Bordered DataSource="ListViewLessons">
-        <Header>Header</Header>
-        <ChildContent Context="item">
-            <ListItem>
-                <span><Text Mark>[ITEM]</Text></span>@item
-            </ListItem>
-        </ChildContent>
+                <AntList DataSource="@item.Value" TItem="LessonsViewModel">
+                    <ChildContent Context="ls">
+                        <ListItem>
+                            <ListItemMeta Avatar="avatar" Description="@ls.NoiDung">
+                                <TitleTemplate>
+                                    <a @onclick="(() => Edit(ls.Id))">@ls.TenBaiHoc</a>
+                                </TitleTemplate>
+                            </ListItemMeta>
+                            <div @onclick="(() => Delete(ls.Id))">Xóa</div>
+                        </ListItem>
+                    </ChildContent>
+                </AntList>
 
-        <Footer>Footer</Footer>
-    </AntList>
+            </Panel>
+        }
+    </Collapse>
 
 
+
+</div>
 
 
 @if (PermissionClaim?.COURSE_ADD == true)
@@ -51,9 +78,19 @@
     <Drawer Closable="true" MaskClosable="true" Width="720" Visible="DetailVisible"
             Title='($"Thông tin bài học")' OnClose="CloseDetail">
         <Template>
-            <InputForm ItemType="LessonsEditModel" Value="EditModel" ValueChanged="SaveCourseAsync" CancelChanged="CloseDetail"></InputForm>
+            <InputForm ItemType="LessonsEditModel" Value="EditModel" ValueChanged="SaveLessonAsync" CancelChanged="CloseDetail"></InputForm>
         </Template>
     </Drawer>
 }
 
 
+@code{
+
+    RenderFragment avatar =@<Avatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
+
+
+@*static RenderFragment edit = @<a key="list-loadmore-edit" @onclick="Edit">edit</a>;
+
+    static RenderFragment add = @<a key="list-loadmore-more">more</a>;*@
+
+}

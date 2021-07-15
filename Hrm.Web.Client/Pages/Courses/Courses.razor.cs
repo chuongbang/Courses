@@ -87,7 +87,6 @@ namespace Course.Web.Client.Pages.Courses
                 Error.ProcessError(ex);
             }
             loading = false;
-
         }
 
         void AddNew()

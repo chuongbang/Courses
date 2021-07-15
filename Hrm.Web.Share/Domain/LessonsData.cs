@@ -51,6 +51,12 @@ namespace Course.Web.Share.Domain {
         {
             get;
             set;
+        }        
+        [DataMember(Order=8)]
+        public virtual String TypeContent
+        {
+            get;
+            set;
         }
     }
 }

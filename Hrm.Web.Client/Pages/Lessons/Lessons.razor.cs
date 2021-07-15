@@ -43,8 +43,6 @@ namespace Course.Web.Client.Pages.Lessons
 
         bool DetailVisible { get; set; }
         Page Page { get; set; } = new() { PageIndex = 1, PageSize = 20, Total = 0 };
-        string selectionType = "checkbox";
-        bool loading;
         ClaimsPrincipal User;
         string KeyWord { get; set; }
         Property<LessonsEditModel> property;
@@ -57,7 +55,6 @@ namespace Course.Web.Client.Pages.Lessons
             EditModel = new LessonsEditModel();
             property = new Property<LessonsEditModel>();
             ListViewLessons = new List<LessonsViewModel>();
-            Datas = new Dictionary<CoursesViewModel, List<LessonsViewModel>>();
             ListCourses = (await CoursesService.GetAllActiveAsync()).Dts;
 
             await LoadDataAsync();
@@ -67,77 +64,38 @@ namespace Course.Web.Client.Pages.Lessons
         {
             try
             {
-                int sttCourse = 1;
-                Datas.Clear();
+                int Stt = 1;
                 var ListAll = await CoursesService.GetCoursesActiveWithLessonsAsync();
                 ListAllLesson = ListAll.LDatas;
                 foreach (var cs in ListAll?.CDatas)
                 {
-                    var course = Mapper.Map<CoursesViewModel>(cs);
-                    course.Stt = sttCourse++;
-                    var ls = ListAll.LDatas.Where(c => c.KhoaHocId == cs.Id);
-                    if (true)
-                    {
-                        Datas.TryAdd(course, Mapper.Map<List<LessonsViewModel>>(ls));
-                    }
-                }                
-                
-                foreach (var cs in ListAll?.CDatas)
-                {
-                    var listLs = ListAll.LDatas.Where(c => c.KhoaHocId == cs.Id);
+                    var listLs = ListAll.LDatas.Where(c => c.KhoaHocId == cs.Id).ToList();
                     LessonsViewModel ls = new LessonsViewModel();
-                    ls.Id = cs.Id;
-                    ls.TenKhoaHoc = cs.TenKhoaHoc;
-                    ls.Lessons = new List<Lesson>();
-
-                    listLs.ForEach((dt) => 
-                    {
-                        Lesson lss = new Lesson();
-                        lss.Update(dt);
-                        ls.Lessons.Add(lss);
-                    });
-
+                    ls.Update(cs);
+                    ls.Stt = Stt++;
+                    ls.SetDataList(listLs);
+                    ListViewLessons.Add(ls);
 
                 }
-
-
-
-
-                //var data = await Service.GetByPageAsync(Page, KeyWord);
-                //if (data == null)
-                //{
-                //    return;
-                //}
-                //ListLessons = data.Dts;
-                //Page.Total = data.Total;
-                //ListViewLessons = Mapper.Map<List<LessonsViewModel>>(ListLessons);
-                //int stt = Page.PageSize * (Page.PageIndex - 1) + 1;
-                //ListViewLessons.ForEach(c =>
-                //{
-                //    c.Stt = stt++;
-                //});
             }
             catch (Exception ex)
             {
                 Error.ProcessError(ex);
             }
-            loading = false;
 
         }
 
         void AddNew()
         {
-            EditModel = new LessonsEditModel() { };
-            EditModel.DataSource[property.Name(c => c.KhoaHocId)] = ListCourses.ToDictionary(c => c.Id, v => (ISelectItem)v);
+            EditModel = new LessonsEditModel(listLS: ListCourses);
 
             DetailVisible = true;
-
         }
         void Edit(string id)
         {
             var current = ListAllLesson.FirstOrDefault(c => c.Id == id);
             EditModel = Mapper.Map<LessonsEditModel>(current);
-
+            EditModel.DataSource[property.Name(c => c.KhoaHocId)] = ListCourses.ToDictionary(c => c.Id, v => (ISelectItem)v);
             DetailVisible = true;
 
         }
@@ -240,31 +198,8 @@ namespace Course.Web.Client.Pages.Lessons
                 Error.ProcessError(ex);
             }
         }
-        async Task UpadateStatus(string id, bool check)
-        {
-            try
-            {
-                var current = ListViewLessons.FirstOrDefault(c => c.Id == id);
-                if (current.IsNotNullOrEmpty())
-                {
-                    current.IsTrial = check;
-                    var result = await Service.UpdateAsync(Mapper.Map<LessonsData>(current));
-                    if (result.State)
-                    {
-                        Notice.NotiSuccess(AlertResource.UpdateSuccessful);
-                        await LoadDataAsync();
-                    }
-                    else
-                    {
-                        Notice.NotiError(AlertResource.UpdateFailed);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Error.ProcessError(ex);
-            }
-        }
+
+
 
 
     }

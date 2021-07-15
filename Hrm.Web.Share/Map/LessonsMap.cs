@@ -19,6 +19,7 @@ namespace Course.Web.Share.Map
 			Map(x => x.MaBaiHoc).Column("MaBaiHoc");
 			Map(x => x.IsTrial).Column("IsTrial");
 			Map(x => x.TenBaiHoc).Column("TenBaiHoc");
+			Map(x => x.TypeContent).Column("TypeContent");
         }
     }
 }

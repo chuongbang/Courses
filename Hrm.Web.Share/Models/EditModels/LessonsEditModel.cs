@@ -9,6 +9,7 @@ using Course.Core.Data;
 using Course.Core.Enums;
 using Course.Core.Extentions;
 using Course.Core.Ultis;
+using Course.Web.Share.Domain;
 
 namespace Course.Web.Share.Models.EditModels
 {
@@ -47,7 +48,7 @@ namespace Course.Web.Share.Models.EditModels
 
         Property<LessonsEditModel> property;
 
-        public LessonsEditModel(bool isEdit = true)
+        public LessonsEditModel(bool isEdit = true, List<CoursesData> listLS = null)
         {
             DataSource = new Dictionary<string, Dictionary<string, ISelectItem>>();
             property = new Property<LessonsEditModel>();
@@ -66,7 +67,7 @@ namespace Course.Web.Share.Models.EditModels
             typeContent.Add(new SelectItem() { Text = "Nhập nội dung Text", Value = "1" });
             DataSource[property.Name(c => c.TypeContent)] = typeContent.ToDictionary(c => c.Value, v => (ISelectItem)v);
 
-            DataSource[property.Name(c => c.KhoaHocId)] = new Dictionary<string, ISelectItem>();
+            DataSource[property.Name(c => c.KhoaHocId)] = listLS == null ? new Dictionary<string, ISelectItem>() : listLS.ToDictionary(c => c.Id, v => (ISelectItem)v); ;
 
         }
 

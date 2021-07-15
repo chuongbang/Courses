@@ -232,3 +232,7 @@ html, body {
 .block {
     display: block;
 }
+.lesson-items {
+    border: 1px solid #fff;
+    margin-left: 120px;
+}

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Course.Core.Extentions;
+using Course.Web.Share.Domain;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,12 +14,36 @@ namespace Course.Web.Share.Models.ViewModels
         public string Id { get; set; }
         public string KhoaHocId { get; set; }
 
-        [Display(Name = "Nội dung bài học")]
-
+        [Display(Name = "Khóa học")]
         public string TenKhoaHoc { get; set; }
 
+        [Display(Name = "Thời lượng")]
+        public string ThoiLuong { get; set; }
+
+        [Display(Name = "Giáo viên")]
+        public string GiaoVien { get; set; }
+
+        [Display(Name = "STT")]
+        public int Stt { get; set; }
 
         public List<Lesson> Lessons { get; set; }
+
+        public LessonsViewModel()
+        {
+            Lessons = new List<Lesson>();
+
+        }
+        public void SetDataList(List<LessonsData> list)
+        {
+
+            list.ForEach((dt) =>
+            {
+                Lesson lss = new Lesson();
+                lss.Update(dt);
+                Lessons.Add(lss);
+            });
+
+        }
 
     }
 
@@ -40,5 +66,7 @@ namespace Course.Web.Share.Models.ViewModels
         public bool IsTrial { get; set; }
 
         public string TenBaiHoc { get; set; }
+
+
     }
 }

@@ -31,43 +31,24 @@
             </Row>
         </AntDesign.Col>
     </Row>
-
-    @*<Table DataSource="data" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")">
+    <Table DataSource="ListViewLessons" RowExpandable="(rc) => rc.Data.Lessons.Any()">
         <RowTemplate>
-            <Column @bind-Field="@context.Name" />
-            <Column @bind-Field="@context.Age" />
-            <Column @bind-Field="@context.Address" />
-            <ActionColumn Title="Action">
-                <a>Delete</a>
-            </ActionColumn>
+            <Column Width="3%" @bind-Field="@context.Stt" />
+            <Column @bind-Field="@context.TenKhoaHoc" />
+            <Column @bind-Field="@context.ThoiLuong" />
+            <Column @bind-Field="@context.GiaoVien" />
         </RowTemplate>
         <ExpandTemplate>
-            @context.Data.Description
+            @foreach (var item in context.Data.Lessons)
+            {
+                <Row>
+                    <AntDesign.Col Span="20" Class="lesson-items">@item.TenBaiHoc</AntDesign.Col>
+                    <AntDesign.Col Span="2"><a @onclick="(() => Edit(item.Id))">Sửa</a></AntDesign.Col>
+                </Row>
+            }
+
         </ExpandTemplate>
-    </Table>*@
-
-    <Collapse Bordered="false">
-        @foreach (var item in Datas)
-        {
-            <Panel Header="@item.Key.TenKhoaHoc" Key="@item.Key.Stt.ToString()">
-
-                <AntList DataSource="@item.Value" TItem="LessonsViewModel">
-                    <ChildContent Context="ls">
-                        <ListItem>
-                            <ListItemMeta Avatar="avatar" Description="@ls.NoiDung">
-                                <TitleTemplate>
-                                    <a @onclick="(() => Edit(ls.Id))">@ls.TenBaiHoc</a>
-                                </TitleTemplate>
-                            </ListItemMeta>
-                            <div @onclick="(() => Delete(ls.Id))">Xóa</div>
-                        </ListItem>
-                    </ChildContent>
-                </AntList>
-
-            </Panel>
-        }
-    </Collapse>
-
+    </Table>
 
 
 </div>

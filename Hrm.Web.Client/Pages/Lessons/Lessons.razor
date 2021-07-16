@@ -30,7 +30,12 @@
             </Row>
         </AntDesign.Col>
     </Row>
-    <Table DataSource="ListViewLessons" RowExpandable="(rc) => rc.Data.Lessons.Any()">
+    <Table @ref="table" DataSource="ListViewLessons" TItem="LessonsViewModel" 
+           Total="Page.Total" Class="table-striped"
+           PageIndex="Page.PageIndex"  Loading="loading"
+           PageSize="Page.PageSize"
+           OnPageIndexChange="PageIndexChangeAsync"
+           RowExpandable="(rc) => rc.Data.Lessons.Any()">
         <RowTemplate>
             <Column Width="2%" @bind-Field="@context.Stt" />
             <Column @bind-Field="@context.TenKhoaHoc" />
@@ -41,19 +46,19 @@
             @foreach (var item in context.Data.Lessons)
             {
                 <Row Class="row-lessons">
-                    <AntDesign.Col Span="19" Class="lesson-items">@item.TenBaiHoc</AntDesign.Col>
-                    <AntDesign.Col Span="2"  Class="row-lessons-flex-end">
+                    <AntDesign.Col Span="19" Class="lesson-items">@item.TenBaiHocFormat</AntDesign.Col>
+                    <AntDesign.Col Span="2" Class="row-lessons-flex-end">
                         <Space>
                             @if (PermissionClaim?.LESSON_EDIT == true)
                             {
-                            <SpaceItem>
-                                <Button Icon="edit" OnClick="(() => Edit(item.Id))">Sửa</Button>
-                            </SpaceItem>
+                                <SpaceItem>
+                                    <Button Icon="edit" OnClick="(() => Edit(item.Id))">Sửa</Button>
+                                </SpaceItem>
                             }
                             @if (PermissionClaim?.LESSON_DELETE == true)
                             {
                                 <SpaceItem>
-                                <Button Icon="delete" OnClick="(() => Edit(item.Id))">Xóa</Button>
+                                    <Button Icon="delete" OnClick="(() => Delete(item.Id))">Xóa</Button>
                                 </SpaceItem>
                             }
                         </Space>

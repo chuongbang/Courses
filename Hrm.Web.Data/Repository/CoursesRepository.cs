@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Course.Web.Data.IRepository;
 using Course.Web.Share.Domain;
+using Course.Web.Share.IServices;
 
 namespace Course.Web.Data.Repository
 {
@@ -69,19 +70,28 @@ namespace Course.Web.Data.Repository
             return dt;
         }
 
-        public async Task<(List<Courses>, List<Lessons>)> GetCoursesActiveWithLessonsAsync()
+        public async Task<(List<Courses>, List<Lessons>, int)> GetCoursesActiveWithLessonsAsync(CoursesSearch cs)
         {
             using var tx = session.BeginTransaction();
             List<Courses> CDts = null;
             List<Lessons> LDts = null;
+            int total = 0;
             try
             {
+                var _query = Query;
+                _query = _query.Where(c => c.IsActive);
 
-                var courseDatas = Query.Where(c => c.IsActive).ToFuture();
-                var courseIds = courseDatas.GetEnumerable().Select(c => c.Id);
+                if (cs.Keyword != null && cs.Keyword != string.Empty)
+                {
+                    _query = _query.Where(c => c.TenKhoaHoc.ToLower().Contains(cs.Keyword.ToLower()));
+                }
+                total = _query.Count();
 
+                CDts = await _query.Skip((cs.Page.PageIndex - 1) * cs.Page.PageSize).Take(cs.Page.PageSize).ToListAsync();
+
+                var courseIds = CDts.Select(c => c.Id);
                 LDts = await _lessonQuery.Where(c => courseIds.Contains(c.KhoaHocId)).ToListAsync();
-                CDts = courseDatas.ToList();
+
                 tx.Commit();
 
             }
@@ -90,7 +100,7 @@ namespace Course.Web.Data.Repository
                 tx.Rollback();
             }
 
-            return (CDts, LDts);
+            return (CDts, LDts, total);
         }
 
 

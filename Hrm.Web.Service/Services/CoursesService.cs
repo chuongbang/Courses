@@ -56,21 +56,23 @@ namespace Course.Web.Service.Services
             return new CoursesResult() { Dts = dts};
         }        
         
-        public async ValueTask<CourseLessons> GetCoursesActiveWithLessonsAsync(CallContext context = default)
+        public async ValueTask<CourseLessons> GetCoursesActiveWithLessonsAsync(CoursesSearch cs, CallContext context = default)
         {
             List<CoursesData> cDts = null;
             List<LessonsData> lDts = null;
+            int total = 0;
             try
             {
-                var data = await _coursesRepository.GetCoursesActiveWithLessonsAsync();
+                var data = await _coursesRepository.GetCoursesActiveWithLessonsAsync(cs);
 
                 cDts = data.Item1?.Select(c => c.As<CoursesData>()).ToList();
                 lDts = data.Item2?.Select(c => c.As<LessonsData>()).ToList();
+                total = data.Item3;
             }
             catch (Exception ex)
             {
             }
-            return new CourseLessons() { CDatas = cDts, LDatas = lDts};
+            return new CourseLessons() { CDatas = cDts, LDatas = lDts, Total = total };
         }
 
 

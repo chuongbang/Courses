@@ -39,10 +39,11 @@ namespace Course.Web.Client.Pages.Lessons
         protected List<LessonsData> ListLessons;
         protected List<CoursesData> ListCourses;
         protected LessonsEditModel EditModel;
-        Dictionary<CoursesViewModel, List<LessonsViewModel>> Datas;
 
+        ITable table;
+        bool loading;
         bool DetailVisible { get; set; }
-        Page Page { get; set; } = new() { PageIndex = 1, PageSize = 20, Total = 0 };
+        Page Page { get; set; } = new() { PageIndex = 1, PageSize = 2, Total = 0 };
         ClaimsPrincipal User;
         string KeyWord { get; set; }
         Property<LessonsEditModel> property;
@@ -64,25 +65,31 @@ namespace Course.Web.Client.Pages.Lessons
         {
             try
             {
-                int Stt = 1;
-                var ListAll = await CoursesService.GetCoursesActiveWithLessonsAsync();
+                loading = true;
+                StateHasChanged();
+                var ListAll = await CoursesService.GetCoursesActiveWithLessonsAsync(Page, KeyWord);
+                Page.Total = ListAll.Total;
+                int Stt = Page.PageSize * (Page.PageIndex - 1) + 1;
                 ListAllLesson = ListAll.LDatas;
-                foreach (var cs in ListAll?.CDatas)
+                ListViewLessons.Clear();
+                if (ListAll.CDatas.IsNotNullOrEmpty())
                 {
-                    var listLs = ListAll.LDatas.Where(c => c.KhoaHocId == cs.Id).ToList();
-                    LessonsViewModel ls = new LessonsViewModel();
-                    ls.Update(cs);
-                    ls.Stt = Stt++;
-                    ls.SetDataList(listLs);
-                    ListViewLessons.Add(ls);
-
+                    foreach (var cs in ListAll.CDatas)
+                    {
+                        var listLs = ListAll.LDatas?.Where(c => c.KhoaHocId == cs.Id).ToList();
+                        LessonsViewModel ls = new LessonsViewModel();
+                        ls.Update(cs);
+                        ls.Stt = Stt++;
+                        ls.SetDataList(listLs, 1);
+                        ListViewLessons.Add(ls);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Error.ProcessError(ex);
             }
-
+            loading = false;
         }
 
         void AddNew()
@@ -99,7 +106,28 @@ namespace Course.Web.Client.Pages.Lessons
             DetailVisible = true;
 
         }
+        async Task Delete(string id)
+        {
+            try
+            {
+                var current = ListAllLesson.FirstOrDefault(c => c.Id == id);
 
+                var result = await Service.DeleteAsync(current);
+                if (result.State)
+                {
+                    Notice.NotiSuccess(AlertResource.DeleteSuccessful);
+                    await LoadDataAsync();
+                }
+                else
+                {
+                    Notice.NotiError(AlertResource.DeleteFailed);
+                }
+            }
+            catch (Exception ex)
+            {
+                Error.ProcessError(ex);
+            }
+        }
         async Task PageIndexChangeAsync(PaginationEventArgs e)
         {
             try
@@ -111,7 +139,6 @@ namespace Course.Web.Client.Pages.Lessons
             {
                 Error.ProcessError(ex);
             }
-
         }
 
         void CloseDetail()
@@ -176,28 +203,7 @@ namespace Course.Web.Client.Pages.Lessons
             }
         }
 
-        async Task Delete(string id)
-        {
-            try
-            {
 
-                var result = await Service.DeleteAsync(new LessonsData());
-                //if (result.State)
-                //{
-                //    Notice.NotiSuccess(AlertResource.DeleteSuccessful);
-                //    await LoadDataAsync();
-                //}
-                //else
-                //{
-                //    Notice.NotiError(AlertResource.DeleteFailed);
-                //}
-
-            }
-            catch (Exception ex)
-            {
-                Error.ProcessError(ex);
-            }
-        }
 
 
 

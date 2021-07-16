@@ -33,15 +33,20 @@ namespace Course.Web.Share.Models.ViewModels
             Lessons = new List<Lesson>();
 
         }
-        public void SetDataList(List<LessonsData> list)
+        public void SetDataList(List<LessonsData> list, int stt)
         {
-
-            list.ForEach((dt) =>
+            if (list.IsNotNullOrEmpty())
             {
-                Lesson lss = new Lesson();
-                lss.Update(dt);
-                Lessons.Add(lss);
-            });
+                list.ForEach((dt) =>
+                {
+                    Lesson lss = new Lesson();
+                    lss.Update(dt);
+                    lss.Stt = stt++.ToString();
+                    lss.MaBaiHoc = lss.MaBaiHoc.IsNotNullOrEmpty() ? string.Format("({0})", lss.MaBaiHoc) : string.Empty;
+                    lss.TenBaiHocFormat = string.Format("{0} - {1}{2}", lss.Stt, lss.TenBaiHoc, lss.MaBaiHoc);
+                    Lessons.Add(lss);
+                });
+            }
 
         }
 
@@ -66,6 +71,9 @@ namespace Course.Web.Share.Models.ViewModels
         public bool IsTrial { get; set; }
 
         public string TenBaiHoc { get; set; }
+        public string TenBaiHocFormat { get; set; }
+
+        public string Stt { get; set; }
 
 
     }

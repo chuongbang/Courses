@@ -61,13 +61,14 @@ namespace Course.Web.Client.Data
             {
                 throw;
             }
-        }        
-        
-        public async Task<CourseLessons> GetCoursesActiveWithLessonsAsync()
+        }
+
+        public async Task<CourseLessons> GetCoursesActiveWithLessonsAsync(Page page = null, string keyword = null)
         {
             try
             {
-                return await Service.GetCoursesActiveWithLessonsAsync();
+                page = page ?? new Page();
+                return await Service.GetCoursesActiveWithLessonsAsync(new CoursesSearch() {Page = page, Keyword = keyword });
             }
             catch (Exception ex)
             {

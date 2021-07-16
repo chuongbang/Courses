@@ -18,7 +18,7 @@ namespace Course.Web.Share.IServices
         ValueTask<ExcuteResponse> UpdateAsync(CoursesData hs, CallContext context = default);
         ValueTask<ExcuteResponse> DeleteAsync(CoursesData hs, CallContext context = default);
         ValueTask<ExcuteResponse> DeleteListAsync(List<CoursesData> ls, CallContext context = default);
-        ValueTask<CourseLessons> GetCoursesActiveWithLessonsAsync(CallContext context = default);
+        ValueTask<CourseLessons> GetCoursesActiveWithLessonsAsync(CoursesSearch cs, CallContext context = default);
 
     }
 
@@ -51,7 +51,8 @@ namespace Course.Web.Share.IServices
         [DataMember(Order = 2)]
         public List<LessonsData> LDatas { get; set; }
 
-
+        [DataMember(Order = 3)]
+        public int Total { get; set; }
 
     }
 

@@ -40,7 +40,7 @@
            OnPageIndexChange="PageIndexChangeAsync">
 
         <Selection Key="@context.Id" Type="@selectionType" Disabled="@(context.Id=="Disabled User")" />
-        <Column @bind-Field="@context.Stt" Sortable />
+        <Column Width="5%" @bind-Field="@context.Stt" Sortable />
         <Column @bind-Field="@context.TenKhoaHoc" Sortable>
             <a class="btn-link" @onclick="(() => OpenDetail(context))">@context.TenKhoaHoc</a>
         </Column>

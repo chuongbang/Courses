@@ -1,12 +1,11 @@
 ﻿@page "/quan-ly-bai-học"
 
 <div class="site-content">
-    @*<Space>
-            <SpaceItem>
-                <h3 style="text-transform: uppercase; margin-top: 10px"> </h3>
-            </SpaceItem>
-        </Space>*@
-    <PageHeader Class="site-page-header" Title="Quản lý bài học" />
+    <Space>
+        <SpaceItem>
+            <h3 style="text-transform: uppercase; margin-top: 10px"> </h3>
+        </SpaceItem>
+    </Space>
     <Row Wrap="false" Style="padding: 10px 0px">
         <AntDesign.Col Span="6">
             <Search Placeholder="Tên khóa học" OnChange="SearchAsync" EnterButton="true" @bind-Value="@KeyWord" />
@@ -22,9 +21,9 @@
                     }
                     @if (PermissionClaim?.LESSON_DELETE == true)
                     {
-                        <SpaceItem>
-                            <Button Icon="delete">Xóa chọn</Button>
-                        </SpaceItem>
+                        @*<SpaceItem>
+                                <Button Icon="delete">Xóa chọn</Button>
+                            </SpaceItem>*@
                     }
                 </Space>
 
@@ -33,7 +32,7 @@
     </Row>
     <Table DataSource="ListViewLessons" RowExpandable="(rc) => rc.Data.Lessons.Any()">
         <RowTemplate>
-            <Column Width="3%" @bind-Field="@context.Stt" />
+            <Column Width="2%" @bind-Field="@context.Stt" />
             <Column @bind-Field="@context.TenKhoaHoc" />
             <Column @bind-Field="@context.ThoiLuong" />
             <Column @bind-Field="@context.GiaoVien" />
@@ -41,9 +40,24 @@
         <ExpandTemplate>
             @foreach (var item in context.Data.Lessons)
             {
-                <Row>
-                    <AntDesign.Col Span="20" Class="lesson-items">@item.TenBaiHoc</AntDesign.Col>
-                    <AntDesign.Col Span="2"><a @onclick="(() => Edit(item.Id))">Sửa</a></AntDesign.Col>
+                <Row Class="row-lessons">
+                    <AntDesign.Col Span="19" Class="lesson-items">@item.TenBaiHoc</AntDesign.Col>
+                    <AntDesign.Col Span="2"  Class="row-lessons-flex-end">
+                        <Space>
+                            @if (PermissionClaim?.LESSON_EDIT == true)
+                            {
+                            <SpaceItem>
+                                <Button Icon="edit" OnClick="(() => Edit(item.Id))">Sửa</Button>
+                            </SpaceItem>
+                            }
+                            @if (PermissionClaim?.LESSON_DELETE == true)
+                            {
+                                <SpaceItem>
+                                <Button Icon="delete" OnClick="(() => Edit(item.Id))">Xóa</Button>
+                                </SpaceItem>
+                            }
+                        </Space>
+                    </AntDesign.Col>
                 </Row>
             }
 
@@ -67,11 +81,6 @@
 
 @code{
 
-    RenderFragment avatar =@<Avatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
 
-
-@*static RenderFragment edit = @<a key="list-loadmore-edit" @onclick="Edit">edit</a>;
-
-    static RenderFragment add = @<a key="list-loadmore-more">more</a>;*@
 
 }

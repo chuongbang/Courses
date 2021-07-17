@@ -13,6 +13,7 @@ namespace Course.Web.Share.IServices
     public interface ICoursesService
     {
         ValueTask<CoursesResult> GetByPageAsync(CoursesSearch cs, CallContext context = default);
+        ValueTask<CoursesResult> GetByPageWithUserIdAsync(CoursesSearch cs, CallContext context = default);
         ValueTask<CoursesResult> GetAllActiveAsync(CallContext context = default);
         ValueTask<ExcuteResponse> AddAsync(CoursesData hs, CallContext context = default);
         ValueTask<ExcuteResponse> UpdateAsync(CoursesData hs, CallContext context = default);
@@ -39,7 +40,7 @@ namespace Course.Web.Share.IServices
         [DataMember(Order = 2)]
         public Page Page { get; set; }
         [DataMember(Order = 3)]
-        public IEnumerable<string> Ids { get; set; }
+        public string Id { get; set; }
 
     }
     [DataContract]

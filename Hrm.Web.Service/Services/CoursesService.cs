@@ -41,6 +41,24 @@ namespace Course.Web.Service.Services
             return new CoursesResult() { Dts = dts , Total = total};
         }        
         
+        public async ValueTask<CoursesResult> GetByPageWithUserIdAsync(CoursesSearch cs, CallContext context = default)
+        {
+            List<CoursesData> dts = null;
+            int total = 0;
+            try
+            {
+               
+                var data = await _coursesRepository.GetPageByIdAsync(cs.Id, cs.Keyword, cs.Page.PageIndex, cs.Page.PageSize);
+
+                dts = data.Item1?.Select(c => c.As<CoursesData>()).ToList();
+                total = data.Item2;
+            }
+            catch (Exception ex)
+            {
+            }
+            return new CoursesResult() { Dts = dts , Total = total};
+        }        
+        
         public async ValueTask<CoursesResult> GetAllActiveAsync(CallContext context = default)
         {
             List<CoursesData> dts = null;

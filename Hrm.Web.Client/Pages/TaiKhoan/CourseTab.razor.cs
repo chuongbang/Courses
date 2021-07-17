@@ -35,6 +35,7 @@ namespace Course.Web.Client.Pages.TaiKhoan
         AppUserData currentUser => SessionData.User;
         List<UserCoursesViewModel> ListUserCourseView;
         List<CoursesData> allKhoaHoc;
+        Page Page { get; set; } = new() { PageIndex = 1, PageSize = 10000, Total = 0 };
 
         Dictionary<string, ISelectItem> DataSource;
         Dictionary<string, ISelectItem> DataSourceFull;
@@ -50,8 +51,7 @@ namespace Course.Web.Client.Pages.TaiKhoan
         public async Task LoadUserCoursesDetail()
         {
             allKhoaHoc = (await CoursesService.GetAllActiveAsync()).Dts;
-
-            var allMap = await UserCoursesService.GetByIdAsync(UserId);
+            var allMap = await UserCoursesService.GetByIdAsync(UserId, Page);
             ListUserCourseView = allMap.Dts != null ?  Mapper.Map<List<UserCoursesViewModel>>(allMap.Dts) : null;
             DataSourceFull = allKhoaHoc != null ? allKhoaHoc.ToDictionary(c => c.Id, v => (ISelectItem)v) : new Dictionary<string, ISelectItem>();
             UpdateListView();

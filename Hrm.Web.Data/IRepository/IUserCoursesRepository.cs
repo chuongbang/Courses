@@ -7,8 +7,8 @@ namespace Course.Web.Data.IRepository
 {
     public interface IUserCoursesRepository : IRepository<UserCourses>
     {
-        Task<List<UserCourses>> GetByIdAsync(string id);
-
+        Task<(List<UserCourses>, int)> GetByIdAsync(string id, string keyword, int pageIndex, int pageSize);
+        Task<(List<Courses>, int)> GetPageByIdAsync(string id, string keyword, int pageIndex, int pageSize);
 
     }
 }

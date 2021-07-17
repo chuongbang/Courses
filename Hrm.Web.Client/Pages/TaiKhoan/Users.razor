@@ -54,9 +54,12 @@
                 <Space Size=@("small")>
                     <SpaceItem>
                         <Button OnClick="() => OpenDetail(context)">Thông tin</Button>
-                    </SpaceItem>                    
+                    </SpaceItem>
                     <SpaceItem>
-                        <Button OnClick="() => OpenCourseDetail(context)">Khóa học</Button>
+                        @if (PermissionClaim?.COURSE_ADD == true)
+                        {
+                            <Button OnClick="() => OpenCourseDetail(context)">Khóa học</Button>
+                        }
                     </SpaceItem>
                     <SpaceItem>
                         @if (PermissionClaim?.ACCOUNT_SETROLE == true)
@@ -98,7 +101,7 @@
             <AppUserDetail @ref="appUserDetail" Cancel="CloseDetail" ValueChanged="@SaveDetailAsync"></AppUserDetail>
         </Template>
     </Drawer>
-    <Drawer Closable="true" MaskClosable="@(!PermissionClaim.COURSE_EDIT)" Width="900" Visible="@DetailCourse" Title='("Thông tin khóa học")' OnClose="CloseCourseDetail">
+    <Drawer Closable="true" MaskClosable="false" Width="900" Visible="@DetailCourse" Title='("Thông tin khóa học")' OnClose="CloseCourseDetail">
         <Template>
             <CourseTab @ref="courseTab" UserId="@VisibaleUserId" CancelChanged="CloseCourseDetail" />
         </Template>

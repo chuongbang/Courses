@@ -12,7 +12,8 @@ namespace Course.Web.Share.IServices
     [ServiceContract(Name = "Hyper.UserCoursesService")]
     public interface IUserCoursesService
     {
-        ValueTask<UserCoursesResult> GetByIdAsync(string id, CallContext context = default);
+        ValueTask<UserCoursesResult> GetByIdAsync(CoursesSearch cs, CallContext context = default);
+        ValueTask<CoursesResult> GetByPageWithUserIdAsync(CoursesSearch cs, CallContext context = default);
         ValueTask<ExcuteResponse> AddAsync(UserCourseList hs, CallContext context = default);
         ValueTask<ExcuteResponse> UpdateAsync(UserCoursesData hs, CallContext context = default);
         ValueTask<ExcuteResponse> DeleteAsync(UserCoursesData hs, CallContext context = default);

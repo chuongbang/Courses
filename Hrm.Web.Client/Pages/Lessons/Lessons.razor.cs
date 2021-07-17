@@ -43,7 +43,7 @@ namespace Course.Web.Client.Pages.Lessons
         ITable table;
         bool loading;
         bool DetailVisible { get; set; }
-        Page Page { get; set; } = new() { PageIndex = 1, PageSize = 2, Total = 0 };
+        Page Page { get; set; } = new() { PageIndex = 1, PageSize = 15, Total = 0 };
         ClaimsPrincipal User;
         string KeyWord { get; set; }
         Property<LessonsEditModel> property;

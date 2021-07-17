@@ -8,7 +8,7 @@ namespace Course.Web.Data.IRepository
 {
     public interface ICoursesRepository : IRepository<Courses>
     {
-        Task<(List<Courses>, int)> GetByIdsAsync(IEnumerable<string> ids, string keyword, int pageIndex, int pageSize);
+        Task<(List<Courses>, int)> GetPageByIdAsync(string id, string keyword, int pageIndex, int pageSize);
         Task<List<Courses>> GetAllActiveAsync();
         Task<(List<Courses>, List<Lessons>, int)> GetCoursesActiveWithLessonsAsync(CoursesSearch cs);
 

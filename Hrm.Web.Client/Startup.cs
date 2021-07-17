@@ -17,6 +17,7 @@ using Course.Web.Client.Service;
 using Microsoft.AspNetCore.Identity;
 using Course.Web.Share.Domain;
 using Course.Web.Share;
+using Microsoft.Extensions.FileProviders;
 
 namespace Course.Web.Client
 {
@@ -125,7 +126,12 @@ namespace Course.Web.Client
             });
 
             app.UseStaticFiles();
-
+            string resourceFolderPath = Configuration["ImageFolderPath"];
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = "/resource",
+                FileProvider = new PhysicalFileProvider(resourceFolderPath)
+            });
             //app.UseCookiePolicy();
             app.UseAuthentication();
 

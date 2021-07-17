@@ -31,18 +31,22 @@ namespace Course.Web.Client.Data
         public async Task<ExcuteResponse> DeleteAsync(CoursesData hs)
         {
             return await Service.DeleteAsync(hs);
-        }        
-        
+        }
+
         public async Task<ExcuteResponse> DeleteListAsync(List<CoursesData> hs)
         {
             return await Service.DeleteListAsync(hs);
         }
 
-        public async Task<CoursesResult> GetByPageAsync(Page page = null, string keyword = null)
+        public async Task<CoursesResult> GetByPageAsync(Page page = null, string keyword = null, string userId = null)
         {
             try
             {
                 page = page ?? new Page();
+                if (userId != null)
+                {
+                    return await Service.GetByPageWithUserIdAsync(new CoursesSearch() { Page = page, Keyword = keyword, Id = userId });
+                }
                 return await Service.GetByPageAsync(new CoursesSearch() { Page = page, Keyword = keyword });
             }
             catch (Exception ex)
@@ -68,7 +72,7 @@ namespace Course.Web.Client.Data
             try
             {
                 page = page ?? new Page();
-                return await Service.GetCoursesActiveWithLessonsAsync(new CoursesSearch() {Page = page, Keyword = keyword });
+                return await Service.GetCoursesActiveWithLessonsAsync(new CoursesSearch() { Page = page, Keyword = keyword });
             }
             catch (Exception ex)
             {

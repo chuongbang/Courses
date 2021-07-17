@@ -23,7 +23,7 @@ namespace Course.Web.Data.Repository
         }
 
 
-        public async Task<(List<Courses>, int)> GetByIdsAsync(IEnumerable<string> ids, string keyword, int pageIndex, int pageSize)
+        public async Task<(List<Courses>, int)> GetPageByIdAsync(string id, string keyword, int pageIndex, int pageSize)
         {
             using var tx = session.BeginTransaction();
             List<Courses> dt = null;
@@ -31,20 +31,14 @@ namespace Course.Web.Data.Repository
             try
             {
                 var _query = Query;
-                _query = _query.Where(c => ids.Contains(c.Id));
+                _query = _query.Where(c => c.Id == id);
                 if (keyword != null && keyword != string.Empty)
                 {
                     _query = _query.Where(c => c.TenKhoaHoc.ToLower().Contains(keyword.ToLower()));
                 }
                 total = _query.Count();
-                if (pageIndex != 0)
-                {
-                    dt = await _query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                }
-                else
-                {
-                    dt = await _query.ToListAsync();
-                }
+                dt = await _query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
                 tx.Commit();
             }
             catch (Exception ex)

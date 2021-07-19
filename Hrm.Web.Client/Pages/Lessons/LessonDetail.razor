@@ -6,12 +6,33 @@
         <Breadcrumb>
             <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
             <BreadcrumbItem>Khóa học của tôi</BreadcrumbItem>
-            <BreadcrumbItem>Khóa ....</BreadcrumbItem>
+            <BreadcrumbItem>@Course.TenKhoaHoc</BreadcrumbItem>
         </Breadcrumb>
     </PageHeaderExtra>
 </PageHeader>
 
+<div class="site-content">
 
+    <Row Wrap="false" Style="padding: 10px 0px">
+        <AntDesign.Col Span="16">
+            <iframe src="/resource/@LinkFile" style="width: 100%"></iframe>
+        </AntDesign.Col>
+        <AntDesign.Col Span="8">
+            <AntList DataSource="@ListLessonView" TItem="LessonsData" OnItemClick="(e => LessonClick(e))">
+                <ListItem>
+                    <ListItemMeta Description="@context.MaBaiHoc">
+                        <TitleTemplate>
+                            <a>@context.TenBaiHoc</a>
+                        </TitleTemplate>
+                    </ListItemMeta>
+                </ListItem>
+            </AntList>
+        </AntDesign.Col>
+    </Row>
+
+
+
+</div>
 
 @code {
 

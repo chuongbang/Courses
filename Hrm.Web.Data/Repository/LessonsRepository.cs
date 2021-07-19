@@ -14,9 +14,11 @@ namespace Course.Web.Data.Repository
 {
     public class LessonsRepository : Repository<Lessons>, ILessonsRepository
     {
+        IQueryable<Courses> _queryCourse;
         public LessonsRepository(ISession session)
             : base(session)
         {
+            _queryCourse = session.Query<Courses>();
         }
 
 
@@ -65,6 +67,23 @@ namespace Course.Web.Data.Repository
                 tx.Rollback();
             }
             return dt;
+        }      
+        public async Task<(List<Lessons>, Courses)> GetLessonsByCourseId(string courseId)
+        {
+            using var tx = session.BeginTransaction();
+            List<Lessons> dts = null;
+            Courses course = null;
+            try
+            {
+                course = await _queryCourse.FirstOrDefaultAsync(c => c.Id == courseId);
+                dts = await Query.Where(c => c.KhoaHocId == courseId).ToListAsync();
+                tx.Commit();
+            }
+            catch (Exception ex)
+            {
+                tx.Rollback();
+            }
+            return (dts,course);
         }
 
 

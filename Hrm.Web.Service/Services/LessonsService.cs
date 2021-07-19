@@ -54,6 +54,23 @@ namespace Course.Web.Service.Services
             {
             }
             return new LessonsResult() { Dts = dts};
+        }        
+        
+        public async ValueTask<LessonsResult> GetLessonsByCourseId(string courseId, CallContext context = default)
+        {
+            List<LessonsData> dts = null;
+            CoursesData course = null;
+            try
+            {
+                var data = await _lessonsRepository.GetLessonsByCourseId(courseId);
+
+                dts = data.Item1?.Select(c => c.As<LessonsData>()).ToList();
+                course = data.Item2?.As<CoursesData>();
+            }
+            catch (Exception ex)
+            {
+            }
+            return new LessonsResult() { Dts = dts, Course = course};
         }
 
 

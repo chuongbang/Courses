@@ -14,6 +14,7 @@ namespace Course.Web.Share.IServices
     {
         ValueTask<LessonsResult> GetByPageAsync(LessonsSearch cs, CallContext context = default);
         ValueTask<LessonsResult> GetAllActiveAsync(CallContext context = default);
+        ValueTask<LessonsResult> GetLessonsByCourseId(string courseId, CallContext context = default);
         ValueTask<ExcuteResponse> AddAsync(LessonsData hs, CallContext context = default);
         ValueTask<ExcuteResponse> UpdateAsync(LessonsData hs, CallContext context = default);
         ValueTask<ExcuteResponse> DeleteAsync(LessonsData hs, CallContext context = default);
@@ -26,7 +27,9 @@ namespace Course.Web.Share.IServices
         [DataMember(Order = 1)]
         public List<LessonsData> Dts { get; set; }
         [DataMember(Order = 2)]
-        public int Total { get; set; }
+        public int Total { get; set; }       
+        [DataMember(Order = 3)]
+        public CoursesData Course { get; set; }
     }
 
     [DataContract]

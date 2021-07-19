@@ -63,6 +63,17 @@ namespace Course.Web.Client.Data
             }
         }
 
+        public async Task<LessonsResult> GetLessonsByCourseId(string courseId) 
+        {
+            try
+            {
+                return await Service.GetLessonsByCourseId(courseId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
 
 
     }

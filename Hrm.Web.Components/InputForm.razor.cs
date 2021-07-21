@@ -13,6 +13,10 @@ using Course.Core.Ultis;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Course.Web.Share.Models.EditModels;
+using Microsoft.AspNetCore.Components.Forms;
+using System.IO;
+using Microsoft.Extensions.Hosting;
+using Course.Web.Share.Ultils;
 
 namespace Course.Web.Components
 {
@@ -312,5 +316,40 @@ namespace Course.Web.Components
             }
             InvokeAsync(StateHasChanged);
         }
+
+        List<IBrowserFile> loadedFiles = new();
+        long maxFileSize = 1024 * 1024 * 50;
+        int maxAllowedFiles = 3;
+        string NameFile;
+        private async Task LoadFiles(InputFileChangeEventArgs e, PropertyInfo property)
+        {
+            loadedFiles.Clear();
+
+            foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+            {
+                try
+                {
+                    loadedFiles.Add(file);
+                    NameFile += file.Name;
+                    var trustedFileNameForFileStorage = file.Name;
+                    var pathFolder = Path.Combine(GlobalVariants.FileUploadPath);
+                    var pathFile = Path.Combine(pathFolder, trustedFileNameForFileStorage);
+                    if (!Directory.Exists(Path.GetDirectoryName(pathFolder)))
+                    {
+                        Directory.CreateDirectory(pathFolder);
+                    }
+                    await using FileStream fs = new(pathFile, FileMode.Create);
+                    await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+
+            FieldChanged(property, NameFile);
+
+        }
+
     }
 }

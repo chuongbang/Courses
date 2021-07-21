@@ -28,6 +28,7 @@ namespace Course.Web.Client
             Configuration = configuration;
             Env = env;
             GlobalVariants.InitFileVersion();
+            GlobalVariants.FileUploadPath = Configuration["FileUploadPath"];
         }
 
         public IConfiguration Configuration { get; }

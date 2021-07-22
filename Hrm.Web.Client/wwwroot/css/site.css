@@ -246,3 +246,45 @@ html, body {
     display: flex;
     justify-content: flex-end;
 }
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+}
+
+    .fileUpload input.upload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+
+.btn--browse {
+    border: 1px solid gray;
+    border-left: 0;
+    border-radius: 0 2px 2px 0;
+    background-color: #1890ff;
+    color: #fff;
+    height: 32px;
+    padding: 4px 14px;
+}
+    .btn--browse:hover {
+        color: #fff;
+        background: #40a9ff;
+        border-color: #40a9ff;
+    }
+
+    .f-input {
+        height: 32px;
+        background-color: white;
+        border: 1px solid gray;
+        width: 100%;
+        max-width: 268px;
+        float: left;
+        padding: 0 14px;
+    }

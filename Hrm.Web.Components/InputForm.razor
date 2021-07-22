@@ -35,7 +35,10 @@
                                             <LabelFor FieldIdentifier="context.Field(property.Name)"></LabelFor>
                                         }
                                         <input id="uploadFile" disabled class="f-input" value="@value" />
-                                        <InputFile OnChange="@(e => LoadFiles(e, property))" @bind-Value="value" />
+                                        <div class="fileUpload btn btn--browse">
+                                            <span>Chọn File</span>
+                                            <InputFile OnChange="@(e => LoadFiles(e, property))" @bind-Value="value" class="upload"/>
+                                        </div>
                                         <CustomValidationMessage Field="context.Field(property.Name)" TValue="object"></CustomValidationMessage>
                                     </div>
 

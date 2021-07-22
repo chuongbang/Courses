@@ -324,7 +324,7 @@ namespace Course.Web.Components
         private async Task LoadFiles(InputFileChangeEventArgs e, PropertyInfo property)
         {
             loadedFiles.Clear();
-
+            NameFile = string.Empty;
             foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
             {
                 try

@@ -13,8 +13,15 @@
             <div class="logo" />
             <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Horizontal" DefaultSelectedKeys=@(new[]{"quan-tri"})>
                 <MenuItem Key="quan-tri" RouterLink="/" RouterMatch="NavLinkMatch.All"><Icon Type="home" Theme="outline"></Icon> Trang chủ</MenuItem>
-                <MenuItem Key="khoa-hoc" RouterLink="/khoa-hoc" RouterMatch="NavLinkMatch.All"><Icon Type="book" Theme="outline" /> Khóa học</MenuItem>
-                <MenuItem Key="bai-hoc" RouterLink="/bai-hoc" RouterMatch="NavLinkMatch.All"><Icon Type="book" Theme="outline" /> Bài học</MenuItem>
+                <MenuItem Key="khoa-hoc" RouterLink="/khoa-hoc" RouterMatch="NavLinkMatch.All"><Icon Type="book" Theme="outline" /> Khóa học của tôi</MenuItem>
+                @if (Permission?.COURSE_VIEW == true)
+                {
+                    <MenuItem Key="quan-ly-khoa-hoc" RouterLink="/quan-ly-khoa-hoc" RouterMatch="NavLinkMatch.All"><Icon Type="book" Theme="outline" /> Quản lý khóa học</MenuItem>
+                }                
+                @if (Permission?.LESSON_VIEW == true)
+                {
+                    <MenuItem Key="quan-ly-bai-hoc" RouterLink="/quan-ly-bai-học" RouterMatch="NavLinkMatch.All"><Icon Type="book" Theme="outline" /> Quản lý bài học</MenuItem>
+                }
                 <SubMenu>
                     <ChildContent>
                         @if (Permission?.ACCOUNT_VIEW == true)

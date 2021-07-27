@@ -13,6 +13,12 @@ using Course.Core.Ultis;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Course.Web.Share.Models.EditModels;
+using Microsoft.AspNetCore.Components.Forms;
+using System.IO;
+using Microsoft.Extensions.Hosting;
+using Course.Web.Share.Ultils;
+using Course.Core.Enums;
+using Blazored.TextEditor;
 
 namespace Course.Web.Components
 {
@@ -50,7 +56,6 @@ namespace Course.Web.Components
         [Parameter] public EventCallback OnValid { get; set; }
         [Parameter] public EventCallback<string> ButtonClick { get; set; }
 
-
         protected Action InitForm { get; set; }
         protected Func<string, Dictionary<string, List<string>>> Validate { get; set; }
         protected Func<Dictionary<string, List<string>>> ValidateAll { get; set; }
@@ -69,6 +74,13 @@ namespace Course.Web.Components
         bool _requiredRefresh = false;
         bool dialogTamTinh = false;
         string message;
+
+        BlazoredTextEditor _quillHtml;
+        [Parameter] public string QuillHtmlContent { get; set; }
+
+        [Parameter] public EventCallback<string> QuillHtmlContentChanged { get; set; }
+
+
         protected override void OnParametersSet()
         {
             if (Value == null)
@@ -147,6 +159,10 @@ namespace Course.Web.Components
         {
             try
             {
+                if (_quillHtml != null)
+                {
+                    await QuillHtmlContentChanged.InvokeAsync((await _quillHtml.GetHTML()));
+                }
                 var customValidateResult = ValidateAll?.Invoke();
                 if (customValidateResult != null && !customValidateResult.Any())
                 {
@@ -174,6 +190,7 @@ namespace Course.Web.Components
         protected override void OnInitialized()
         {
             formStyle = pattern + Style;
+
         }
 
         protected void ChangeStyle(int i)
@@ -297,7 +314,7 @@ namespace Course.Web.Components
             var isLessThanMaxSize = file.Size / 1024 / 1024 < fileOptions.MaxSize;
             if (!isLessThanMaxSize)
             {
-                Message.Error($"Ảnh phải có kính thước dưới {fileOptions.MaxSize/1024/1024}MB!");
+                Message.Error($"Ảnh phải có kính thước dưới {fileOptions.MaxSize / 1024 / 1024}MB!");
             }
             return isAllowType && isLessThanMaxSize;
         }
@@ -312,5 +329,67 @@ namespace Course.Web.Components
             }
             InvokeAsync(StateHasChanged);
         }
+
+        List<IBrowserFile> loadedFiles = new();
+        long maxFileSize = 1024 * 1024 * 100;
+        int maxAllowedFiles = 1;
+        string NameFile;
+        int progressPercent;
+        bool displayProgress = false;
+        private async Task LoadFiles(InputFileChangeEventArgs e, PropertyInfo property)
+        {
+            loadedFiles.Clear();
+            NameFile = string.Empty;
+            foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+            {
+                try
+                {
+                    loadedFiles.Add(file);
+                    NameFile += file.Name;
+                    var trustedFileNameForFileStorage = file.Name;
+                    var pathFolder = Path.Combine(GlobalVariants.FileUploadPath);
+                    var pathFile = Path.Combine(pathFolder, trustedFileNameForFileStorage);
+                    if (!Directory.Exists(Path.GetDirectoryName(pathFolder)))
+                    {
+                        Directory.CreateDirectory(pathFolder);
+                    }
+                    using var fileUpload = File.OpenWrite(pathFile);
+                    using var stream = file.OpenReadStream(968435456);
+
+                    var buffer = new byte[4 * 1096];
+                    int bytesRead;
+                    double totalRead = 0;
+                    var cancelation = new CancellationTokenSource();
+                    displayProgress = true;
+
+                    while ((bytesRead = await stream.ReadAsync(buffer, cancelation.Token)) != 0)
+                    {
+                        totalRead += bytesRead;
+                        await fileUpload.WriteAsync(buffer, cancelation.Token);
+
+                        progressPercent = (int)((totalRead / file.Size) * 100);
+                        StateHasChanged();
+                    }
+
+                    displayProgress = false;
+
+                    //await using FileStream fs = new(pathFile, FileMode.Create);
+                    //await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+
+
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+
+            FieldChanged(property, NameFile);
+
+        }
+
+
+
+
+
     }
 }

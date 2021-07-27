@@ -1,0 +1,93 @@
+﻿@page "/quan-ly-bai-học"
+
+@if (PermissionClaim?.LESSON_VIEW == true)
+{
+    <PageHeader Class="site-page-header" Title="Quản lý bài học">
+        <PageHeaderExtra>
+            <Breadcrumb>
+                <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+                <BreadcrumbItem>Quản lý bài học</BreadcrumbItem>
+            </Breadcrumb>
+        </PageHeaderExtra>
+    </PageHeader>
+    <div class="site-content">
+
+        <Row Wrap="false" Style="padding: 10px 0px">
+            <AntDesign.Col Span="6">
+                <Search Placeholder="Tên khóa học" OnChange="SearchAsync" EnterButton="true" @bind-Value="@KeyWord" />
+            </AntDesign.Col>
+            <AntDesign.Col Flex=@("auto")>
+                <Row Justify="end">
+                    <Space>
+                        @if (PermissionClaim?.LESSON_ADD == true)
+                        {
+                            <SpaceItem>
+                                <Button Icon="plus" OnClick="AddNew">Thêm mới</Button>
+                            </SpaceItem>
+                        }
+                        @if (PermissionClaim?.LESSON_DELETE == true)
+                        {
+                            @*<SpaceItem>
+                                    <Button Icon="delete">Xóa chọn</Button>
+                                </SpaceItem>*@
+                        }
+                    </Space>
+
+                </Row>
+            </AntDesign.Col>
+        </Row>
+        <Table @ref="table" DataSource="ListViewLessons" TItem="LessonsViewModel"
+               Total="Page.Total" Class="table-striped"
+               PageIndex="Page.PageIndex" Loading="loading"
+               PageSize="Page.PageSize"
+               OnPageIndexChange="PageIndexChangeAsync"
+               RowExpandable="(rc) => rc.Data.Lessons.Any()">
+            <RowTemplate>
+                <Column Width="2%" @bind-Field="@context.Stt" />
+                <Column @bind-Field="@context.TenKhoaHoc" />
+                <Column @bind-Field="@context.ThoiLuong" />
+                <Column @bind-Field="@context.GiaoVien" />
+            </RowTemplate>
+            <ExpandTemplate>
+                @foreach (var item in context.Data.Lessons)
+                {
+                    <Row Class="row-lessons">
+                        <AntDesign.Col Span="19" Class="lesson-items">@item.TenBaiHocFormat</AntDesign.Col>
+                        <AntDesign.Col Span="2" Class="row-lessons-flex-end">
+                            <Space>
+                                @if (PermissionClaim?.LESSON_EDIT == true)
+                                {
+                                    <SpaceItem>
+                                        <Button Icon="edit" OnClick="(() => Edit(item.Id))">Sửa</Button>
+                                    </SpaceItem>
+                                }
+                                @if (PermissionClaim?.LESSON_DELETE == true)
+                                {
+                                    <SpaceItem>
+                                        <Button Icon="delete" OnClick="(() => Delete(item.Id))">Xóa</Button>
+                                    </SpaceItem>
+                                }
+                            </Space>
+                        </AntDesign.Col>
+                    </Row>
+                }
+
+            </ExpandTemplate>
+        </Table>
+
+
+    </div>
+
+    if (PermissionClaim?.COURSE_ADD == true)
+    {
+        <Drawer Closable="true" MaskClosable="true" Width="720" Visible="DetailVisible"
+                Title='($"Thông tin bài học")' OnClose="CloseDetail">
+            <Template>
+                <InputForm ItemType="LessonsEditModel" Value="EditModel" ValueChanged="SaveLessonAsync" CancelChanged="CloseDetail" @bind-QuillHtmlContent="QuillHtmlContent"></InputForm>
+            </Template>
+        </Drawer>
+    }
+}
+
+
+

@@ -18,81 +18,43 @@ namespace Course.Web.Client.Data
         {
         }
 
-        public async Task<bool> AddAsync(CoursesData hs)
+        public async Task<ExcuteResponse> AddAsync(CoursesData hs)
         {
-            try
-            {
-                _logger.LogInformation("{id}: Them ho so CoursesData", hs.Id);
-                var response = await Service.AddAsync(hs);
-                if (response != null)
-                {
-                    _logger.LogInformation("{id}: Them ho so CoursesData: {state}", hs.Id, response.State);
-                    return response.State;
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "{id}: Them ho so that bai", hs.Id);
-                throw;
-            }
+            return await Service.AddAsync(hs);
         }
 
-        public async Task<bool> UpdateAsync(CoursesData hs)
+        public async Task<ExcuteResponse> UpdateAsync(CoursesData hs)
         {
-            try
-            {
-                _logger.LogInformation("{id}: Cap nhat ho so CoursesData", hs.Id);
-                var response = await Service.UpdateAsync(hs);
-                if (response != null)
-                {
-                    _logger.LogInformation("{id}: Cap nhat ho so CoursesData: {state}", hs.Id, response.State);
-                    return response.State;
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "{id}: Them ho so that bai", hs.Id);
-                throw;
-            }
-
+            return await Service.UpdateAsync(hs);
         }
 
-        public async Task<bool> DeleteAsync(CoursesData hs)
+        public async Task<ExcuteResponse> DeleteAsync(CoursesData hs)
         {
-            try
-            {
-                _logger.LogInformation("{id}: Xoa ho so CoursesData [{key}] [{name}]", hs.Id);
-                var response = await Service.DeleteAsync(hs);
-                if (response != null)
-                {
-                    _logger.LogInformation("{id}: Xoa ho so CoursesData : {state}", hs.Id, response.State);
-                    return response.State;
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "{id}: Xoa ho so CoursesData that bai [{key}] [{name}]",  hs.Id);
-                throw;
-            }
+            return await Service.DeleteAsync(hs);
         }
 
-        public async Task<CoursesResult> GetByIdsAsync(List<string> ids, Page page = null, string keyword = null)
+        public async Task<ExcuteResponse> DeleteListAsync(List<CoursesData> hs)
+        {
+            return await Service.DeleteListAsync(hs);
+        }
+
+        public async Task<CoursesResult> GetByPageAsync(Page page = null, string keyword = null, string userId = null)
         {
             try
             {
                 page = page ?? new Page();
-                return await Service.GetByIdsAsync(new CoursesSearch() { Ids = ids, Page = page , Keyword = keyword});
+                if (userId != null)
+                {
+                    return await Service.GetByPageWithUserIdAsync(new CoursesSearch() { Page = page, Keyword = keyword, Id = userId });
+                }
+                return await Service.GetByPageAsync(new CoursesSearch() { Page = page, Keyword = keyword });
             }
             catch (Exception ex)
             {
-                _logger.LogInformation(ex, "Lay danh sach ho so CoursesModel that bai");
                 throw;
             }
-        }        
-        
+        }
+
         public async Task<CoursesResult> GetAllActiveAsync()
         {
             try
@@ -101,32 +63,22 @@ namespace Course.Web.Client.Data
             }
             catch (Exception ex)
             {
-                _logger.LogInformation(ex, "Lay danh sach ho so CoursesModel that bai");
                 throw;
             }
         }
 
-
-        
-        //public async Task<bool> DeleteListAsync(List<CoursesData> ls)
-        //{
-        //    try
-        //    {
-        //        _logger.LogInformation("{id}: Xoa list du lieu CoursesData", ThongTinToChucId);
-        //        var response = await Service.DeleteListAsync(ls);
-        //        if (response != null)
-        //        {
-        //            _logger.LogInformation("{id}:  Xoa list du lieu CoursesData: {state}", ThongTinToChucId, response.State);
-        //            return response.State;
-        //        }
-        //        return false;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "{id}: Xoa list du lieu CoursesData that bai", ThongTinToChucId);
-        //        throw;
-        //    }
-        //}
+        public async Task<CourseLessons> GetCoursesActiveWithLessonsAsync(Page page = null, string keyword = null)
+        {
+            try
+            {
+                page = page ?? new Page();
+                return await Service.GetCoursesActiveWithLessonsAsync(new CoursesSearch() { Page = page, Keyword = keyword });
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
 
 
 

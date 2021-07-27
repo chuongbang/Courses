@@ -9,18 +9,21 @@ using System.Threading;
 using System.Threading.Tasks;
 using Course.Web.Data.IRepository;
 using Course.Web.Share.Domain;
+using Course.Web.Share.IServices;
 
 namespace Course.Web.Data.Repository
 {
     public class CoursesRepository : Repository<Courses>, ICoursesRepository
     {
+        IQueryable<Lessons> _lessonQuery;
         public CoursesRepository(ISession session)
             : base(session)
         {
+            _lessonQuery = session.Query<Lessons>();
         }
 
 
-        public async Task<(List<Courses>, int)> GetByIdsAsync(IEnumerable<string> ids, string keyword, int pageIndex, int pageSize)
+        public async Task<(List<Courses>, int)> GetPageByIdAsync(string id, string keyword, int pageIndex, int pageSize)
         {
             using var tx = session.BeginTransaction();
             List<Courses> dt = null;
@@ -28,20 +31,14 @@ namespace Course.Web.Data.Repository
             try
             {
                 var _query = Query;
-                _query = _query.Where(c => ids.Contains(c.Id));
+                _query = _query.Where(c => c.Id == id);
                 if (keyword != null && keyword != string.Empty)
                 {
                     _query = _query.Where(c => c.TenKhoaHoc.ToLower().Contains(keyword.ToLower()));
                 }
                 total = _query.Count();
-                if (pageIndex != 0)
-                {
-                    dt = await _query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                }
-                else
-                {
-                    dt = await _query.ToListAsync();
-                }
+                dt = await _query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
                 tx.Commit();
             }
             catch (Exception ex)
@@ -51,20 +48,56 @@ namespace Course.Web.Data.Repository
             return (dt, total);
         }
 
+        public async Task<List<Courses>> GetAllActiveAsync()
+        {
+            using var tx = session.BeginTransaction();
+            List<Courses> dt = null;
+            try
+            {
+                dt = await Query.Where(c => c.IsActive).ToListAsync();
+                tx.Commit();
+            }
+            catch (Exception ex)
+            {
+                tx.Rollback();
+            }
+            return dt;
+        }
 
-        //public async Task<bool> DeleteListAsync(IEnumerable<Courses> dts)
-        //{
-        //    BeginTransaction();
-        //    try
-        //    {
-        //        await DeleteWithListKeyAsync(dts?.Select(c => c.Id), false);
-        //        return await CommitTransactionAsync();
-        //    }
-        //    catch (Exception)
-        //    {
-        //        await RolbackTransactionAsync();
-        //        return false;
-        //    }
-        //}
+        public async Task<(List<Courses>, List<Lessons>, int)> GetCoursesActiveWithLessonsAsync(CoursesSearch cs)
+        {
+            using var tx = session.BeginTransaction();
+            List<Courses> CDts = null;
+            List<Lessons> LDts = null;
+            int total = 0;
+            try
+            {
+                var _query = Query;
+                _query = _query.Where(c => c.IsActive);
+
+                if (cs.Keyword != null && cs.Keyword != string.Empty)
+                {
+                    _query = _query.Where(c => c.TenKhoaHoc.ToLower().Contains(cs.Keyword.ToLower()));
+                }
+                total = _query.Count();
+
+                CDts = await _query.Skip((cs.Page.PageIndex - 1) * cs.Page.PageSize).Take(cs.Page.PageSize).ToListAsync();
+
+                var courseIds = CDts.Select(c => c.Id);
+                LDts = await _lessonQuery.Where(c => courseIds.Contains(c.KhoaHocId)).ToListAsync();
+
+                tx.Commit();
+
+            }
+            catch (Exception ex)
+            {
+                tx.Rollback();
+            }
+
+            return (CDts, LDts, total);
+        }
+
+
+
     }
 }

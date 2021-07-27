@@ -44,17 +44,9 @@ namespace Course.Web.Share.Models.EditModels
         [Compare("PasswordHash", ErrorMessage = "Xác nhận mật khẩu phải giống với mật khẩu.")]
         public virtual string ConfirmPassword { get; set; }
 
-        //[Display(Name = "Chọn khóa học")]
-        //[Field(Type = Core.Enums.FieldType.ComboboxMulti)]
-        //public virtual IEnumerable<string> KhoaHoc { get; set; }
 
-
-        Property<AppUserEditModel> _property;
         public AppUserEditModel(bool isEdit = true)
         {
-            _property = new Property<AppUserEditModel>();
-            DataSource = new Dictionary<string, Dictionary<string, Core.Data.ISelectItem>>();
-
             if (isEdit)
             {
                 DisableInputFields.Add<AppUserEditModel>(c => c.UserName);
@@ -73,14 +65,12 @@ namespace Course.Web.Share.Models.EditModels
             InputFields.Add<AppUserEditModel>(c => c.JobTitle);
             InputFields.Add<AppUserEditModel>(c => c.Email);
             InputFields.Add<AppUserEditModel>(c => c.IsActive);
-            //InputFields.Add<AppUserEditModel>(c => c.KhoaHoc);
             if (isEdit)
             {
                 InputFields.Add<AppUserEditModel>(c => c.LastLogin);
                 InputFields.Add<AppUserEditModel>(c => c.LoginCount);
             }
 
-            //DataSource[_property.Name(c => c.KhoaHoc)] = new Dictionary<string, Core.Data.ISelectItem>();
 
         }
     }

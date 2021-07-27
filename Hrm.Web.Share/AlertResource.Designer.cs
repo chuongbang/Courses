@@ -286,6 +286,15 @@ namespace Course.Web.Share {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cập nhật dữ liệu thất bại.
+        /// </summary>
+        public static string UpdateFailed {
+            get {
+                return ResourceManager.GetString("UpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cập nhật dữ liệu thành công.
         /// </summary>
         public static string UpdateSuccessful {

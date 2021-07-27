@@ -18,6 +18,7 @@ namespace Course.Web.Components
         [Parameter] public FieldIdentifier FieldIdentifier { get; set; }
 
         [Parameter] public Expression<Func<string>> For { get; set; }
+        [Parameter] public string Class { get; set; } = "block";
 
         protected override void OnParametersSet()
         {

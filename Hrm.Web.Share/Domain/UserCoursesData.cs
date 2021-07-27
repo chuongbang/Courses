@@ -38,6 +38,12 @@ namespace Course.Web.Share.Domain {
         public virtual DateTime? DenNgay {
             get;
             set;
+        }        
+        [DataMember(Order=6)]
+        public virtual Boolean IsTrial
+        {
+            get;
+            set;
         }
         
 

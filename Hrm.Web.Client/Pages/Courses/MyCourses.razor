@@ -1,0 +1,83 @@
+﻿@page "/khoa-hoc"
+
+<PageHeader Class="site-page-header" Title="Khóa học của tôi">
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Khóa học của tôi</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
+
+<div class="site-content-1">
+
+    @*<AntList DataSource="@ListViewCourses" ItemLayout="@ListItemLayout.Vertical">
+            <ChildContent Context="item">
+                <ListItem Extra="@extra">
+                    <ListItemMeta Description="@item.HocPhiFormat">
+                        <AvatarTemplate>
+                            @avatar
+                        </AvatarTemplate>
+                        <TitleTemplate>
+                            <a href="/chi-tiet-khoa-hoc/@item.Id">@item.TenKhoaHoc</a>
+                        </TitleTemplate>
+                    </ListItemMeta>
+                    @item.GiaoVien
+                </ListItem>
+            </ChildContent>
+        </AntList>*@
+
+    <Row Gutter="16">
+        @foreach (var item in ListViewCourses)
+        {
+            <GridCol Span="6">
+                <Card Class="card-width" Bordered Cover="extra" Hoverable>
+                    <Body>
+                        <a class="card-title"><b>@item.TenKhoaHoc</b></a>
+                        <p>Học phí: @((MarkupString)item.HocPhiFormat)</p>
+                        <p>Thời lượng: @((MarkupString)item.ThoiLuong)</p>
+                        <p>Giáo viên: @((MarkupString)item.GiaoVien)</p>
+                        <div class="pull-right">
+                            <Button Type="primary" Icon="enter" OnClick="(() =>DetailCourse(item.Id))">Chi tiết</Button>
+                        </div>
+                    </Body>
+                </Card>
+            </GridCol>
+        }
+    </Row>
+
+
+</div>
+
+<style>
+
+    .pull-right {
+        float: right;
+    }
+
+    .card-title {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .card-item {
+        margin: 0;
+    }
+
+    .card-width {
+        max-width: 450px;
+    }
+    .site-content-1 {
+        background: #fff;
+        padding: 1px 15px;
+        margin-top: 10px;
+    }
+    }
+</style>
+@code {
+
+
+    RenderFragment extra =@<img width="272" alt="logo" src="/resource/logo.png" />;
+
+
+}

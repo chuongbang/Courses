@@ -38,6 +38,7 @@ namespace Course.Web.Client.Pages.TaiKhoan
         public string Search { get; set; }
         Page Page { get; set; } = new() { PageIndex = 1, PageSize = 10, Total = 0 };
         bool loading;
+        CourseTab courseTab;
         AppUserData selectAppUserViewModel;
         AppUserDetail appUserDetail;
         ResetPasswordModel resetPasswordModel;
@@ -47,10 +48,8 @@ namespace Course.Web.Client.Pages.TaiKhoan
         ClaimsPrincipal User;
         SetClaim setClaimComponent;
         bool setClaimVisible;
-        CourseTab courseTab;
-        string defaultTab = "1";
-        string activeTab = "1";
-
+        string VisibaleUserId { get; set; }
+        bool DetailCourse { get; set; }
         protected override async Task OnInitializedAsync()
         {
             try
@@ -131,7 +130,6 @@ namespace Course.Web.Client.Pages.TaiKhoan
                     appUserDetail.DisableField();
                 }
                 DetailVisible = true;
-                activeTab = "1";
             }
             catch (Exception ex)
             {
@@ -158,7 +156,6 @@ namespace Course.Web.Client.Pages.TaiKhoan
             try
             {
                 DetailVisible = false;
-                courseTab = null;
             }
             catch (Exception ex)
             {
@@ -347,10 +344,30 @@ namespace Course.Web.Client.Pages.TaiKhoan
             setClaimVisible = false;
         }
 
-        void TabChanged(string key)
+
+        async Task OpenCourseDetail(AppUserViewModel model)
         {
-            activeTab = key;
-            StateHasChanged();
+            try
+            {
+                VisibaleUserId = model.Id;
+                await courseTab.LoadUserCoursesDetail();
+                DetailCourse = true;
+            }
+            catch (Exception ex)
+            {
+                Error.ProcessError(ex);
+            }
+        }
+        void CloseCourseDetail()
+        {
+            try
+            {
+                DetailCourse = false;
+            }
+            catch (Exception ex)
+            {
+                Error.ProcessError(ex);
+            }
         }
     }
 }

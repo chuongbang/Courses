@@ -14,28 +14,65 @@ namespace Course.Web.Data.Repository
 {
     public class UserCoursesRepository : Repository<UserCourses>, IUserCoursesRepository
     {
+        IQueryable<Courses> _courseQr;
         public UserCoursesRepository(ISession session)
             : base(session)
         {
+            _courseQr = session.Query<Courses>();
         }
 
 
-        public async Task<List<UserCourses>> GetByIdAsync(string id)
+        public async Task<(List<UserCourses>, int)> GetByIdAsync(string userId, string keyword, int pageIndex, int pageSize)
         {
             using var tx = session.BeginTransaction();
             List<UserCourses> dt = null;
+            int total = 0;
             try
             {
-                dt = await Query.Where(c => c.UserId == id).ToListAsync();
+                var _query = Query;
+                _query = _query.Where(c => c.UserId == userId);
+                var khoaHocIds = _query.Select(a => a.KhoaHocId);
+                var listActiveById = _courseQr.Where(c => khoaHocIds.Contains(c.Id) && c.IsActive);
+
+                _query = _query.Where(c => listActiveById.Select(a => a.Id).Contains(c.KhoaHocId));
+                total = _query.Count();
+                dt = await _query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
                 tx.Commit();
             }
             catch (Exception ex)
             {
                 tx.Rollback();
             }
-            return dt;
+            return (dt, total);
         }
 
+        public async Task<(List<Courses>, int)> GetPageByIdAsync(string userId, string keyword, int pageIndex, int pageSize)
+        {
+            using var tx = session.BeginTransaction();
+            List<Courses> dt = null;
+            int total = 0;
+            try
+            {
+                var _query = Query;
+                var listCourseByUserId = _query.Where(c => c.UserId == userId).Select(c => c.KhoaHocId).ToList();
+                _courseQr = _courseQr.Where(c => listCourseByUserId.Contains(c.Id) && c.IsActive);
+                if (keyword != null && keyword != string.Empty)
+                {
+                    _courseQr = _courseQr.Where(c => c.TenKhoaHoc.ToLower().Contains(keyword.ToLower()));
+                }
+                total = _courseQr.Count();
+
+                dt = await _courseQr.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
+                tx.Commit();
+            }
+            catch (Exception ex)
+            {
+                tx.Rollback();
+            }
+            return (dt, total);
+        }
 
 
     }

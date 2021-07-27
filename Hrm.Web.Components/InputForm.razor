@@ -27,30 +27,28 @@
 
                                 if (att.Any(c => c is FieldAttribute && ((FieldAttribute)c).Type == FieldType.File))
                                 {
-                                    if (loadings.ContainsKey(property.Name))
-                                    {
-                                        loadings.Add(property.Name, false);
-                                    }
-                                    var allowType = (FileAttribute)att.FirstOrDefault(c => c is FileAttribute);
-                                    <Upload Action="@UploadApiPath"
-                                            Name="@property.Name"
-                                            Class="avatar-uploader"
-                                            ListType="picture-card"
-                                            ShowUploadList="false"
-                                            BeforeUpload="e => BeforeUpload(e, allowType)"
-                                            OnChange="e => UploadSingleFileChange(e, property)">
-                                        @if (!string.IsNullOrWhiteSpace(imageUrl))
+                                    Dictionary<string, object> test = new Dictionary<string, object>();
+                                    test.Add("hidden", true);
+                                    <div class="form-group">
+                                        @if (nameAttribute != null)
                                         {
-                                            <img src="@value" alt="avatar" style="width: 100%" />
+                                            <LabelFor FieldIdentifier="context.Field(property.Name)"></LabelFor>
                                         }
-                                        else
-                                        {
-                                            <div>
-                                                <Icon Spin="loadings[property.Name]" Type="@(loadings[property.Name] ? "Loading":"plus")"></Icon>
-                                                <div className="ant-upload-text">Upload</div>
-                                            </div>
+                                        <input id="uploadFile" disabled class="f-input" value="@value" />
+                                        <div class="fileUpload btn btn--browse">
+                                            <span>Chọn File</span>
+                                            <InputFile OnChange="@(e => LoadFiles(e, property))" @bind-Value="value" class="upload" />
+                                        </div>
+                                        @{
+                                            var progressCss = "progress " + (displayProgress ? "" : "d-none");
+                                            var progressWidthStyle = progressPercent + "%";
                                         }
-                                    </Upload>
+                                        <div class="@progressCss">
+                                            <div class="progress-bar" role="progressbar" style="width:@progressWidthStyle" area-valuenow="@progressPercent" aria-minvalue="0" aria-maxvalue="100"></div>
+                                        </div>
+                                        <CustomValidationMessage Field="context.Field(property.Name)" TValue="object"></CustomValidationMessage>
+                                    </div>
+
                                 }
                                 else if (att.Any(c => c is FieldAttribute && ((FieldAttribute)c).Type == FieldType.Combobox))
                                 {
@@ -68,6 +66,7 @@
                                                       Placeholder="Nhập để chọn"
                                                       AllowFilter="true"
                                                       @attributes="@additionalAttributes" />
+                                        <CustomValidationMessage Field="context.Field(property.Name)" TValue="object"></CustomValidationMessage>
                                     </div>
                                 }
                                 else if (att.Any(c => c is FieldAttribute && ((FieldAttribute)c).Type == FieldType.ComboboxMulti))
@@ -111,6 +110,72 @@
                                         <CustomValidationMessage Field="context.Field(property.Name)" TValue="object"></CustomValidationMessage>
                                     </div>
                                 }
+                                else if (att.Any(c => c is FieldAttribute && ((FieldAttribute)c).Type == FieldType.Switch))
+                                {
+                                    <div class="form-group">
+                                        @if (nameAttribute != null)
+                                        {
+                                            <LabelFor FieldIdentifier="context.Field(property.Name)" Class="no-block"></LabelFor>
+                                        }
+                                        <Switch Checked="(bool)value" CheckedChanged="e => FieldChanged(property, e)" Style="margin-left: 20px" />
+                                        <CustomValidationMessage Field="context.Field(property.Name)" TValue="object"></CustomValidationMessage>
+                                    </div>
+                                }
+                                else if (att.Any(c => c is FieldAttribute && ((FieldAttribute)c).Type == FieldType.RichTextEditor))
+                                {
+                                    <div class="form-group">
+                                        @if (nameAttribute != null)
+                                        {
+                                            <LabelFor FieldIdentifier="context.Field(property.Name)"></LabelFor>
+                                        }
+                                        @*<BlazoredTextEditor @ref="@_quillHtml" Placeholder="Nhập nội dung ...">
+                                            <ToolbarContent>
+                                                <span class="ql-formats">
+                                                    <select class="ql-font">
+                                                        <option selected=""></option>
+                                                        <option value="serif"></option>
+                                                        <option value="monospace"></option>
+                                                    </select>
+                                                    <select class="ql-size">
+                                                        <option value="small"></option>
+                                                        <option selected=""></option>
+                                                        <option value="large"></option>
+                                                        <option value="huge"></option>
+                                                    </select>
+                                                </span>
+                                                <span class="ql-formats">
+                                                    <button class="ql-bold"></button>
+                                                    <button class="ql-italic"></button>
+                                                    <button class="ql-underline"></button>
+                                                    <button class="ql-strike"></button>
+                                                </span>
+                                                <span class="ql-formats">
+                                                    <select class="ql-color"></select>
+                                                    <select class="ql-background"></select>
+                                                </span>
+                                                <span class="ql-formats">
+                                                    <button class="ql-list" value="ordered"></button>
+                                                    <button class="ql-list" value="bullet"></button>
+                                                    <button class="ql-indent" value="-1"></button>
+                                                    <button class="ql-indent" value="+1"></button>
+                                                    <select class="ql-align">
+                                                        <option selected=""></option>
+                                                        <option value="center"></option>
+                                                        <option value="right"></option>
+                                                        <option value="justify"></option>
+                                                    </select>
+                                                </span>
+                                                <span class="ql-formats">
+                                                    <button class="ql-link"></button>
+                                                </span>
+                                            </ToolbarContent>
+                                            <EditorContent>
+                                                @((MarkupString)value?.ToString())
+                                            </EditorContent>
+                                        </BlazoredTextEditor>*@
+                                        <CustomValidationMessage Field="context.Field(property.Name)" TValue="object"></CustomValidationMessage>
+                                    </div>
+                                }
                                 else
                                 {
                                     <div class="form-group">
@@ -138,7 +203,7 @@
                                         }
                                         else if (property.PropertyType == typeof(decimal?))
                                         {
-                                            <InputText id="@(property.Name + Value.GetHashCode())"
+                                            <InputText class="decimal-input" id="@(property.Name + Value.GetHashCode())"
                                                        Value="@value?.ToString()"
                                                        ValueExpression="@(() => property.Name)"
                                                        ValueChanged="(e => FieldChanged(property, e))" @attributes="@additionalAttributes" />

@@ -1,73 +1,86 @@
-﻿@page "/khoa-hoc"
+﻿@page "/quan-ly-khoa-hoc"
 
-@if (_displayGrid == LoaiHienThiEnum.Grid)
+@if (PermissionClaim?.COURSE_VIEW == true)
 {
-    <div class="box">
-        <div class="box-body">
 
-            @*<h5>
-            selections:
-            @if (selectedRows != null)
-            {
-                @foreach (var selected in selectedRows)
-                {
-                    <Tag @key="selected" Closable OnClose="e=>RemoveSelection(selected.Id)">@selected.TenKhoaHoc</Tag>
-                }
-                <Button Danger Size="small" OnClick="@(e => { table.SetSelection(null); })">Bỏ chọn</Button>
-            }
-        </h5>*@
+<PageHeader Class="site-page-header" Title="Quản lý khóa học">
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Quản lý khóa học</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
 
-            <Table @ref="table" TItem="CoursesViewModel" DataSource="@ListViewCourses" @bind-SelectedRows="selectedRows"
-                   Total="Page.Total"
-                   Loading="loading"
-                   PageIndex="Page.PageIndex"
-                   PageSize="Page.PageSize"
-                   OnPageIndexChange="PageIndexChangeAsync">
+    <div class="site-content">
 
-                <Selection Key="@context.Id" Type="@selectionType" Disabled="@(context.Id=="Disabled User")" />
-                <Column @bind-Field="@context.Stt" />
-                <Column @bind-Field="@context.TenKhoaHoc">
-                    <a>@context.TenKhoaHoc</a>
-                </Column>
-                <Column @bind-Field="@context.ThoiLuong" />
-                <Column @bind-Field="@context.TuNgay" />
-                <Column @bind-Field="@context.DenNgay" />
-            </Table>
+        @*<Space>
+            <SpaceItem Style="text-transform: uppercase; margin-top: 10px">
+                <h3>Quản lý khóa học</h3>
+            </SpaceItem>
+        </Space>*@
+        <Row Wrap="false" Style="padding: 10px 0px">
+            <AntDesign.Col Span="6">
+                <Search Placeholder="Tên khóa học" OnChange="SearchAsync" EnterButton="true" @bind-Value="@KeyWord" />
+            </AntDesign.Col>
+            <AntDesign.Col Flex=@("auto")>
+                <Row Justify="end">
+                    <Space>
+                        @if (PermissionClaim?.COURSE_ADD == true)
+                        {
+                            <SpaceItem>
+                                <Button Icon="plus" OnClick="(() => OpenDetail(null))">Thêm mới</Button>
+                            </SpaceItem>
+                        }
+                        @if (PermissionClaim?.COURSE_DELETE == true)
+                        {
+                            <SpaceItem>
+                                <Button Icon="delete" OnClick="DeleteSelected">Xóa chọn</Button>
+                            </SpaceItem>
+                        }
+                    </Space>
+
+                </Row>
+            </AntDesign.Col>
+        </Row>
 
 
-        </div>
+        <Table @ref="table" TItem="CoursesViewModel" DataSource="@ListViewCourses" @bind-SelectedRows="selectedRows"
+               Total="Page.Total" Loading="loading" ScrollY="600px"
+               PageIndex="Page.PageIndex"
+               PageSize="Page.PageSize"
+               OnPageIndexChange="PageIndexChangeAsync">
+
+            <Selection Key="@context.Id" Type="@selectionType" Disabled="@(context.Id == "Disabled User")" />
+            <Column Width="5%" @bind-Field="@context.Stt" Sortable />
+            <Column @bind-Field="@context.TenKhoaHoc" Sortable>
+                <a class="btn-link" @onclick="(() => OpenDetail(context))">@context.TenKhoaHoc</a>
+            </Column>
+            <Column @bind-Field="@context.MaKhoaHoc" />
+            <Column @bind-Field="@context.ThoiLuong" />
+            <Column @bind-Field="@context.TuNgay" Format="dd-MM-yyyy" />
+            <Column @bind-Field="@context.DenNgay" Format="dd-MM-yyyy" />
+            <Column @bind-Field="@context.HocPhi" />
+            <Column @bind-Field="@context.GiaoVien" />
+            <Column Width="5%" @bind-Field="@context.IsActive">
+                <Switch @bind-Value="@context.IsActive" OnChange="((e) => UpadateStatus(context.Id, e))" />
+            </Column>
+            <ActionColumn>
+
+            </ActionColumn>
+        </Table>
+
     </div>
 
+    @if (PermissionClaim?.COURSE_ADD == true)
+    {
+        <Drawer Closable="true" MaskClosable="true" Width="720" Visible="DetailVisible"
+                Title='($"Thông tin khóa học")' OnClose="CloseDetail">
+            <Template>
+                <InputForm ItemType="CoursesEditModel" Value="EditModel" ValueChanged="SaveCourseAsync" CancelChanged="CloseDetail"></InputForm>
+            </Template>
+        </Drawer>
+    }
 
-    <div class="box">
-        <div class="box-body">
-            @*<div class="row">
-                    <div class="col-sm-4 col-xs-4 text-left">
-                        <button class="btn btn-danger" @onclick="DeleteSelectedCheck">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                            Xóa chọn
-                        </button>
-                        <button class="btn btn-danger" @onclick="@(() => deleteAllConfirm.Show(new DeleteEventArgs()))">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                            Xóa tất cả
-                        </button>
-                    </div>
-                    <div class="col-sm-8 col-xs-8 text-right">
-                        <button class="btn btn-primary" @onclick="SaveAllAsync">
-                            <i class="fa fa-save" aria-hidden="true"></i>
-                            Lưu thủ tục
-                        </button>
 
-                        <button class="btn btn-primary" @onclick="ShowSaoChepFormAsync">
-                            <i class="fa fa-files-o" aria-hidden="true"></i>
-                            Sao chép
-                        </button>
-                        <button class="btn btn-primary" @onclick="Preview">
-                            <i class="fa fa-snowflake-o" aria-hidden="true"></i>
-                            Xem trước
-                        </button>
-                    </div>
-                </div>*@
-        </div>
-    </div>
 }

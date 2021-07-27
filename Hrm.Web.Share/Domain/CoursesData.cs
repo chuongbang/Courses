@@ -46,6 +46,24 @@ namespace Course.Web.Share.Domain {
         public virtual DateTime? DenNgay {
             get;
             set;
+        }        
+        [DataMember(Order=7)]
+        public virtual Boolean IsActive
+        {
+            get;
+            set;
+        }        
+        [DataMember(Order=8)]
+        public virtual Decimal? HocPhi
+        {
+            get;
+            set;
+        }        
+        [DataMember(Order=9)]
+        public virtual String GiaoVien
+        {
+            get;
+            set;
         }
 
         public string GetCustomDisplay()

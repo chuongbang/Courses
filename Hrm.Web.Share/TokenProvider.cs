@@ -14,7 +14,7 @@ namespace Course.Web.Share
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public bool IsAuthenticated => _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
-        public string UserName => _httpContextAccessor.HttpContext.User.Identity.Name;
+        public bool? IsAuthenticated => _httpContextAccessor.HttpContext?.User.Identity.IsAuthenticated;
+        public string UserName => _httpContextAccessor.HttpContext?.User.Identity.Name;
     }
 }

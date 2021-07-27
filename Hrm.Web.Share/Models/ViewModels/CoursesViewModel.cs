@@ -9,23 +9,35 @@ namespace Course.Web.Share.Models.ViewModels
 {
     public class CoursesViewModel
     {
-        public virtual string Id { get; set; }
+        public  string Id { get; set; }
 
         [Display(Name = "Tên khóa học")]
-        public virtual string TenKhoaHoc { get; set; }
+        public  string TenKhoaHoc { get; set; }       
+        [Display(Name = "Mã khóa học")]
+        public  string MaKhoaHoc { get; set; }
 
         [Display(Name = "Thời lượng khóa học")]
-        public virtual string ThoiLuong { get; set; }
+        public  string ThoiLuong { get; set; }
 
         [Display(Name = "Bắt đầu từ")]
-        public virtual DateTime? TuNgay { get; set; }
+        public  DateTime? TuNgay { get; set; }
 
         [Display(Name = "Kết thúc từ")]
-        public virtual DateTime? DenNgay { get; set; }
+        public  DateTime? DenNgay { get; set; }
 
         [Display(Name = "STT")]
-        public int Stt { get; set; }
+        public int Stt { get; set; }        
+        
+        [Display(Name = "Công khai")]
+        public bool IsActive { get; set; }
 
-        public string Selected { get; set; }
+        [Display(Name = "Học phí")]
+        public string HocPhiFormat { get; set; }
+        public decimal? HocPhi { get; set; }
+
+        [Display(Name = "Giáo viên")]
+        public string GiaoVien { get; set; }
+
+        public string SoBaiHoc { get; set; }
     }
 }

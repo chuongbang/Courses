@@ -17,6 +17,7 @@ using Course.Web.Client.Service;
 using Microsoft.AspNetCore.Identity;
 using Course.Web.Share.Domain;
 using Course.Web.Share;
+using Microsoft.Extensions.FileProviders;
 
 namespace Course.Web.Client
 {
@@ -27,6 +28,7 @@ namespace Course.Web.Client
             Configuration = configuration;
             Env = env;
             GlobalVariants.InitFileVersion();
+            GlobalVariants.FileUploadPath = Configuration["FileUploadPath"];
         }
 
         public IConfiguration Configuration { get; }
@@ -85,6 +87,8 @@ namespace Course.Web.Client
             services.AddScoped<TokenProvider>();
             services.AddHttpContextAccessor();
             services.AddScoped<PermissionClaim>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -125,7 +129,19 @@ namespace Course.Web.Client
             });
 
             app.UseStaticFiles();
-
+            string resourceFolderPath = Configuration["ImageFolderPath"];
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = "/resource",
+                FileProvider = new PhysicalFileProvider(resourceFolderPath)
+            });            
+            
+            string fileFolderPath = Configuration["FileUploadPath"];
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = "/files",
+                FileProvider = new PhysicalFileProvider(fileFolderPath)
+            });
             //app.UseCookiePolicy();
             app.UseAuthentication();
 

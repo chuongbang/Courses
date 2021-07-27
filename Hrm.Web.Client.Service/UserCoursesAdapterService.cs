@@ -79,11 +79,23 @@ namespace Course.Web.Client.Data
             }
         }
 
-        public async Task<UserCoursesResult> GetByIdAsync(string id)
+        public async Task<UserCoursesResult> GetByIdAsync(string id, Page page = null, string keyword = null)
         {
             try
             {
-                return await Service.GetByIdAsync(id);
+                return await Service.GetByIdAsync(new CoursesSearch() { Page = page, Keyword = keyword, Id = id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex, "Lay danh sach ho so UserCoursesModel that bai");
+                throw;
+            }
+        }
+        public async Task<CoursesResult> GetPageByIdAsync(string id, Page page = null, string keyword = null)
+        {
+            try
+            {
+                return await Service.GetByPageWithUserIdAsync(new CoursesSearch() { Page = page, Keyword = keyword, Id = id });
             }
             catch (Exception ex)
             {

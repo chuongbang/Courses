@@ -35,30 +35,31 @@ namespace Course.Web.Client.Pages.TaiKhoan
         AppUserData currentUser => SessionData.User;
         List<UserCoursesViewModel> ListUserCourseView;
         List<CoursesData> allKhoaHoc;
+        Page Page { get; set; } = new() { PageIndex = 1, PageSize = 10000, Total = 0 };
 
         Dictionary<string, ISelectItem> DataSource;
         Dictionary<string, ISelectItem> DataSourceFull;
         int sttId = 0;
         int stt = 1;
 
-        protected async override Task OnInitializedAsync()
+        protected override Task OnInitializedAsync()
         {
-            ListUserCourseView = new List<UserCoursesViewModel>();
-            allKhoaHoc = (await CoursesService.GetAllActiveAsync()).Dts;
-
-            var allMap = await UserCoursesService.GetByIdAsync(UserId);
-            ListUserCourseView = Mapper.Map<List<UserCoursesViewModel>>(allMap.Dts);
-
-            var dataSoureList = allMap.Dts != null ? allKhoaHoc.Where(c => !allMap.Dts.Select(a => a.KhoaHocId).Contains(c.Id)) : allKhoaHoc;
-            DataSource = allKhoaHoc != null ? dataSoureList.ToDictionary(c => c.Id, v => (ISelectItem)v) : new Dictionary<string, ISelectItem>();
-            DataSourceFull = allKhoaHoc != null ? allKhoaHoc.ToDictionary(c => c.Id, v => (ISelectItem)v) : new Dictionary<string, ISelectItem>();
-
-            UpdateListView();
+            return base.OnInitializedAsync();
         }
 
 
+        public async Task LoadUserCoursesDetail()
+        {
+            allKhoaHoc = (await CoursesService.GetAllActiveAsync()).Dts;
+            var allMap = await UserCoursesService.GetByIdAsync(UserId, Page);
+            ListUserCourseView = allMap.Dts != null ?  Mapper.Map<List<UserCoursesViewModel>>(allMap.Dts) : null;
+            DataSourceFull = allKhoaHoc != null ? allKhoaHoc.ToDictionary(c => c.Id, v => (ISelectItem)v) : new Dictionary<string, ISelectItem>();
+            UpdateListView();
+        }
+
         void AddRow()
         {
+            ListUserCourseView ??= new List<UserCoursesViewModel>();
             ListUserCourseView.Add(new UserCoursesViewModel() { Stt = stt++, TuNgay = DateTime.Now, DenNgay = DateTime.Now });
         }
 
@@ -125,7 +126,7 @@ namespace Course.Web.Client.Pages.TaiKhoan
 
         void UpdateListView(bool updateStt = true, bool updateIsSave = true)
         {
-            ListUserCourseView.Where(c => c.KhoaHocId != null).ForEach(c =>
+            ListUserCourseView?.Where(c => c.KhoaHocId != null).ForEach(c =>
             {
                 DataSourceFull.TryGetValue(c.KhoaHocId, out var tenKhoaHoc);
                 if (updateStt)
@@ -141,10 +142,6 @@ namespace Course.Web.Client.Pages.TaiKhoan
 
         }
 
-        public async Task InitialTab()
-        {
-            await OnInitializedAsync();
-        }
 
 
     }

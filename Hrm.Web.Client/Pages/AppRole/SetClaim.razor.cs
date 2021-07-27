@@ -55,7 +55,7 @@ namespace Course.Web.Client.Pages.AppRole
                 
                 new ClaimViewModel{ Id = PermissionKey.LESSON_VIEW, Group = "Quản lý bài học", Name ="Xem danh sách"},
                 new ClaimViewModel{ Id = PermissionKey.LESSON_ADD, Group = "Quản lý bài học", Name ="Thêm mới"},
-                new ClaimViewModel{ Id = PermissionKey.LESSON_DELETE, Group = "Quản lý bài học", Name ="Chỉnh sửa"},
+                new ClaimViewModel{ Id = PermissionKey.LESSON_EDIT, Group = "Quản lý bài học", Name ="Chỉnh sửa"},
                 new ClaimViewModel{ Id = PermissionKey.LESSON_DELETE, Group = "Quản lý bài học", Name ="Xóa"},
 
 

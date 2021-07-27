@@ -18,6 +18,9 @@ namespace Course.Web.Share.Map
 			Map(x => x.ThoiLuong).Column("ThoiLuong");
 			Map(x => x.TuNgay).Column("TuNgay");
 			Map(x => x.DenNgay).Column("DenNgay");
+			Map(x => x.IsActive).Column("IsActive");
+			Map(x => x.HocPhi).Column("HocPhi");
+			Map(x => x.GiaoVien).Column("GiaoVien");
         }
     }
 }

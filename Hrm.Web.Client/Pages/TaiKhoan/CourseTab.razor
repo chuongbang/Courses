@@ -1,102 +1,94 @@
 ﻿
-<div>
-    <Button OnClick="AddRow" Type="primary" Style="margin-bottom:16px">
-        Thêm khóa học
-    </Button>
-    <Table DataSource="ListUserCourseView" RowClassName="@(_=>"editable-row")" Bordered Size="@TableSize.Small">
-        <Column Width="35%" DataIndex="@nameof(context.TenKhoaHoc)" TData="string">
-            @if (sttId == context.Stt && !context.IsSave)
-            {
-                DataSource.TryGetValue((context.KhoaHocId ?? "").ToString(), out var selectedItem);
+<Button OnClick="AddRow" Type="primary" Style="margin-bottom:16px">
+    Thêm khóa học
+</Button>
+<Table DataSource="ListUserCourseView" RowClassName="@(_=>"editable-row")" Bordered Size="@TableSize.Small">
+    <Column Width="35%" DataIndex="@nameof(context.TenKhoaHoc)" TData="string">
+        @if (sttId == context.Stt && !context.IsSave)
+        {
+            DataSourceFull.TryGetValue((context.KhoaHocId ?? "").ToString(), out var selectedItem);
 
-                <AutoComplete TOption="KeyValuePair<string, ISelectItem>"
-                              Value="@selectedItem?.GetDisplay()"
-                              Options="DataSource"
-                              OptionFormat="e => e.Value.Value.GetDisplay()"
-                              OnSelectionChange="((e) => OnSelectionChange(e, sttId))"
-                              Placeholder="Nhập để chọn"
-                              AllowFilter="true" />
-            }
-            else
-            {
-                <div class="editable-cell-value-wrap" @onclick="()=>StartEdit(context.Stt)">
-                    @context.TenKhoaHoc
-                </div>
-            }
-        </Column>
-        <Column Width="25%" DataIndex="@nameof(context.TuNgay)" TData="DateTime?">
-            @if (sttId == context.Stt && !context.IsSave)
-            {
-                <DatePicker TValue="DateTime?" DefaultValue="new DateTime(1970, 1, 1)"
-                            @bind-Value="@context.TuNgay" Format="dd/MM/yyyy" Style="display:block" />
-            }
-            else
-            {
-                <div class="editable-cell-value-wrap" @onclick="()=>StartEdit(context.Stt)">
-                    @context.TuNgay.ToShortDate()
-                </div>
-            }
+            <AutoComplete TOption="KeyValuePair<string, ISelectItem>"
+                          Value="@selectedItem?.GetDisplay()"
+                          Options="DataSourceFull"
+                          OptionFormat="e => e.Value.Value.GetDisplay()"
+                          OnSelectionChange="((e) => OnSelectionChange(e, sttId))"
+                          Placeholder="Nhập để chọn"
+                          AllowFilter="true" />
+        }
+        else
+        {
+            <div class="editable-cell-value-wrap" @onclick="()=>StartEdit(context.Stt)">
+                @context.TenKhoaHoc
+            </div>
+        }
+    </Column>
+    <Column Width="20%" DataIndex="@nameof(context.TuNgay)" TData="DateTime?">
+        @if (sttId == context.Stt && !context.IsSave)
+        {
+            <DatePicker TValue="DateTime?" DefaultValue="new DateTime(1970, 1, 1)"
+                        @bind-Value="@context.TuNgay" Format="dd/MM/yyyy" Style="display:block" />
+        }
+        else
+        {
+            <div class="editable-cell-value-wrap" @onclick="()=>StartEdit(context.Stt)">
+                @context.TuNgay.ToShortDate()
+            </div>
+        }
 
-        </Column>
-        <Column Width="25%" DataIndex="@nameof(context.DenNgay)" TData="DateTime?">
-            @if (sttId == context.Stt && !context.IsSave)
-            {
-                <DatePicker TValue="DateTime?" DefaultValue="new DateTime(1970, 1, 1)"
-                            @bind-Value="@context.DenNgay" Format="dd/MM/yyyy" Style="display:block" />
-            }
-            else
-            {
-                <div class="editable-cell-value-wrap" @onclick="()=>StartEdit(context.Stt)">
-                    @context.DenNgay.ToShortDate()
-                </div>
-            }
+    </Column>
+    <Column Width="20%" DataIndex="@nameof(context.DenNgay)" TData="DateTime?">
+        @if (sttId == context.Stt && !context.IsSave)
+        {
+            <DatePicker TValue="DateTime?" DefaultValue="new DateTime(1970, 1, 1)"
+                        @bind-Value="@context.DenNgay" Format="dd/MM/yyyy" Style="display:block" />
+        }
+        else
+        {
+            <div class="editable-cell-value-wrap" @onclick="()=>StartEdit(context.Stt)">
+                @context.DenNgay.ToShortDate()
+            </div>
+        }
+    </Column>
+    <Column DataIndex="@nameof(context.IsTrial)" TData="bool">
+        @if (sttId == context.Stt && !context.IsSave)
+        {
+            <div style="text-align:center">
+                <Checkbox @bind-Checked="@context.IsTrial" />
+            </div>
 
-        </Column>
-        <ActionColumn Title="Thao tác">
+        }
+        else
+        {
+            <div @onclick="()=>StartEdit(context.Stt)" style="text-align:center">
+                <Checkbox @bind-Checked="@context.IsTrial" Disabled="true" />
+            </div>
+        }
+    </Column>
+    <ActionColumn Title="Thao tác">
+        <div style="text-align:center">
             <Popconfirm Title="Bạn có chắc muốn xóa không?"
                         OnConfirm="()=> DeleteRow(context.Stt)"
                         OkText="Yes"
                         CancelText="No">
-                <a>Xóa</a>
+                <Space>
+                    <SpaceItem><Button Danger>Xóa</Button></SpaceItem>
+                </Space>
             </Popconfirm>
-        </ActionColumn>
-    </Table>
+        </div>
+    </ActionColumn>
+</Table>
 
-    <div style="display:flex">
-        <Space Size=@("small")>
-            <SpaceItem>
-                <Button Type="@ButtonType.Primary" Icon="save" HtmlType="button" @onclick="SaveAsync">Lưu</Button>
-            </SpaceItem>
-            <SpaceItem>
-                <Button Icon="cancel" HtmlType="button" @onclick="() => CancelChanged.InvokeAsync()">
-                    @("Đóng")
-                </Button>
-            </SpaceItem>
-        </Space>
-    </div>
+<div style="display:flex">
+    <Space Size=@("small")>
+        <SpaceItem>
+            <Button Type="@ButtonType.Primary" Icon="save" HtmlType="button" @onclick="SaveAsync">Lưu</Button>
+        </SpaceItem>
+        <SpaceItem>
+            <Button Icon="cancel" HtmlType="button" @onclick="() => CancelChanged.InvokeAsync()">
+                @("Hủy")
+            </Button>
+        </SpaceItem>
+    </Space>
 </div>
 
-<style>
-    .editable-cell {
-        position: relative;
-    }
-
-    .editable-cell-value-wrap {
-        padding: 5px 12px;
-        cursor: pointer;
-    }
-
-    .editable-row:hover .editable-cell-value-wrap {
-        padding: 4px 11px;
-        border: 1px solid #d9d9d9;
-        border-radius: 4px;
-    }
-
-    [data-theme='dark'] .editable-row:hover .editable-cell-value-wrap {
-        border: 1px solid #434343;
-    }
-</style>
-
-@code{
-
-}

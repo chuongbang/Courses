@@ -56,6 +56,12 @@
                         <Button OnClick="() => OpenDetail(context)">Thông tin</Button>
                     </SpaceItem>
                     <SpaceItem>
+                        @if (PermissionClaim?.COURSE_ADD == true)
+                        {
+                            <Button OnClick="() => OpenCourseDetail(context)">Khóa học</Button>
+                        }
+                    </SpaceItem>
+                    <SpaceItem>
                         @if (PermissionClaim?.ACCOUNT_SETROLE == true)
                         {
                             <Button OnClick="() => OpenSetRoleAsync(context)">Gán nhóm tài khoản</Button>
@@ -91,26 +97,14 @@
 
     <Drawer Closable="true" MaskClosable="@(!PermissionClaim.ACCOUNT_EDIT)" Width="720" Visible="DetailVisible"
             Title='("Thông tin tài khoản")' OnClose="CloseDetail">
-        <Tabs DefaultActiveKey="@defaultTab" ActiveKey="@activeTab" OnChange="TabChanged">
-            <TabPane Key="1">
-                <Tab>
-                    <span><Icon Type="info"/>Thông tin chung</span>
-                </Tab>
-                <ChildContent>
-                    <Template>
-                        <AppUserDetail @ref="appUserDetail" Cancel="CloseDetail" ValueChanged="@SaveDetailAsync"></AppUserDetail>
-                    </Template>
-                </ChildContent>
-            </TabPane>
-            <TabPane Key="2">
-                <Tab>
-                    <span><Icon Type="book"/>Thông tin khóa học</span>
-                </Tab>
-                <ChildContent>
-                    <CourseTab @ref="courseTab" UserId="@appUserDetail.Value.Id" CancelChanged="CloseDetail"/>
-                </ChildContent>
-            </TabPane>
-        </Tabs>
+        <Template>
+            <AppUserDetail @ref="appUserDetail" Cancel="CloseDetail" ValueChanged="@SaveDetailAsync"></AppUserDetail>
+        </Template>
+    </Drawer>
+    <Drawer Closable="true" MaskClosable="false" Width="900" Visible="@DetailCourse" Title='("Thông tin khóa học")' OnClose="CloseCourseDetail">
+        <Template>
+            <CourseTab @ref="courseTab" UserId="@VisibaleUserId" CancelChanged="CloseCourseDetail" />
+        </Template>
     </Drawer>
     @if (PermissionClaim?.ACCOUNT_CHANGEPASSWORD == true)
     {

@@ -6,10 +6,6 @@ using System.Threading.Tasks;
 
 namespace Course.Web.Client.Models
 {
-    public class CourseInputModel
-    {
-
-    }
 
     public class CoursesModel
     {

@@ -4,9 +4,11 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-a, .btn-link {
-    color: #0366d6;
+.btn-link {
+    color: #0366d6 !important;
 }
+
+
 
 .btn-primary {
     color: #fff;
@@ -19,7 +21,7 @@ a, .btn-link {
 }
 
 .valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
+    /*outline: 1px solid #26b050;*/
 }
 
 .invalid {
@@ -61,6 +63,7 @@ a, .btn-link {
     background: #fff;
     padding: 0px 10px;
     margin-top: 10px;
+    height: calc(100vh - 180px);
 }
 
 .ant-layout-header {
@@ -195,4 +198,97 @@ a, .btn-link {
 .ant-page-header-footer{
     margin-top: 5px;
     padding-bottom: 5px;
+}
+
+.editable-cell {
+    position: relative;
+}
+
+.editable-cell-value-wrap {
+    padding: 5px 12px;
+    cursor: pointer;
+}
+
+.editable-row:hover .editable-cell-value-wrap {
+    padding: 4px 11px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+}
+
+[data-theme='dark'] .editable-row:hover .editable-cell-value-wrap {
+    border: 1px solid #434343;
+}
+.decimal-input{
+    border: 1px solid #d9d9d9;
+    width: 100%;
+    height: 32px;
+}
+    .decimal-input:focus {
+        border-color: #40a9ff;
+        border-right-width: 1px !important;
+        outline: 0;
+        box-shadow: 0 0 0 2px rgb(24 144 255 / 20%);
+    }
+
+.block {
+    display: block;
+}
+.lesson-items {
+    /*border: 1px solid #fff;*/
+    margin-left: 120px;
+}
+.row-lessons {
+    display: flex;
+    align-items: center;
+    padding: 2px 0;
+    margin: 0;
+}
+.row-lessons-flex-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+}
+
+    .fileUpload input.upload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+
+.btn--browse {
+    border: 1px solid gray;
+    border-left: 0;
+    border-radius: 0 2px 2px 0;
+    background-color: #1890ff;
+    color: #fff;
+    height: 32px;
+    padding: 4px 14px;
+}
+    .btn--browse:hover {
+        color: #fff;
+        background: #40a9ff;
+        border-color: #40a9ff;
+    }
+
+    .f-input {
+        height: 32px;
+        background-color: white;
+        border: 1px solid gray;
+        width: 100%;
+        max-width: 268px;
+        float: left;
+        padding: 0 14px;
+    }
+.ant-empty-image, .ant-empty {
+    height: 100%;
 }

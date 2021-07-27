@@ -87,6 +87,8 @@ namespace Course.Web.Client
             services.AddScoped<TokenProvider>();
             services.AddHttpContextAccessor();
             services.AddScoped<PermissionClaim>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -132,6 +134,13 @@ namespace Course.Web.Client
             {
                 RequestPath = "/resource",
                 FileProvider = new PhysicalFileProvider(resourceFolderPath)
+            });            
+            
+            string fileFolderPath = Configuration["FileUploadPath"];
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = "/files",
+                FileProvider = new PhysicalFileProvider(fileFolderPath)
             });
             //app.UseCookiePolicy();
             app.UseAuthentication();

@@ -40,7 +40,7 @@ namespace Course.Web.Client.Service
         public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
         {
             var metadata = new Metadata();
-            if (_tokenProvider.IsAuthenticated)
+            if (_tokenProvider.IsAuthenticated == true)
             {
                 metadata.Add("Authorization", $"Bearer {_tokenProvider.AccessToken}");
             }
@@ -53,7 +53,7 @@ namespace Course.Web.Client.Service
         public override TResponse BlockingUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, BlockingUnaryCallContinuation<TRequest, TResponse> continuation)
         {
             var metadata = new Metadata();
-            if (_tokenProvider.IsAuthenticated)
+            if (_tokenProvider.IsAuthenticated == true)
             {
                 metadata.Add("Authorization", $"Bearer {_tokenProvider.AccessToken}");
             }

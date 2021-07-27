@@ -78,13 +78,12 @@
 
     </div>
 
-
-    @if (PermissionClaim?.COURSE_ADD == true)
+    if (PermissionClaim?.COURSE_ADD == true)
     {
         <Drawer Closable="true" MaskClosable="true" Width="720" Visible="DetailVisible"
                 Title='($"Thông tin bài học")' OnClose="CloseDetail">
             <Template>
-                <InputForm ItemType="LessonsEditModel" Value="EditModel" ValueChanged="SaveLessonAsync" CancelChanged="CloseDetail"></InputForm>
+                <InputForm ItemType="LessonsEditModel" Value="EditModel" ValueChanged="SaveLessonAsync" CancelChanged="CloseDetail" @bind-QuillHtmlContent="QuillHtmlContent"></InputForm>
             </Template>
         </Drawer>
     }

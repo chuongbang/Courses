@@ -63,6 +63,7 @@ html, body {
     background: #fff;
     padding: 0px 10px;
     margin-top: 10px;
+    height: calc(100vh - 180px);
 }
 
 .ant-layout-header {
@@ -288,3 +289,6 @@ html, body {
         float: left;
         padding: 0 14px;
     }
+.ant-empty-image, .ant-empty {
+    height: 100%;
+}

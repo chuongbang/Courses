@@ -32,7 +32,6 @@ namespace Course.Web.Client.Pages.Courses
         [Inject] public CoursesAdapterService Service { get; set; }
         [Inject] public UserCoursesAdapterService UserCourseService { get; set; }
 
-        protected LoaiHienThiEnum _displayGrid = LoaiHienThiEnum.None;
         protected List<CoursesViewModel> ListViewCourses;
         protected List<CoursesData> ListCourses;
         protected CoursesEditModel EditModel;
@@ -51,7 +50,6 @@ namespace Course.Web.Client.Pages.Courses
 
         protected async override Task OnInitializedAsync()
         {
-            _displayGrid = LoaiHienThiEnum.Grid;
             User = (await AuthenticationStateTask).User;
             var claims = User?.Claims?.ToList();
             EditModel = new CoursesEditModel();

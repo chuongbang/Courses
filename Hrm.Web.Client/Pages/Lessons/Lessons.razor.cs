@@ -20,6 +20,8 @@ using Course.Web.Client.Ultils;
 using Course.Web.Share;
 using Course.Core.Ultis;
 using Course.Core.Data;
+using Blazored.TextEditor;
+using Microsoft.JSInterop;
 
 namespace Course.Web.Client.Pages.Lessons
 {
@@ -30,11 +32,11 @@ namespace Course.Web.Client.Pages.Lessons
         [Inject] IMapper Mapper { get; set; }
         [Inject] PermissionClaim PermissionClaim { get; set; }
         [Inject] NotificationService Notice { get; set; }
+        [Inject] IJSRuntime JsRuntime { get; set; }
 
         [Inject] public LessonsAdapterService Service { get; set; }
         [Inject] public CoursesAdapterService CoursesService { get; set; }
 
-        protected LoaiHienThiEnum _displayGrid = LoaiHienThiEnum.None;
         protected List<LessonsViewModel> ListViewLessons;
         protected List<LessonsData> ListLessons;
         protected List<CoursesData> ListCourses;
@@ -48,6 +50,20 @@ namespace Course.Web.Client.Pages.Lessons
         string KeyWord { get; set; }
         Property<LessonsEditModel> property;
         List<LessonsData> ListAllLesson;
+        string _quillHtmlContent;
+        public string QuillHtmlContent
+        {
+            get => _quillHtmlContent;
+            set
+            {
+                if (value != null)
+                {
+                    _quillHtmlContent = value;
+                }
+            }
+        }
+        bool render = false;    
+
 
         protected async override Task OnInitializedAsync()
         {
@@ -57,10 +73,15 @@ namespace Course.Web.Client.Pages.Lessons
             property = new Property<LessonsEditModel>();
             ListViewLessons = new List<LessonsViewModel>();
             ListCourses = (await CoursesService.GetAllActiveAsync()).Dts;
-
             await LoadDataAsync();
 
         }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);    
+        }
+
         async Task LoadDataAsync()
         {
             try
@@ -96,15 +117,20 @@ namespace Course.Web.Client.Pages.Lessons
         {
             EditModel = new LessonsEditModel(listLS: ListCourses);
 
-            DetailVisible = true;
+            ShowDrawer();
         }
         void Edit(string id)
         {
             var current = ListAllLesson.FirstOrDefault(c => c.Id == id);
             EditModel = Mapper.Map<LessonsEditModel>(current);
             EditModel.DataSource[property.Name(c => c.KhoaHocId)] = ListCourses.ToDictionary(c => c.Id, v => (ISelectItem)v);
+            ShowDrawer();
+        }
+        void ShowDrawer()
+        {
+            render = true;
             DetailVisible = true;
-
+            StateHasChanged();
         }
         async Task Delete(string id)
         {
@@ -150,6 +176,8 @@ namespace Course.Web.Client.Pages.Lessons
         {
             try
             {
+                model.NoiDung = _quillHtmlContent;
+
                 if (model.Id.IsNotNullOrEmpty())
                 {
                     var updateModel = Mapper.Map<LessonsData>(model);
@@ -158,7 +186,7 @@ namespace Course.Web.Client.Pages.Lessons
                     {
                         CloseDetail();
                         Notice.NotiSuccess(AlertResource.UpdateSuccessful);
-                        await LoadDataAsync();
+                        //await LoadDataAsync();
                     }
                     else
                     {
@@ -202,9 +230,6 @@ namespace Course.Web.Client.Pages.Lessons
                 Error.ProcessError(ex);
             }
         }
-
-
-
 
 
 

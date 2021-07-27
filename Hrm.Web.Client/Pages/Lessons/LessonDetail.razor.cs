@@ -19,6 +19,9 @@ using Course.Core.Extentions;
 using Course.Web.Client.Ultils;
 using Course.Web.Share;
 using Course.Core.Ultis;
+using Microsoft.JSInterop;
+using System.IO;
+
 namespace Course.Web.Client.Pages.Lessons
 {
     public partial class LessonDetail : ComponentBase
@@ -29,14 +32,17 @@ namespace Course.Web.Client.Pages.Lessons
         [Inject] LessonsAdapterService Service { get; set; }
         [Inject] CoursesAdapterService CourseService { get; set; }
         [Inject] IMapper Mapper { get; set; }
+        [Inject] IJSRuntime JSRuntime { get; set; }
 
         [Parameter] public string KhoaHocId { get; set; }
 
         string Title { get; set; } = "Chi tiết khóa học";
-        string SubTitle { get; set; } = "Bài số ...";
         CoursesData Course;
         List<LessonsData> ListLessonView;
         string LinkFile { get; set; } = string.Empty;
+        Dictionary<string, string> sources = new Dictionary<string, string>();
+        LoaiHienThiFileEnum typeFile = LoaiHienThiFileEnum.None;
+        LessonsData LessonSelected = new LessonsData();
 
         protected async override Task OnInitializedAsync()
         {
@@ -57,7 +63,38 @@ namespace Course.Web.Client.Pages.Lessons
 
         void LessonClick(LessonsData lesson)
         {
-            LinkFile = lesson.FileNoiDung;
+            sources.Clear();
+            LessonSelected = lesson;
+            LinkFile = string.Empty;
+            if (lesson.TypeContent == LoaiNoiDung.File.EnumToString())
+            {
+
+                if (lesson.FileNoiDung.IsNotNullOrEmpty())
+                {
+                    var path = Path.Combine(GlobalVariants.FileUploadPath, lesson.FileNoiDung);
+                    if (File.Exists(path))
+                    {
+                        if (path.IsMediaFile())
+                        {
+                            typeFile = LoaiHienThiFileEnum.Media;
+                            LinkFile = lesson.FileNoiDung;
+                            sources.Add("720", "/files/" + lesson.FileNoiDung + "");
+                        }
+                        else
+                        {
+                            typeFile = LoaiHienThiFileEnum.Pdf;
+                            LinkFile = lesson.FileNoiDung;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (lesson.NoiDung.IsNotNullOrEmpty())
+                {
+
+                }
+            }
 
             StateHasChanged();
         }
@@ -65,8 +102,10 @@ namespace Course.Web.Client.Pages.Lessons
         async Task BackToMyCourses()
         {
 
-
         }
-
+        public async Task<object> ReloadTinyMce(string id)
+        {
+            return await JSRuntime.InvokeAsync<object>("ReloadTinyMce", id);
+        }
     }
 }

@@ -25,14 +25,21 @@ namespace Course.Web.Client.Data
 
         public async Task<ExcuteResponse> UpdateAsync(LessonsData hs)
         {
-            return await Service.UpdateAsync(hs);
+            try
+            {
+                return await Service.UpdateAsync(hs);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public async Task<ExcuteResponse> DeleteAsync(LessonsData hs)
         {
             return await Service.DeleteAsync(hs);
-        }        
-        
+        }
+
         public async Task<ExcuteResponse> DeleteListAsync(List<LessonsData> hs)
         {
             return await Service.DeleteListAsync(hs);
@@ -63,7 +70,7 @@ namespace Course.Web.Client.Data
             }
         }
 
-        public async Task<LessonsResult> GetLessonsByCourseId(string courseId) 
+        public async Task<LessonsResult> GetLessonsByCourseId(string courseId)
         {
             try
             {

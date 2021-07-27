@@ -20,23 +20,24 @@ namespace Course.Core.Enums
         Password,
         PercentageInputMask,
         PositiveIntMask,
-        BHXHcode,
         DynamicClass,
         DateInputMask,
         ReadOnly,
-        GETBHXHcode,
-        DotMMYYYYInputMask,
         File,
         FileList,
         ComboboxMulti,
-        Switch
+        Switch,
+        RichTextEditor
     }
-    public enum LoaiHienThiEnum
+    public enum LoaiHienThiFileEnum
     {
         None,
-        Grid,
-        Form,
-        Input,
-        Select
+        Pdf,
+        Media,
+    }
+    public enum LoaiNoiDung
+    {
+        File,
+        Text
     }
 }

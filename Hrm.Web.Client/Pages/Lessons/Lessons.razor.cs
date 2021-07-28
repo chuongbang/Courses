@@ -20,7 +20,6 @@ using Course.Web.Client.Ultils;
 using Course.Web.Share;
 using Course.Core.Ultis;
 using Course.Core.Data;
-using Blazored.TextEditor;
 using Microsoft.JSInterop;
 
 namespace Course.Web.Client.Pages.Lessons
@@ -186,7 +185,7 @@ namespace Course.Web.Client.Pages.Lessons
                     {
                         CloseDetail();
                         Notice.NotiSuccess(AlertResource.UpdateSuccessful);
-                        //await LoadDataAsync();
+                        await LoadDataAsync();
                     }
                     else
                     {

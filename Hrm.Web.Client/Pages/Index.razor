@@ -1,4 +1,11 @@
 ﻿@page "/"
 
 
-  Index
+<RichInputText Placeholder="Nhập gì đi ..." EditorContent="textarea">
+</RichInputText>
+
+@code{
+
+    RenderFragment textarea = @<textarea />;
+
+}

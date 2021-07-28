@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Blazored.TextEditor;
 using Course.Core.Attributes.Web;
 using Course.Core.Data;
 using Course.Core.Enums;
@@ -24,12 +23,12 @@ namespace Course.Web.Share.Models.EditModels
 
         [Display(Name = "Nội dung bài học")]
         [Field(Type = FieldType.RichTextEditor)]
-        [StringLength(2000, ErrorMessage = "Nhập không quá 2000 ký tự")]
+        [StringLength(4000, ErrorMessage = "Nhập không quá 4000 ký tự")]
         public string NoiDung { get; set; }
 
         [Display(Name = "File nội dung")]
         [Field(Type = FieldType.File)]
-        [File("application/pdf, image/jpeg", 10000)]
+        [File("application/pdf, image/jpeg", 100000)]
         public string FileNoiDung { get; set; }
 
         [Display(Name = "Mã bài học")]
@@ -49,7 +48,6 @@ namespace Course.Web.Share.Models.EditModels
         [Field(Type = FieldType.Combobox)]
         public string TypeContent { get; set; }
 
-        public BlazoredTextEditor HtmlContent { get; set; }
 
         Property<LessonsEditModel> property;
 

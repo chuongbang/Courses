@@ -83,7 +83,7 @@
         <Drawer Closable="true" MaskClosable="true" Width="720" Visible="DetailVisible"
                 Title='($"Thông tin bài học")' OnClose="CloseDetail">
             <Template>
-                <InputForm ItemType="LessonsEditModel" Value="EditModel" ValueChanged="SaveLessonAsync" CancelChanged="CloseDetail" @bind-QuillHtmlContent="QuillHtmlContent"></InputForm>
+                <InputForm ItemType="LessonsEditModel" Value="EditModel" ValueChanged="SaveLessonAsync" CancelChanged="CloseDetail" @bind-HtmlContent="QuillHtmlContent"></InputForm>
             </Template>
         </Drawer>
     }

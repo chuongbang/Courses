@@ -18,7 +18,6 @@ using System.IO;
 using Microsoft.Extensions.Hosting;
 using Course.Web.Share.Ultils;
 using Course.Core.Enums;
-using Blazored.TextEditor;
 
 namespace Course.Web.Components
 {
@@ -75,10 +74,10 @@ namespace Course.Web.Components
         bool dialogTamTinh = false;
         string message;
 
-        BlazoredTextEditor _quillHtml;
-        [Parameter] public string QuillHtmlContent { get; set; }
+        RichInputText _richTextEditor;
+        [Parameter] public string HtmlContent { get; set; }
 
-        [Parameter] public EventCallback<string> QuillHtmlContentChanged { get; set; }
+        [Parameter] public EventCallback<string> HtmlContentChanged { get; set; }
 
 
         protected override void OnParametersSet()
@@ -159,9 +158,9 @@ namespace Course.Web.Components
         {
             try
             {
-                if (_quillHtml != null)
+                if (_richTextEditor != null)
                 {
-                    await QuillHtmlContentChanged.InvokeAsync((await _quillHtml.GetHTML()));
+                    await HtmlContentChanged.InvokeAsync(await _richTextEditor.GetHTML());
                 }
                 var customValidateResult = ValidateAll?.Invoke();
                 if (customValidateResult != null && !customValidateResult.Any())

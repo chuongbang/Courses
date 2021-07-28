@@ -1,0 +1,263 @@
+﻿.file-manager {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    border: 1px solid;
+    border-color: #e0e0e0;
+    background: transparent;
+}
+
+    .file-manager .fm-toolbar {
+        height: auto;
+        width: auto;
+        display: flex;
+        box-sizing: content-box;
+        border-bottom-color: #e0e0e0;
+        border-bottom-style: solid;
+        border-width: 0 0 1px;
+        box-shadow: none;
+        font-family: "Segoe UI", "GeezaPro", "DejaVu Serif", sans-serif, "-apple-system", "BlinkMacSystemFont";
+        font-size: 14px;
+        font-weight: normal;
+    }
+
+        .file-manager .fm-toolbar .btn-toolbar {
+            display: flex;
+            align-items: center;
+        }
+
+            .file-manager .fm-toolbar .btn-toolbar i {
+                margin-right: 5px;
+            }
+
+        .file-manager .fm-toolbar button, .file-manager .fm-toolbar .btn-toolbar {
+            height: inherit;
+            margin: 0;
+            min-height: 40px;
+            min-width: 40px;
+            padding: 0px 5px;
+            line-height: 25px;
+            align-self: center;
+            text-overflow: ellipsis;
+            background: #fff;
+            box-shadow: none;
+            color: #333;
+            border: none;
+            cursor: pointer;
+            font-family: "Segoe UI", "GeezaPro", "DejaVu Serif";
+            font-size: 16px;
+            font-weight: 400;
+            overflow: hidden;
+            text-align: center;
+            text-decoration: none;
+            text-transform: none;
+        }
+
+            .file-manager .fm-toolbar button:hover, .file-manager .fm-toolbar .btn-toolbar:hover {
+                background: #f4f4f4;
+                border-color: #eaeaea;
+                border-radius: 0;
+                color: #000;
+            }
+
+        .file-manager .fm-toolbar .fm-toolbar-left {
+            width: 100%;
+            padding-left: 10px;
+            display: flex
+        }
+
+        .file-manager .fm-toolbar .fm-toolbar-right {
+            width: 250px;
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 10px;
+        }
+
+    .file-manager .fm-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+    }
+
+        .file-manager .fm-container .fm-sidebar {
+            min-width: 200px;
+            height: 100%;
+        }
+
+        .file-manager .fm-container .fm-content {
+            width: 100%;
+            height: 100%;
+        }
+
+    .file-manager .fm-breadcumb {
+        width: 100%;
+        height: 33px;
+        display: flex;
+    }
+
+        .file-manager .fm-breadcumb .fm-breadcumb-left {
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .file-manager .fm-breadcumb .fm-breadcumb-right {
+            width: 150px;
+        }
+
+    .file-manager .fm-file-search {
+        width: 100%;
+    }
+
+.disable-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.tree-item-panel {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    cursor: pointer;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.tree-item-panel-active {
+    background-color: #d1ebff;
+    border-color: #f4f4f4;
+}
+
+.tree-item-panel:hover {
+    background-color: #f4f4f4;
+    border-color: #f4f4f4;
+}
+
+.tree-item-panel:active {
+    background-color: #d1ebff;
+    border-color: #f4f4f4;
+}
+
+.tree-item-panel .tree-item-icon:before {
+    font-family: 'FontAwesome';
+    content: "\f0d7";
+    float: left;
+    color: gray;
+    margin-right: 5px;
+    padding: 10px 0px;
+}
+
+.tree-item-panel .tree-item-no-icon:before {
+    font-family: 'FontAwesome';
+    content: "\f0d7";
+    float: left;
+    color: transparent;
+    margin-right: 5px;
+    padding: 10px 0px;
+    width: 5px;
+}
+
+.tree-item-panel .tree-item-icon:hover:before {
+    color: #3c8dbc;
+}
+
+.tree-item-panel .tree-item-icon.collapsed:before {
+    content: "\f0da";
+}
+
+.tree-item ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.tree-item-panel .tree-item-text {
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+}
+
+.absolute {
+    position: absolute !important;
+}
+
+.file-selected {
+    box-shadow: none;
+    box-sizing: border-box;
+    background-color: #d1ebff;
+    border-color: #333;
+}
+
+.icon-xls:before, .icon-xlsx:before {
+    font-family: 'FontAwesome';
+    content: "\f1c3";
+    padding: 10px 0px;
+}
+
+.icon-pdf:before {
+    font-family: 'FontAwesome';
+    content: "\f1c1";
+    padding: 10px 0px;
+}
+
+.icon-doc:before, .icon-docx:before {
+    font-family: 'FontAwesome';
+    content: "\f1c2";
+    padding: 10px 0px;
+}
+
+.icon-txt:before {
+    font-family: 'FontAwesome';
+    content: "\f15c";
+    padding: 10px 0px;
+}
+
+.icon-mp4:before {
+    font-family: 'FontAwesome';
+    content: "\f1c8";
+    padding: 10px 0px;
+}
+
+.icon-folder:before {
+    font-family: 'FontAwesome';
+    content: "\f07b";
+    padding: 10px 0px;
+}
+
+
+/* Style the list */
+.file-manager ul.breadcrumb {
+    padding: 0px;
+    list-style: none;
+    background-color: transparent;
+    margin: 0px;
+    padding-left: 8px;
+
+}
+
+    /* Display list items side by side */
+    .file-manager ul.breadcrumb li {
+        display: inline;
+    }
+
+        /* Add a slash symbol (/) before/behind each list item */
+        .file-manager ul.breadcrumb li + li:before {
+            padding: 5px;
+            color: black;
+            content: "\3E";
+        }
+
+        /* Add a color to all links inside the list */
+        .file-manager ul.breadcrumb li a {
+            color: #0275d8;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+            /* Add a color on mouse-over */
+            .file-manager ul.breadcrumb li a:hover {
+                color: #01447e;
+                text-decoration: underline;
+            }

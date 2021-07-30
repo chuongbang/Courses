@@ -52,7 +52,7 @@ namespace Course.Web.Client.Pages.TaiKhoan
         {
             allKhoaHoc = (await CoursesService.GetAllActiveAsync()).Dts;
             var allMap = await UserCoursesService.GetByIdAsync(UserId, Page);
-            ListUserCourseView = allMap.Dts != null ?  Mapper.Map<List<UserCoursesViewModel>>(allMap.Dts) : null;
+            ListUserCourseView = allMap.Dts != null ? Mapper.Map<List<UserCoursesViewModel>>(allMap.Dts) : null;
             DataSourceFull = allKhoaHoc != null ? allKhoaHoc.ToDictionary(c => c.Id, v => (ISelectItem)v) : new Dictionary<string, ISelectItem>();
             UpdateListView();
         }
@@ -111,15 +111,24 @@ namespace Course.Web.Client.Pages.TaiKhoan
             listAdd.ForEach(c => c.Id = ObjectExtentions.GenerateGuid());
             listAdd.ForEach(c => c.IsSave = true);
             var list = Mapper.Map<List<UserCoursesData>>(listAdd);
-            bool resultAdd = await UserCoursesService.AddAsync(list);
-            if (resultAdd)
+            if (list.IsNotNullOrEmpty() && list.Any())
             {
-                UpdateListView(false);
-                Notice.NotiSuccess(AlertResource.AddSuccessful);
+                bool resultAdd = await UserCoursesService.AddAsync(list);
+                if (resultAdd)
+                {
+                    UpdateListView(false);
+                    Notice.NotiSuccess(AlertResource.AddSuccessful);
+                    await CancelChanged.InvokeAsync(null);
+                }
+                else
+                {
+                    Notice.NotiError(AlertResource.HasError);
+                }
             }
             else
             {
-                Notice.NotiError(AlertResource.HasError);
+                Notice.NotiSuccess(AlertResource.UpdateSuccessful);
+                await CancelChanged.InvokeAsync(null);
             }
 
         }

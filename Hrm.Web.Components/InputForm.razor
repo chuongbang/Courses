@@ -129,7 +129,8 @@
                                             <LabelFor FieldIdentifier="context.Field(property.Name)"></LabelFor>
                                         }
                                         @{ HtmlContent = value?.ToString(); }
-                                        <RichInputText @ref="_richTextEditor" Placeholder="Nhập nội dung ..." HtmlContent="@HtmlContent" ></RichInputText>
+                                        <RichInputText @ref="_richTextEditor" Placeholder="Nhập nội dung ..." HtmlContent="@HtmlContent" InsertImageChange="(e => InsertImageAsync(e))">
+                                        </RichInputText>
                                         <CustomValidationMessage Field="context.Field(property.Name)" TValue="object"></CustomValidationMessage>
                                     </div>
                                 }

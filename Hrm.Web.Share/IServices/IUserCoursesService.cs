@@ -17,6 +17,7 @@ namespace Course.Web.Share.IServices
         ValueTask<ExcuteResponse> AddAsync(UserCourseList hs, CallContext context = default);
         ValueTask<ExcuteResponse> UpdateAsync(UserCoursesData hs, CallContext context = default);
         ValueTask<ExcuteResponse> DeleteAsync(UserCoursesData hs, CallContext context = default);
+        ExcuteResponse CheckIsTrialAsync(string khoahocId, CallContext context = default);
     }
 
     [DataContract]

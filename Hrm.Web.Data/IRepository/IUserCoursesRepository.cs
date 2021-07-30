@@ -9,6 +9,7 @@ namespace Course.Web.Data.IRepository
     {
         Task<(List<UserCourses>, int)> GetByIdAsync(string id, string keyword, int pageIndex, int pageSize);
         Task<(List<Courses>, int)> GetPageByIdAsync(string id, string keyword, int pageIndex, int pageSize);
+        bool CheckIsTrialAsync(string khoahocId);
 
     }
 }

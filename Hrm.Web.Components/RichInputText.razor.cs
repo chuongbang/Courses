@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 
 namespace Course.Web.Components
@@ -33,6 +34,8 @@ namespace Course.Web.Components
 
         [Parameter] public string HtmlContent { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
+        [Parameter]
+        public EventCallback<InputFileChangeEventArgs> InsertImageChange { get; set; }
 
         private ElementReference QuillElement;
         private ElementReference ToolBar;
@@ -94,6 +97,11 @@ namespace Course.Web.Components
             var QuillDelta =
                 await RichInputTextInterop.InsertQuillImage(
                     JSRuntime, QuillElement, ImageURL);
+        }
+        public async Task InsertImages(List<string> ImageURLs)
+        {
+            await RichInputTextInterop.InsertQuillImages(
+                JSRuntime, QuillElement, ImageURLs);
         }
 
         public async Task EnableEditor(bool mode)

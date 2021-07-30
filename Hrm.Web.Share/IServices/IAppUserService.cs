@@ -53,7 +53,9 @@ namespace Course.Web.Share.IServices
         [DataMember(Order = 4)]
         public bool RequiresTwoFactor { get; set; }
         [DataMember(Order = 5)]
-        public string AuthenToken { get; set; }
+        public string AuthenToken { get; set; }        
+        [DataMember(Order = 6)]
+        public bool IsExpired { get; set; }
 
     }
 

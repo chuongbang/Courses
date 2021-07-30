@@ -102,6 +102,18 @@ namespace Course.Web.Client.Data
                 _logger.LogInformation(ex, "Lay danh sach ho so UserCoursesModel that bai");
                 throw;
             }
+        }            
+        
+        public bool CheckIsTrialAsync(string khaohocId)
+        {
+            try
+            {
+                return Service.CheckIsTrialAsync(khaohocId).State;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }        
 
 

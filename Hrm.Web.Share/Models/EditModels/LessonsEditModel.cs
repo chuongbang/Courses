@@ -48,6 +48,10 @@ namespace Course.Web.Share.Models.EditModels
         [Field(Type = FieldType.Combobox)]
         public string TypeContent { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(AlertResource), ErrorMessageResourceName = "Required")]
+        [Display(Name = "Thứ tự hiển thị")]
+        public int? Stt { get; set; }
+
 
         Property<LessonsEditModel> property;
 
@@ -57,6 +61,7 @@ namespace Course.Web.Share.Models.EditModels
             property = new Property<LessonsEditModel>();
 
             InputFields.Add<LessonsEditModel>(c => c.KhoaHocId);
+            InputFields.Add<LessonsEditModel>(c => c.Stt);
             InputFields.Add<LessonsEditModel>(c => c.TenBaiHoc);
             InputFields.Add<LessonsEditModel>(c => c.MaBaiHoc);
             InputFields.Add<LessonsEditModel>(c => c.TypeContent);

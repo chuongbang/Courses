@@ -36,17 +36,41 @@
             }
             else
             {
-                @((MarkupString)LessonSelected.NoiDung)
+                if (LessonSelected.NoiDung != null)
+                {
+                    <div class="ql-editor">
+                        @((MarkupString)LessonSelected.NoiDung)
+                    </div>
+                }
+                else
+                {
+                    <Empty Description="false" />
+                }
             }
         </AntDesign.Col>
 
         <AntDesign.Col Span="8">
-            <PageHeader Title="Đề cương khóa học" BackIcon="@("menu")" OnBack="BackToMyCourses"></PageHeader>
+            <PageHeader Title="@hocThu" BackIcon="@("menu")" OnBack="BackToMyCourses"></PageHeader>
             <AntList DataSource="@ListLessonView" TItem="LessonsData" OnItemClick="(e => LessonClick(e))">
                 <ListItem>
-                    <ListItemMeta Description="@context.MaBaiHoc">
+                    <ListItemMeta Description="@context.MaBaiHoc" Style="cursor: pointer">
                         <TitleTemplate>
-                            <a>@context.TenBaiHoc</a>
+                            @if (courseIsTrial)
+                            {
+                                if (context.IsTrial)
+                                {
+                                    <a>@context.TenBaiHoc</a>
+                                }
+                                else
+                                {
+                                    <span class="not-trial">@context.TenBaiHoc</span>
+                                }
+                            }
+                            else
+                            {
+                                <a>@context.TenBaiHoc</a>
+
+                            }
                         </TitleTemplate>
                     </ListItemMeta>
                 </ListItem>

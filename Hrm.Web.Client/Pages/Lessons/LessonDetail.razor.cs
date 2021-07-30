@@ -31,6 +31,7 @@ namespace Course.Web.Client.Pages.Lessons
         [CascadingParameter] SessionData SessionData { get; set; }
         [Inject] LessonsAdapterService Service { get; set; }
         [Inject] CoursesAdapterService CourseService { get; set; }
+        [Inject] UserCoursesAdapterService UserCourseService { get; set; }
         [Inject] IMapper Mapper { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
 
@@ -43,7 +44,8 @@ namespace Course.Web.Client.Pages.Lessons
         Dictionary<string, string> sources = new Dictionary<string, string>();
         LoaiHienThiFileEnum typeFile = LoaiHienThiFileEnum.None;
         LessonsData LessonSelected = new LessonsData();
-
+        bool courseIsTrial;
+        string hocThu => courseIsTrial ? "Đề cương khóa học" : "Đề cương khóa học";
         protected async override Task OnInitializedAsync()
         {
             Course = new CoursesData();
@@ -55,14 +57,19 @@ namespace Course.Web.Client.Pages.Lessons
         async Task LoadDataAsync()
         {
             var data = await Service.GetLessonsByCourseId(KhoaHocId);
+            courseIsTrial = UserCourseService.CheckIsTrialAsync(KhoaHocId);
             Course = data.Course;
             Title = Course.TenKhoaHoc;
-            ListLessonView = data.Dts;
+            ListLessonView = data.Dts.OrderBy(c => c.Stt).ToList();
 
         }
 
         void LessonClick(LessonsData lesson)
         {
+            if (courseIsTrial && !lesson.IsTrial)
+            {
+                return;
+            }
             sources.Clear();
             LessonSelected = lesson;
             LinkFile = string.Empty;

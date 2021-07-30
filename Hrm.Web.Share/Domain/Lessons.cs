@@ -14,5 +14,6 @@ namespace Course.Web.Share.Domain {
         public virtual bool IsTrial { get; set; }
         public virtual string TenBaiHoc { get; set; }
         public virtual string TypeContent { get; set; }
+        public virtual int? Stt { get; set; }
     }
 }

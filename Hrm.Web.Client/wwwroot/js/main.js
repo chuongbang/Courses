@@ -50,5 +50,21 @@ window.QuillFunctions = {
                 .retain(editorIndex)
                 .insert({ image: imageURL },
                     { alt: imageURL }));
+    },
+    insertQuillImages: function (quillElement, imageURLs) {
+        var Delta = Quill.import('delta');
+        editorIndex = 0;
+
+        if (quillElement.__quill.getSelection() !== null) {
+            editorIndex = quillElement.__quill.getSelection().index;
+        }
+
+        for (var i = 0; i < imageURLs.length; i++) {
+            quillElement.__quill.updateContents(
+                new Delta()
+                    .retain(editorIndex++)
+                    .insert({ image: imageURLs[i] },
+                        { alt: imageURLs[i] }));
+        }
     }
 };

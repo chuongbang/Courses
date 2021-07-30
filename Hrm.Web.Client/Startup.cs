@@ -137,6 +137,7 @@ namespace Course.Web.Client
             });            
             
             string fileFolderPath = Configuration["FileUploadPath"];
+            GlobalVariants.ResourceFolderName = "files";
             app.UseStaticFiles(new StaticFileOptions
             {
                 RequestPath = "/files",

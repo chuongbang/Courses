@@ -21,6 +21,23 @@ namespace Course.Web.Data.Repository
             _courseQr = session.Query<Courses>();
         }
 
+        public bool CheckIsTrialAsync(string khoahocId)
+        {
+            bool isTrial = false;
+            try
+            {
+                var uc = Query.FirstOrDefault(c => c.KhoaHocId == khoahocId);
+                if (uc != null)
+                {
+                    isTrial = uc.IsTrial;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return isTrial;
+        }
 
         public async Task<(List<UserCourses>, int)> GetByIdAsync(string userId, string keyword, int pageIndex, int pageSize)
         {

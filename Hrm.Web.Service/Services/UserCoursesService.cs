@@ -80,7 +80,7 @@ namespace Course.Web.Service.Services
                 var result = await _UserCoursesRepository.AddEntityAsync(hs.Dts.Select(c => c.As<UserCourses>()));
                 return new ExcuteResponse() { State = result };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new ExcuteResponse() { State = false };
             }
@@ -104,6 +104,18 @@ namespace Course.Web.Service.Services
             try
             {
                 var result = await _UserCoursesRepository.DeleteAsync(hs.Id);
+                return new ExcuteResponse() { State = result };
+            }
+            catch (Exception)
+            {
+                return new ExcuteResponse() { State = false };
+            }
+        }        
+        public ExcuteResponse CheckIsTrialAsync(string khoahocId, CallContext context = default)
+        {
+            try
+            {
+                var result = _UserCoursesRepository.CheckIsTrialAsync(khoahocId);
                 return new ExcuteResponse() { State = result };
             }
             catch (Exception)

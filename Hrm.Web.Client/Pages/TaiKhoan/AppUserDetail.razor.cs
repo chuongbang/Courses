@@ -41,9 +41,11 @@ namespace Course.Web.Client.Pages.TaiKhoan
             if (Value != null)
             {
                 appUserEditModel = new(isEdit);
-                Value.IsActive = true;
+                //Value.IsActive = true;
                 Mapper.Map(Value, appUserEditModel);
                 appUserEditModel.ReadOnly = readOnly;
+                appUserEditModel.ConfirmPassword = appUserEditModel.PasswordHash;
+                appUserEditModel.ExpiredDate = Value.ExpiredDate.IsNullOrEmpty() ? DateTime.Now : Value.ExpiredDate;
             }
         }
 

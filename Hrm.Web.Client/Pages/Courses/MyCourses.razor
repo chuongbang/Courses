@@ -37,8 +37,13 @@
                         <p>Học phí: @((MarkupString)item.HocPhiFormat)</p>
                         <p>Thời lượng: @((MarkupString)item.ThoiLuong)</p>
                         <p>Giáo viên: @((MarkupString)item.GiaoVien)</p>
-                        <div class="pull-right">
-                            <Button Type="primary" Icon="enter" OnClick="(() =>DetailCourse(item.Id))">Chi tiết</Button>
+                        <div>
+                            <div class="pull-left trial-course">
+                                <span>Học thử</span>
+                            </div>
+                            <div class="pull-right">
+                                <Button Type="primary" Icon="enter" OnClick="(() =>DetailCourse(item.Id))">Chi tiết</Button>
+                            </div>
                         </div>
                     </Body>
                 </Card>
@@ -67,6 +72,7 @@
     .card-width {
         max-width: 450px;
     }
+
     .site-content-1 {
         background: #fff;
         padding: 1px 15px;

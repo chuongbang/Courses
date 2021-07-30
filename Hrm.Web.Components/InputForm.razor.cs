@@ -386,7 +386,36 @@ namespace Course.Web.Components
 
         }
 
+        async void InsertImageAsync(InputFileChangeEventArgs e)
+        {
+            loadedFiles.Clear();
+            List<string> listUrls = new List<string>();
+            foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+            {
+                try
+                {
+                    loadedFiles.Add(file);
+                    var trustedFileNameForFileStorage = file.Name;
+                    var pathFolder = Path.Combine(GlobalVariants.FileUploadPath);
+                    var pathFile = Path.Combine(pathFolder, trustedFileNameForFileStorage);
+                    if (!Directory.Exists(Path.GetDirectoryName(pathFolder)))
+                    {
+                        Directory.CreateDirectory(pathFolder);
+                    }
+                    listUrls.Add(file.Name);
 
+                    await using FileStream fs = new(pathFile, FileMode.Create);
+                    await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+
+                    var a = listUrls.Select(c => c.ToFullUrl()).ToList();
+                    await _richTextEditor.InsertImages(listUrls.Select(c => c.ToFullUrl()).ToList());
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+
+        }
 
 
 

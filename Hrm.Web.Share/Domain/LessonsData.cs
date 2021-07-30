@@ -57,6 +57,12 @@ namespace Course.Web.Share.Domain {
         {
             get;
             set;
+        }        
+        [DataMember(Order=9)]
+        public virtual Int32? Stt
+        {
+            get;
+            set;
         }
     }
 }

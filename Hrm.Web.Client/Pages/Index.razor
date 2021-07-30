@@ -1,11 +1,16 @@
 ﻿@page "/"
 
 
-<RichInputText Placeholder="Nhập gì đi ..." EditorContent="textarea">
+<RichInputText Placeholder="Nhập gì đi ...">
+    <EditorContent>
+        @((MarkupString)Contents)
+    </EditorContent>
 </RichInputText>
 
 @code{
 
     RenderFragment textarea = @<textarea />;
+
+    public string Contents { get; set; } = "<strong> test </strong>";
 
 }

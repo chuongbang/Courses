@@ -45,11 +45,17 @@
         </span>
         <span class="ql-formats">
             <button class="ql-link"></button>
-            <button type="button"><i class="fa fa-image"></i></button>
+            <div class="fileUpload-icon">
+                <span><Icon Type="file-image" Theme="outline" /></span>
+                <InputFile OnChange="InsertImageChange" class="upload"/>
+            </div>
+            @*<button type="button" @onclick="InsertImageChange"><i class="fa fa-image"></i></button>*@
         </span>
     }
 </div>
 <div @ref="@QuillElement">
-    @*@EditorContent*@
-    <textarea />
+    @EditorContent
 </div>
+
+@code{
+}

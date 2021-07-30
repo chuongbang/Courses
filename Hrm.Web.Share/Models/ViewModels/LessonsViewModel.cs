@@ -37,11 +37,12 @@ namespace Course.Web.Share.Models.ViewModels
         {
             if (list.IsNotNullOrEmpty())
             {
-                list.ForEach((dt) =>
+                list.OrderBy(c => c.Stt).ToList().ForEach((dt) =>
                 {
                     Lesson lss = new Lesson();
                     lss.Update(dt);
-                    lss.Stt = stt++.ToString();
+                    //lss.Stt = stt++.ToString();
+                    lss.Stt = dt.Stt.ToString();
                     lss.MaBaiHoc = lss.MaBaiHoc.IsNotNullOrEmpty() ? string.Format("({0})", lss.MaBaiHoc) : string.Empty;
                     lss.TenBaiHocFormat = string.Format("{0} - {1}{2}", lss.Stt, lss.TenBaiHoc, lss.MaBaiHoc);
                     Lessons.Add(lss);

@@ -44,6 +44,10 @@ namespace Course.Web.Share.Models.EditModels
         [Compare("PasswordHash", ErrorMessage = "Xác nhận mật khẩu phải giống với mật khẩu.")]
         public virtual string ConfirmPassword { get; set; }
 
+        [RequiredIf("Id", null, ErrorMessageResourceType = typeof(AlertResource), ErrorMessageResourceName = "Required")]
+        [Display(Name = "Ngày hết hạn tài khoản")]
+        public virtual DateTime? ExpiredDate { get; set; }
+
 
         public AppUserEditModel(bool isEdit = true)
         {
@@ -65,10 +69,11 @@ namespace Course.Web.Share.Models.EditModels
             InputFields.Add<AppUserEditModel>(c => c.JobTitle);
             InputFields.Add<AppUserEditModel>(c => c.Email);
             InputFields.Add<AppUserEditModel>(c => c.IsActive);
+            InputFields.Add<AppUserEditModel>(c => c.ExpiredDate);
             if (isEdit)
             {
-                InputFields.Add<AppUserEditModel>(c => c.LastLogin);
-                InputFields.Add<AppUserEditModel>(c => c.LoginCount);
+                //InputFields.Add<AppUserEditModel>(c => c.LastLogin);
+                //InputFields.Add<AppUserEditModel>(c => c.LoginCount);
             }
 
 

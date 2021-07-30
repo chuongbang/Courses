@@ -90,5 +90,14 @@ namespace Course.Web.Components
                 "QuillFunctions.insertQuillImage",
                 quillElement, imageURL);
         }
+        internal static ValueTask InsertQuillImages(
+            IJSRuntime jsRuntime,
+            ElementReference quillElement,
+            List<string> imageURLs)
+        {
+            return jsRuntime.InvokeVoidAsync(
+                "QuillFunctions.insertQuillImages",
+                quillElement, imageURLs);
+        }
     }
 }

@@ -82,6 +82,10 @@ namespace Course.Web.Client
                         {
                             return (false, "Tài khoản đã bị khóa");
                         }
+                        if (loginResult.IsExpired)
+                        {
+                            return (false, "Tài khoản đã hết hạn sử dụng");
+                        }
                         var claims = new List<Claim> { new Claim(ClaimTypes.Name, userName) };
                         if (userName.ToUpper() == "ADMIN")
                         {

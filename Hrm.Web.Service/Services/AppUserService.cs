@@ -126,6 +126,7 @@ namespace Course.Web.Service.Services
                 user.FullName = model.FullName;
                 user.JobTitle = model.JobTitle;
                 user.IsActive = model.IsActive;
+                user.ExpiredDate = model.ExpiredDate;
                 var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
@@ -159,7 +160,8 @@ namespace Course.Web.Service.Services
                             IsLockedOut = user.LockoutEnabled,
                             IsNotAllowed = !user.IsActive,
                             RequiresTwoFactor = user.TwoFactorEnabled,
-                            AuthenToken = token
+                            AuthenToken = token,
+                            IsExpired = DateTime.Now > user.ExpiredDate
                         };
                     }
                 }
